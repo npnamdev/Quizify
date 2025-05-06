@@ -154,7 +154,7 @@ export default function ReusableTable<T extends { id: number | string, image?: s
       {/* Table */}
       <Table>
         <TableHeader>
-          <TableRow className="bg-gray-100 h-[50px] whitespace-nowrap">
+          <TableRow className="bg-gray-100 h-[45px] whitespace-nowrap">
             <TableHead className="px-5 w-[45px]">
               <Checkbox checked={isAllSelected} onCheckedChange={toggleSelectAll} />
             </TableHead>

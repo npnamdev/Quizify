@@ -7,98 +7,81 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem } from "@/components/ui/sidebar";
 import { useSidebar } from "@/components/ui/sidebar"
-import { toast } from 'sonner';
+import { usePathname, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useAuth } from "@/contexts/AuthProvider";
 
 export default function Menubar() {
+    const router = useRouter();
     const { setOpenMobile } = useSidebar();
+    const { logout, user } = useAuth();
+
     const pathname = usePathname();
     const [openSubmenu, setOpenSubmenu] = React.useState<string | null>(null);
 
+    const handleLogout = () => {
+        logout();
+        router.push("/");
+    };
 
     const data = {
-        user: { name: "Phương Nam", email: "root@domain.com", avatar: "https://lineone.piniastudio.com/images/avatar/avatar-6.jpg" },
+        user: {
+            name: "Phương Nam",
+            email: "root@domain.com",
+            avatar: "https://lineone.piniastudio.com/images/avatar/avatar-6.jpg"
+        },
         navMain: [
             {
-                title: t('statisticsReports'),
+                title: "Thống kê & Báo cáo",
                 url: "/manage",
                 icon: LayoutGrid,
             },
             {
-                title: t('userManagement'),
+                title: "Quản lý người dùng",
                 url: "#",
                 icon: UsersRound,
                 items: [
-                    { title: t('userAccounts'), url: "/manage/user-accounts" },
-                    { title: t('rolesPermissions'), url: "/manage/roles-permissions" },
+                    { title: "Tài khoản người dùng", url: "/manage/user-accounts" },
+                    { title: "Vai trò & Phân quyền", url: "/manage/roles-permissions" },
                 ],
             },
             {
-                title: t('courseManagement'),
+                title: "Quản lý khóa học",
                 url: "#",
                 icon: BookOpen,
                 items: [
-                    { title: t('courseList'), url: "/manage/courses" },
-                    { title: t('courseCategories'), url: "/manage/categories" },
-                    { title: t('courseTags'), url: "/manage/tags" },
-                    { title: t('activationCodes'), url: "/manage/activate-course" },
+                    { title: "Danh sách khóa học", url: "/manage/courses" },
+                    { title: "Danh mục khóa học", url: "/manage/categories" },
+                    { title: "Thẻ khóa học", url: "/manage/tags" },
+                    { title: "Mã kích hoạt", url: "/manage/activate-course" },
                 ],
             },
             {
-                title: t('revenueManagement'),
+                title: "Quản lý doanh thu",
                 url: "#",
                 icon: ShoppingCart,
                 items: [
-                    { title: t('orderList'), url: "/manage/order-list" },
-                    { title: t('codManagement'), url: "/manage/cod-management" },
-                    { title: t('processCodOrders'), url: "/manage/process-cod-orders" },
+                    { title: "Danh sách đơn hàng", url: "/manage/order-list" },
+                    { title: "Quản lý COD", url: "/manage/cod-management" },
+                    { title: "Xử lý đơn hàng COD", url: "/manage/process-cod-orders" },
                 ],
             },
             {
-                title: t('marketingCampaigns'),
-                url: "#",
-                icon: ChartBarDecreasing,
-                items: [
-                    { title: t('promoCodes'), url: "/manage/promo-codes" },
-                    { title: t('emailCampaigns'), url: "/manage/email-marketing" },
-                    { title: t('popUpWindows'), url: "/manage/popups" },
-                ],
-            },
-            {
-                title: t('affiliateMarketing'),
-                url: "#",
-                icon: GitBranch,
-                items: [
-                    { title: t('affiliateList'), url: "/manage/affiliate-list" },
-                    { title: t('affiliatePayments'), url: "/manage/affiliate-payments" },
-                ],
-            },
-            {
-                title: t('uiCustomization'),
-                url: "#",
-                icon: Palette,
-                items: [
-                    { title: t('header'), url: "/customize/header" },
-                    { title: t('heroSection'), url: "/customize/hero" },
-                    { title: t('courseCategories'), url: "/customize/course-categories" },
-                    { title: t('courseList'), url: "/customize/course-list" },
-                    { title: t('about'), url: "/customize/about" },
-                    { title: t('testimonials'), url: "/customize/testimonials" },
-                    { title: t('partners'), url: "/customize/partners" },
-                    { title: t('footer'), url: "/customize/footer" },
-                ],
-            },
-            {
-                title: t('libraryManagement'),
+                title: "Quản lý thư viện",
                 url: "/manage/liblarys",
                 icon: SwatchBook,
+                items: [
+                    { title: "Danh sách CTV", url: "/manage/affiliate-list" },
+                    { title: "Thanh toán CTV", url: "/manage/affiliate-payments" },
+                ],
             },
         ],
         settings: [
-            { name: t('displaySettings'), url: "/manage/display-settings", icon: SlidersVertical },
-            { name: t('systemSettings'), url: "/manage/system-settings", icon: Settings },
-            { name: t('websiteResources'), url: "/manage/website-resources", icon: Package },
+            { name: "Cài đặt hiển thị", url: "/manage/display-settings", icon: SlidersVertical },
+            { name: "Cài đặt hệ thống", url: "/manage/system-settings", icon: Settings },
         ],
     };
+
 
     React.useEffect(() => {
         data.navMain.forEach((item) => {
@@ -113,13 +96,6 @@ export default function Menubar() {
 
     const handleToggle = (title: string) => {
         setOpenSubmenu(prev => (prev === title ? null : title));
-    };
-
-    const handleLogout = () => {
-        document.body.style.pointerEvents = 'auto';
-        router.replace('/sign-in', { locale: currentLocale });
-        localStorage.removeItem('accessToken');
-        toast.success("Đăng xuất thành công");
     };
 
     return (
@@ -236,10 +212,10 @@ export default function Menubar() {
                                     </Avatar>
                                     <div className="grid flex-1 text-left text-sm leading-tight">
                                         <span className="truncate font-semibold text-black">
-                                            {data.user.name}
+                                            {user?.fullName}
                                         </span>
                                         <span className="truncate text-xs text-black">
-                                            {data.user.email}
+                                            {user?.email}
                                         </span>
                                     </div>
                                     <ChevronsUpDown className="ml-auto size-4" />
@@ -264,16 +240,16 @@ export default function Menubar() {
                                         </Avatar>
                                         <div className="grid flex-1 text-left text-sm leading-tight">
                                             <span className="truncate font-semibold">
-                                                {data.user.name}
+                                                {user?.fullName}
                                             </span>
                                             <span className="truncate text-xs">
-                                                {data.user.email}
+                                                {user?.email}
                                             </span>
                                         </div>
                                     </div>
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={() => handleLogout()}>
+                                <DropdownMenuItem onClick={handleLogout}>
                                     <LogOut />
                                     Đăng xuất
                                 </DropdownMenuItem>

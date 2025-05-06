@@ -21,10 +21,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             try {
                 const token = localStorage.getItem("accessToken");
                 if (token) {
-                    const response = await fetch('http://localhost:8081/api/users/me', {
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/me`, {
                         method: 'GET',
-                        headers: { 'Authorization': `Bearer ${token}` },
-                    });
+                        headers: { Authorization: `Bearer ${token}` },
+                      });
+                      
 
                     if (!response.ok) {
                         throw new Error("User not authenticated");
@@ -48,7 +49,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const login = async (email: string, password: string) => {
         try {
-            const response = await fetch("http://localhost:8081/api/auth/login", {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
                 method: "POST",
                 credentials: 'include',
                 headers: { "Content-Type": "application/json" },
@@ -75,10 +76,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (!confirmLogout) return;
 
         try {
-            const response = await fetch("http://localhost:8081/api/auth/logout", {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
                 method: "POST",
                 credentials: 'include',
             });
+
+            console.log("response", response);
+            
 
             if (!response.ok) {
                 throw new Error("Logout failed");
