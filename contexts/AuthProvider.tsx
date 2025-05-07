@@ -16,38 +16,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
-    // useEffect(() => {
-    //     const fetchUser = async () => {
-    //         try {
-    //             const token = localStorage.getItem("accessToken");
-    //             if (token) {
-    //                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/me`, {
-    //                     method: 'GET',
-    //                     headers: { Authorization: `Bearer ${token}` },
-    //                   });
-
-
-    //                 if (!response.ok) {
-    //                     throw new Error("User not authenticated");
-    //                 }
-
-    //                 const data = await response.json();
-    //                 setUser(data);
-    //             } else {
-    //                 setUser(null);
-    //             }
-    //         } catch (err) {
-    //             console.error("User not authenticated", err);
-    //             setUser(null);
-    //         } finally {
-    //             setLoading(false); // ✅ Kết thúc loading dù thành công hay thất bại
-    //         }
-    //     };
-
-    //     fetchUser();
-    // }, []);
-
-
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -58,9 +26,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                     headers: { Authorization: `Bearer ${token}` },
                     credentials: 'include',
                 });
-
-                console.log("check res", res);
-                
 
                 if (res.status === 401) {
                     const refreshRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh-token`, {
@@ -73,21 +38,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                         localStorage.setItem("accessToken", refreshData.accessToken);
                         token = refreshData.accessToken;
 
-                        // thử lại gọi API /me với token mới
                         const retryRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/me`, {
                             method: 'GET',
                             headers: { Authorization: `Bearer ${token}` },
                             credentials: 'include',
                         });
 
-                        console.log("check retryRes", retryRes);
-                        
-
                         if (!retryRes.ok) throw new Error("Retry fetchUser failed");
 
                         const retryData = await retryRes.json();
-                        console.log("check retryData", retryData);
-
                         setUser(retryData);
                     } else {
                         throw new Error("Refresh token failed");
