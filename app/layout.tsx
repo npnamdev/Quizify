@@ -5,6 +5,7 @@ import { AuthProvider } from "@/contexts/AuthProvider";
 import Navbar from "@/components/ui-custom/Navbar";
 import { AuthConsumerWrapper } from "@/components/ui-custom/AuthConsumerWrapper";
 import Header from "@/components/ui-custom/Header";
+import { Toaster } from "@/components/ui/sonner"
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             {children}
           </AuthConsumerWrapper>
         </AuthProvider>
+        <Toaster />
       </body>
     </html>
   );

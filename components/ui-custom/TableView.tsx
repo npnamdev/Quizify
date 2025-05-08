@@ -259,7 +259,7 @@ export default function TableView<T extends { id: number | string, image?: strin
 
       {/* Pagination */}
       <div className="h-[60px] md:h-[65px] px-4 flex justify-between items-center border-t">
-        <div className="text-sm text-gray-700">
+        <div className="text-sm text-gray-700 flex gap-1">
           <span className='hidden md:flex'>Đang chọn:</span> {selectedIds.length} / {total}
         </div>
         <div className="flex items-center gap-3">

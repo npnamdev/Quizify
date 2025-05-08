@@ -108,9 +108,9 @@ export default function App() {
     }
 
     const handleAddUser = () => {
+        toast.success(`Thêm người dùng từ component cha!`);
         console.log('Thêm người dùng từ component cha!');
-        // Thực hiện logic thêm người dùng tại đây
-      };
+    };
 
     return (
         <div className="space-y-4">
