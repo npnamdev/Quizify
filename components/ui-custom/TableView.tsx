@@ -105,7 +105,7 @@ export default function TableView<T extends { id: number | string, image?: strin
 
   return (
     <div className="text-black shadow rounded-md overflow-auto border select-none w-full bg-white">
-      <div className="px-4 h-[55px] md:h-[65px] flex justify-between items-center gap-2">
+      <div className="px-4 h-[60px] md:h-[65px] flex justify-between items-center gap-2">
         <div className="relative hidden md:flex items-center">
           <Search className="absolute left-3 text-gray-600" size={18} strokeWidth={1.5} />
           <Input
@@ -253,7 +253,7 @@ export default function TableView<T extends { id: number | string, image?: strin
       </Table>
 
       {/* Pagination */}
-      <div className="h-[55px] md:h-[65px] px-4 flex justify-between items-center border-t">
+      <div className="h-[60px] md:h-[65px] px-4 flex justify-between items-center border-t">
         <div className="text-sm text-gray-700">
           <span className='hidden md:flex'>Đang chọn:</span> {selectedIds.length} / {total}
         </div>
