@@ -107,6 +107,11 @@ export default function App() {
         });
     }
 
+    const handleAddUser = () => {
+        console.log('Thêm người dùng từ component cha!');
+        // Thực hiện logic thêm người dùng tại đây
+      };
+
     return (
         <div className="space-y-4">
             <TableView <User>
@@ -122,6 +127,7 @@ export default function App() {
                 searchInput={searchInput}
                 setSearchInput={setSearchInput}
                 isLoading={isLoading}
+                onActionAdd={handleAddUser}
                 options={[
                     {
                         value: "copy",

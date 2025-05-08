@@ -4,6 +4,20 @@
 @tailwind components;
 @tailwind utilities;
 
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e0d7d7;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar {
+  width: 8px !important;
+  height: 0px;
+}
+
 body {
   font-family: "Nunito", sans-serif;
 }

@@ -30,7 +30,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 type Column<T> = {
   header: string;
   accessor: keyof T;
-  visible?: boolean; 
+  visible?: boolean;
   type?: 'group' | 'image' | 'system' | 'badge';
 };
 
@@ -56,10 +56,11 @@ type TableViewProps<T extends { id: number | string }> = {
   setSearchInput: (value: string) => void;
   isLoading?: boolean;
   options?: ActionOption[];
+  onActionAdd?: () => void;
 };
 
 export default function TableView<T extends { id: number | string, image?: string }>({
-  columns, data, pageSize, currentPage, total, options,
+  columns, data, pageSize, currentPage, total, options, onActionAdd,
   onSelect, onPageChange, onPageSizeChange,
   selectedIds, setSelectedIds, searchInput, setSearchInput, isLoading
 }: TableViewProps<T>) {
@@ -120,6 +121,10 @@ export default function TableView<T extends { id: number | string, image?: strin
           />
         </div>
 
+        <Button variant={'outline'} className='px-2 w-[45px] flex md:hidden'>
+          <Search className="text-gray-600" size={18} strokeWidth={1.5} />
+        </Button>
+
         <div className='flex w-full items-center gap-2 justify-between'>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -142,9 +147,9 @@ export default function TableView<T extends { id: number | string, image?: strin
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button className="px-2.5 gap-1 text-[13.5px]">
+          <Button className="px-2.5 gap-1 text-[13.5px]" onClick={() => onActionAdd?.()}>
             <Plus strokeWidth="1.5" />
-            Thêm người dùng
+            <span className='hidden md:flex'>Thêm người dùng</span>
           </Button>
         </div>
       </div>
