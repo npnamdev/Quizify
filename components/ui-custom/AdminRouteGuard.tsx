@@ -28,7 +28,12 @@ export const AdminRouteGuard = ({ children }: { children: React.ReactNode }) => 
     }
   }, [loading, isAuthenticated, user, pathname, router]);
 
-  const shouldShowLoader = loading || (isManageRoute && (!isAuthenticated || user?.role?.name !== 'admin'));
+  // const shouldShowLoader = loading || (isManageRoute && (!isAuthenticated || user?.role?.name !== 'admin'));
+  const shouldShowLoader =
+  loading ||
+  (isManageRoute && (!isAuthenticated || user?.role?.name !== 'admin')) ||
+  (isAuthenticated && isAuthPage);
+
 
   if (shouldShowLoader) {
     return (
