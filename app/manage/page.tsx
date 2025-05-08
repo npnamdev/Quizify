@@ -70,7 +70,7 @@ const stats = [
   },
   {
     title: "Doanh thu",
-    value: "₫ 95,300,000",
+    value: "$95",
     icon: <DollarSign className="w-6 h-6 text-red-600" />,
     color: "bg-red-100",
   },

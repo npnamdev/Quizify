@@ -1,113 +1,111 @@
 'use client';
 
-import Image from "next/image";
-import Link from "next/link";
-import { Globe, Moon, ShoppingBag, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter, SheetClose } from "@/components/ui/sheet";
+import { useAuth } from "@/contexts/AuthProvider";
 import { usePathname } from "next/navigation";
-import { Button } from "../ui/button";
+import Link from 'next/link';
 
-const Header = () => {
-    const { theme, setTheme } = useTheme();
-    const pathname = usePathname();
+export const Header = () => {
+  const { user, isAuthenticated, logout } = useAuth();
+  const pathname = usePathname();
 
-    if (pathname.startsWith('/manage')) {
-        return null;
-    }
+  // Ẩn menu nếu đang ở trên những trang này
+  const isHidden = pathname === "/login" || pathname === "/register" || pathname === "/unauthorized" || pathname.startsWith("/manage");
 
-    const menus = [
-        { label: "Trang chủ", href: "/" },
-        { label: "Khóa học", href: "/courses" },
-        { label: "Blog", href: "/blog" },
-        { label: "Liên hệ", href: "/contact" },
-        { label: "Hỗ trợ", href: "/support" },
-    ];
+  if (isHidden) return null;
 
-    return (
-        <header className="hidden lg:block select-none sticky top-0 z-50 bg-white/95 dark:bg-[#0D1824] dark:border-b backdrop-blur shadow-[0px_4px_4px_rgba(93,90,90,0.15)]">
-            <nav className="container h-[64px] flex justify-between items-center">
-                <div className="flex items-center gap-6">
-                    <Link href="/">
-                        <Image
-                            src={'/logo.svg'} alt="Next.js Logo"
-                            width={140}
-                            height={35}
-                            priority
-                            className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70]"
-                        />
-                    </Link>
-                    <ul className="flex gap-8 font-semibold ml-5">
-                        {menus.map((item, index) => (
-                            <li key={index}>
-                                <Link
-                                    className={`text-black dark:text-white hover:text-primary transition-all duration-75 ${pathname === item.href ? 'text-primary' : ''}`}
-                                    href={item.href}
-                                >
-                                    {item.label}
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+  return (
+    <header className="bg-gray-900 text-white shadow-lg">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        {/* Logo */}
+        <div className="text-2xl font-bold">
+          <Link href="/" className="hover:text-indigo-400">
+            MyWebsite
+          </Link>
+        </div>
 
-                <div className="flex items-center">
-                    <div className="mx-3 flex items-center gap-4 h-[36px]">
-                        {theme === 'dark' ? (
+        {/* Desktop Menu */}
+        <nav className="hidden md:flex space-x-8">
+          <Link href="/" className="hover:text-indigo-400">Home</Link>
+          <Link href="/about" className="hover:text-indigo-400">About</Link>
+          <Link href="/services" className="hover:text-indigo-400">Services</Link>
+          <Link href="/contact" className="hover:text-indigo-400">Contact</Link>
+          
+          {/* Conditional rendering for logged-in users */}
+          {isAuthenticated ? (
+            <div className="flex items-center space-x-4">
+              {user?.role?.name === "admin" && (
+                <Link href="/manage">
+                  <Button variant="outline">Manage</Button>
+                </Link>
+              )}
+              <Button variant="outline" onClick={logout}>Logout</Button>
+            </div>
+          ) : (
+            <div className="flex items-center space-x-4">
+              <Link href="/login">
+                <Button variant="outline">Login</Button>
+              </Link>
+              <Link href="/register">
+                <Button variant="outline">Register</Button>
+              </Link>
+            </div>
+          )}
+        </nav>
 
-                            <Sun
-                                onClick={() => setTheme("light")}
-                                size={18}
-                                strokeWidth={1.5}
-                                className="hover:text-primary cursor-pointer text-black dark:text-white"
-                            />
-                        ) : (
-                            <Moon
-                                onClick={() => setTheme("dark")}
-                                size={18}
-                                strokeWidth={1.5}
-                                className="hover:text-primary cursor-pointer text-black dark:text-white"
-                            />
-                        )}
-                        <DropdownMenu>
-                            <DropdownMenuTrigger className="outline-none">
-                                <Globe size={18} strokeWidth={1.5} className="hover:text-primary cursor-pointer" />
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                                <DropdownMenuItem className="font-semibold text-[13px]">
-                                    <Image
-                                        src="https://res.cloudinary.com/dijvnrdmc/image/upload/v1721809899/FlagUs4x3.svg" alt="Next.js Logo"
-                                        width={20}
-                                        height={20}
-                                        priority
-                                        className="rounded-[2px]"
-                                    />
-                                    <span className="ml-2">English</span>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem className="font-semibold text-[13px]">
-                                    <Image
-                                        src="https://res.cloudinary.com/dijvnrdmc/image/upload/v1721809900/FlagVn4x3.svg" alt="Next.js Logo"
-                                        width={20}
-                                        height={20}
-                                        priority
-                                        className="rounded-[2px]"
-                                    />
-                                    <span className="ml-2">Vietnamese</span>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </div>
-                    <Button className="mx-2.5 font-semibold rounded text-[13.5px]" variant="secondary">
-                        <Link href="/manage" className="">Kích hoạt</Link>
-                    </Button>
-                    {/* <Link href="/cart" className="relative ml-4">
-                        <span className="w-[16px] h-[16px] flex justify-center items-center bg-yellow-400 text-white absolute top-[-10px] right-[-10px] rounded-full text-[10px] font-semibold">5</span>
-                        <ShoppingBag size={19} strokeWidth={1.5} className="hover:text-primary cursor-pointer text-black dark:text-white" />
-                    </Link> */}
-                </div>
-            </nav>
-        </header>
-    );
+        {/* Mobile Menu Button using Sheet */}
+        <div className="md:hidden">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" className="text-2xl">
+                ☰
+              </Button>
+            </SheetTrigger>
+
+            <SheetContent>
+              <SheetHeader>
+                <SheetTitle>Menu</SheetTitle>
+                <SheetDescription>
+                  Navigate to different sections of the website.
+                </SheetDescription>
+              </SheetHeader>
+
+              {/* Mobile Menu Links */}
+              <nav className="space-y-4 py-4">
+                <Link href="/" className="block hover:text-indigo-400">Home</Link>
+                <Link href="/about" className="block hover:text-indigo-400">About</Link>
+                <Link href="/services" className="block hover:text-indigo-400">Services</Link>
+                <Link href="/contact" className="block hover:text-indigo-400">Contact</Link>
+
+                {/* Mobile menu login/register/logout */}
+                {isAuthenticated ? (
+                  <div className="space-y-4">
+                    {user?.role?.name === "admin" && (
+                      <Link href="/manage" className="block hover:text-indigo-400">Manage</Link>
+                    )}
+                    <button onClick={logout} className="block hover:text-indigo-400">Logout</button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <Link href="/login" className="block hover:text-indigo-400">Login</Link>
+                    <Link href="/register" className="block hover:text-indigo-400">Register</Link>
+                  </div>
+                )}
+              </nav>
+
+              <SheetFooter>
+                <SheetClose asChild>
+                  <Button type="submit" className="w-full">
+                    Close
+                  </Button>
+                </SheetClose>
+              </SheetFooter>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </div>
+    </header>
+  );
 };
-
-export default Header;

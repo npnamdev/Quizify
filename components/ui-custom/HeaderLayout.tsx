@@ -12,7 +12,7 @@ import { AlignLeft, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const segmentLabels: Record<string, string> = {
-    manage: "Quản trị", courses: "Danh sách khóa học", categories: "Danh mục khóa học",
+    manage: "Quản lý", courses: "Danh sách khóa học", categories: "Danh mục khóa học",
     tags: "Thẻ khóa học", "activate-course": "Kích hoạt khóa học", "user-accounts": "Tài khoản người dùng",
     "account-groups": "Nhóm tài khoản", "roles-permissions": "Vai trò & phân quyền",
     "promo-codes": "Mã giảm giá", "email-marketing": "Chiến dịch email",

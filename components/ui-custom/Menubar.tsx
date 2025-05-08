@@ -101,7 +101,9 @@ export default function Menubar() {
     return (
         <Sidebar collapsible="icon">
             <SidebarHeader className="px-6 border-b bg-white flex justify-center h-[60px]">
-                <h1 className="text-[27px] font-black text-primary">Learnify</h1>
+                <Link href="/">
+                    <h1 className="text-[27px] font-black text-primary">Learnify</h1>
+                </Link>
             </SidebarHeader>
             <SidebarContent className="px-2 bg-white gap-0">
                 <SidebarGroup>
