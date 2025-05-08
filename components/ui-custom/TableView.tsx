@@ -105,7 +105,7 @@ export default function TableView<T extends { id: number | string, image?: strin
 
   return (
     <div className="text-black shadow rounded-md overflow-auto border select-none w-full bg-white">
-      <div className="px-4 h-[55px] md:h-[65px] flex justify-between items-center">
+      <div className="px-4 h-[55px] md:h-[65px] flex justify-between items-center gap-2">
         <div className="relative hidden md:flex items-center">
           <Search className="absolute left-3 text-gray-600" size={18} strokeWidth={1.5} />
           <Input
@@ -120,7 +120,7 @@ export default function TableView<T extends { id: number | string, image?: strin
           />
         </div>
 
-        <div className='flex items-center gap-2 justify-between'>
+        <div className='flex w-full items-center gap-2 justify-between'>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className='px-2.5'>
@@ -179,7 +179,7 @@ export default function TableView<T extends { id: number | string, image?: strin
             </TableRow>
           ) : (
             data.map((row) => (
-              <TableRow key={row.id} className={`h-[50px] py-0 ${selectedIds.includes(row.id) ? 'bg-gray-100' : ''}`}>
+              <TableRow key={row.id} className={`h-[48px] md:h-[50px] py-0 ${selectedIds.includes(row.id) ? 'bg-gray-100' : ''}`}>
                 <TableCell className="px-5 w-[45px] whitespace-nowrap">
                   <Checkbox
                     checked={selectedIds.includes(row.id)}
