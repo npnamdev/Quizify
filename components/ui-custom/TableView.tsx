@@ -30,7 +30,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 type Column<T> = {
   header: string;
   accessor: keyof T;
-  visible?: boolean; // thêm để kiểm soát cột mặc định
+  visible?: boolean; 
   type?: 'group' | 'image' | 'system' | 'badge';
 };
 
