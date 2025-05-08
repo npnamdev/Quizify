@@ -7,6 +7,10 @@ import moment from 'moment';
 import { toast } from "sonner";
 import copy from 'clipboard-copy';
 import TableView from '@/components/ui-custom/TableView';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 
 type User = {
     id: string;
@@ -55,6 +59,12 @@ export default function App() {
 
     const [searchInput, setSearchInput] = useState('');
     const [debouncedSearch, setDebouncedSearch] = useState('');
+
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [fullName, setFullName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [role, setRole] = useState('');
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -108,9 +118,14 @@ export default function App() {
     }
 
     const handleAddUser = () => {
-        toast.success(`Thêm người dùng từ component cha!`);
-        console.log('Thêm người dùng từ component cha!');
+        setIsAddModalOpen(true);
     };
+
+    const handleSubmit = () => {
+        console.log({ fullName, email, password, role });
+        setIsAddModalOpen(false);
+    };
+
 
     return (
         <div className="space-y-4">
@@ -167,6 +182,66 @@ export default function App() {
                     },
                 ]}
             />
+            <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Thêm người dùng mới</DialogTitle>
+                        <DialogDescription>Điền đầy đủ thông tin bên dưới để thêm người dùng.</DialogDescription>
+                    </DialogHeader>
+
+                    <div className="space-y-4">
+                        <div>
+                            <Label htmlFor="fullName">Họ tên</Label>
+                            <Input
+                                id="fullName"
+                                value={fullName}
+                                onChange={(e) => setFullName(e.target.value)}
+                                placeholder="Nguyễn Văn A"
+                            />
+                        </div>
+
+                        <div>
+                            <Label htmlFor="email">Email</Label>
+                            <Input
+                                id="email"
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="example@gmail.com"
+                            />
+                        </div>
+
+                        <div>
+                            <Label htmlFor="password">Mật khẩu</Label>
+                            <Input
+                                id="password"
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="••••••••"
+                            />
+                        </div>
+
+                        <div>
+                            <Label htmlFor="role">Vai trò</Label>
+                            <select
+                                id="role"
+                                value={role}
+                                onChange={(e) => setRole(e.target.value)}
+                                className="w-full border rounded px-3 py-2"
+                            >
+                                <option value="">Chọn vai trò</option>
+                                <option value="admin">Quản trị viên</option>
+                                <option value="user">Người dùng</option>
+                            </select>
+                        </div>
+
+                        <div className="flex justify-end pt-2">
+                            <Button onClick={handleSubmit}>Lưu</Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
