@@ -4,22 +4,30 @@ import { useAuth } from '@/contexts/AuthProvider';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-export const AdminRouteGuard  = ({ children }: { children: React.ReactNode }) => {
+export const AdminRouteGuard = ({ children }: { children: React.ReactNode }) => {
   const { user, isAuthenticated, loading } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
 
+  const isManageRoute = pathname.startsWith('/manage');
+  const isAuthPage = ['/login', '/register', '/forgot-password', 'verify-email'].includes(pathname);
+
   useEffect(() => {
-    if (!loading && pathname.startsWith('/manage')) {
+    if (loading) return;
+
+    if (isManageRoute) {
       if (!isAuthenticated) {
         router.replace('/login');
       } else if (user?.role?.name !== 'admin') {
         router.replace('/unauthorized');
       }
     }
+
+    if (isAuthenticated && isAuthPage) {
+      router.replace('/');
+    }
   }, [loading, isAuthenticated, user, pathname, router]);
 
-  const isManageRoute = pathname.startsWith('/manage');
   const shouldShowLoader = loading || (isManageRoute && (!isAuthenticated || user?.role?.name !== 'admin'));
 
   if (shouldShowLoader) {

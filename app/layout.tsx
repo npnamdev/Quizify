@@ -3,8 +3,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthProvider";
 import Navbar from "@/components/ui-custom/Navbar";
-import { AdminRouteGuard  } from "@/components/ui-custom/AdminRouteGuard";
-import {Header} from "@/components/ui-custom/Header";
+import { AdminRouteGuard } from "@/components/ui-custom/AdminRouteGuard";
+import { Header } from "@/components/ui-custom/Header";
 import { Toaster } from "@/components/ui/sonner"
 
 const geistSans = localFont({
@@ -29,7 +29,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
           <AdminRouteGuard >
-          <Header />
+            {/* <Header /> */}
             <Navbar />
             {children}
           </AdminRouteGuard >

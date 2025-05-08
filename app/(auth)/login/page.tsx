@@ -6,12 +6,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from 'next/link';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthProvider";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-    const { login } = useAuth();
+    const { login, isAuthenticated } = useAuth();
     const [email, setEmail] = useState("admin@gmail.com");
     const [password, setPassword] = useState("namdev");
     const router = useRouter();
@@ -24,6 +24,12 @@ export default function LoginPage() {
             console.error("Login failed:", error);
         }
     };
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            router.push("/");
+        }
+    }, [router, isAuthenticated]);
 
     return (
         <div className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10">
@@ -69,7 +75,7 @@ export default function LoginPage() {
                                             required
                                         />
                                     </div>
-                                    <Button  className="w-full" onClick={handleLogin}>
+                                    <Button className="w-full" onClick={handleLogin}>
                                         Login
                                     </Button>
                                     <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
