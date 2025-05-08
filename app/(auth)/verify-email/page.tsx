@@ -18,7 +18,7 @@ export default function VerifyEmail() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 px-4">
+        <div className="h-dvh flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 px-4">
             <Card className="w-full max-w-lg text-center shadow-xl border-0">
                 <CardHeader className="space-y-2">
                     <div className="flex justify-center">

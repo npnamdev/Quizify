@@ -9,7 +9,7 @@ export default function NotFoundPage() {
     const router = useRouter();
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-muted px-4">
+        <div className="flex h-dvh items-center justify-center bg-muted px-4">
             <Card className="w-full max-w-md shadow-xl">
                 <CardHeader className="flex flex-col items-center text-center">
                     <AlertTriangle className="mb-2 h-12 w-12 text-yellow-500" />

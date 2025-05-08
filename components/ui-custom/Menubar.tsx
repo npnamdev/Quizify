@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import React, { useState } from "react";
 import { CircleHelp, BadgeCheck, Bell, BookOpen, UsersRound, ChevronRight, ChevronsUpDown, ShoppingCart, CreditCard, Folder, Forward, SlidersVertical, ChartBarDecreasing, LogOut, GitBranch, MoreHorizontal, SwatchBook, Package, Settings, Sparkles, LayoutGrid, Trash2, Palette, GalleryVerticalEnd, AudioWaveform, Command } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -15,14 +15,20 @@ export default function Menubar() {
     const router = useRouter();
     const { setOpenMobile } = useSidebar();
     const { logout, user } = useAuth();
+    const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const pathname = usePathname();
     const [openSubmenu, setOpenSubmenu] = React.useState<string | null>(null);
 
     const handleLogout = () => {
-        logout();
-        router.push("/");
+        setDropdownOpen(false);
+
+        setTimeout(async () => {
+            await logout();
+            router.push("/");
+        }, 500);
     };
+
 
     const data = {
         user: {
@@ -199,7 +205,7 @@ export default function Menubar() {
             <SidebarFooter className="px-3.5 bg-white border-t">
                 <SidebarMenu className="">
                     <SidebarMenuItem>
-                        <DropdownMenu>
+                        <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
                             <DropdownMenuTrigger asChild>
                                 <SidebarMenuButton
                                     size="lg"

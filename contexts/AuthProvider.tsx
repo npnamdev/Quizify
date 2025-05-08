@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { toast } from "sonner"
 
 interface AuthContextType {
     user: any;
@@ -93,7 +94,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const logout = async () => {
-    
+        // const confirmLogout = window.confirm("Are you sure you want to logout?");
+        // if (!confirmLogout) return;
 
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
@@ -107,6 +109,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             if (!response.ok) {
                 throw new Error("Logout failed");
             }
+
+            toast.success("Logged out successfully");
+            
+              
 
             localStorage.removeItem("accessToken");
             setUser(null);
