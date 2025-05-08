@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthProvider";
 import Navbar from "@/components/ui-custom/Navbar";
 import { AuthConsumerWrapper } from "@/components/ui-custom/AuthConsumerWrapper";
+import Header from "@/components/ui-custom/Header";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
           <AuthConsumerWrapper>
+          <Header />
             <Navbar />
             {children}
           </AuthConsumerWrapper>

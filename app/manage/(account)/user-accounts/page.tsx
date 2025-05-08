@@ -6,7 +6,7 @@ import { Pencil, Trash2, Eye, Ban, Mail, Clipboard } from 'lucide-react';
 import moment from 'moment';
 import { toast } from "sonner";
 import copy from 'clipboard-copy';
-import ReusableTable from '@/components/ui-custom/ReusableTable';
+import TableView from '@/components/ui-custom/TableView';
 
 type User = {
     id: string;
@@ -36,7 +36,7 @@ const columns: Column<User>[] = [
     { header: 'Họ và tên', accessor: 'fullName' },
     { header: 'Tên người dùng', accessor: 'username', visible: false },
     { header: 'Email', accessor: 'email' },
-    { header: 'Số điện thoại', accessor: 'phoneNumber' },
+    { header: 'Số điện thoại', accessor: 'phoneNumber', visible: false },
     { header: 'Vai trò', accessor: 'role' },
     { header: 'Trạng thái', accessor: 'isActive', type: "badge" },
     { header: 'Ngày sinh', accessor: 'dateOfBirth', visible: false },
@@ -109,7 +109,7 @@ export default function App() {
 
     return (
         <div className="space-y-4">
-            <ReusableTable <User>
+            <TableView <User>
                 columns={columns}
                 data={users}
                 pageSize={pageSize}

@@ -41,7 +41,7 @@ type ActionOption = {
   action: (id: number | string) => void;
 };
 
-type ReusableTableProps<T extends { id: number | string }> = {
+type TableViewProps<T extends { id: number | string }> = {
   columns: Column<T>[];
   data: T[];
   pageSize: number;
@@ -58,11 +58,11 @@ type ReusableTableProps<T extends { id: number | string }> = {
   options?: ActionOption[];
 };
 
-export default function ReusableTable<T extends { id: number | string, image?: string }>({
+export default function TableView<T extends { id: number | string, image?: string }>({
   columns, data, pageSize, currentPage, total, options,
   onSelect, onPageChange, onPageSizeChange,
   selectedIds, setSelectedIds, searchInput, setSearchInput, isLoading
-}: ReusableTableProps<T>) {
+}: TableViewProps<T>) {
   const [hiddenColumns, setHiddenColumns] = useState<Set<keyof T>>(
     new Set(columns.filter((col) => col.visible === false).map((col) => col.accessor))
   );
@@ -105,8 +105,7 @@ export default function ReusableTable<T extends { id: number | string, image?: s
 
   return (
     <div className="text-black shadow rounded-md overflow-auto border select-none w-full bg-white">
-      {/* Search & Control */}
-      <div className="px-4 h-[65px] flex justify-between items-center">
+      <div className="px-4 h-[60px] md:h-[65px] flex justify-between items-center">
         <div className="relative hidden md:flex items-center">
           <Search className="absolute left-3 text-gray-600" size={18} strokeWidth={1.5} />
           <Input
@@ -255,9 +254,9 @@ export default function ReusableTable<T extends { id: number | string, image?: s
       </Table>
 
       {/* Pagination */}
-      <div className="h-[65px] px-5 flex justify-between items-center border-t">
+      <div className="h-[60px] md:h-[65px] px-4 flex justify-between items-center border-t">
         <div className="text-sm text-gray-700">
-          Đang chọn: {selectedIds.length} / {total}
+          <span className='hidden md:flex'>Đang chọn:</span> {selectedIds.length} / {total}
         </div>
         <div className="flex items-center gap-3">
           <Select value={pageSize.toString()} onValueChange={(value) => onPageSizeChange(Number(value))}>
@@ -285,7 +284,7 @@ export default function ReusableTable<T extends { id: number | string, image?: s
                   <ChevronLeft size={16} />
                 </Button>
               </PaginationItem>
-              <PaginationItem>
+              <PaginationItem className='hidden md:flex'>
                 <span className="text-sm text-gray-700 px-2">
                   Trang {currentPage + 1} / {pageCount}
                 </span>
