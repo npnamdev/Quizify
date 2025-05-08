@@ -79,7 +79,7 @@ export default function RoleListPage() {
     const total = data?.pagination?.total || 0;
 
     return (
-        <div className="p-6 space-y-4">
+        <div className="space-y-4">
             <TableView<Role>
                 columns={columns}
                 data={roles}
