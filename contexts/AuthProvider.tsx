@@ -93,8 +93,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const logout = async () => {
-        const confirmLogout = window.confirm("Are you sure you want to logout?");
-        if (!confirmLogout) return;
+    
 
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
