@@ -11,6 +11,7 @@ interface Notification {
 }
 
 const socketUrl = "https://api.wedly.info";
+
 const socket: Socket = io(socketUrl);
 
 const randomMessages: Omit<Notification, "_id" | "status">[] = [
@@ -61,6 +62,9 @@ const NotificationList: React.FC = () => {
     const fetchNotifications = async () => {
         const res = await fetch("https://api.wedly.info/api/notifications");
         const data: Notification[] = await res.json();
+
+        console.log("res", res);
+
         setNotifications(data);
     };
 
@@ -71,20 +75,16 @@ const NotificationList: React.FC = () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(randomNotification),
         });
-
-        const newNotification: Notification = await res.json();
-
-        // Cập nhật danh sách nếu server không emit lại notify
-        setNotifications((prev) => [...prev, newNotification]);
+        const data = await res.json();
+        console.log("Notification created:", data);
     };
 
     const deleteNotification = async (id: string) => {
         const res = await fetch(`https://api.wedly.info/api/notifications/${id}`, { method: "DELETE" });
         const data = await res.json();
-
-        // Cập nhật danh sách nếu server không emit lại deleteNotify
-        setNotifications((prev) => prev.filter((n) => n._id !== id));
+        console.log("Notification deleted:", data);
     };
+    
 
     return (
         <div className="max-w-2xl mx-auto p-4">
@@ -105,7 +105,9 @@ const NotificationList: React.FC = () => {
                 {notifications.map((n) => (
                     <li
                         key={n._id}
-                        className={`${getNotificationClass(n.type)} flex flex-col sm:flex-row sm:justify-between sm:items-center p-4 rounded shadow border gap-2`}
+                        className={`${getNotificationClass(
+                            n.type
+                        )} flex flex-col sm:flex-row sm:justify-between sm:items-center p-4 rounded shadow border gap-2`}
                     >
                         <span>
                             <strong>{n.type.toUpperCase()}</strong>: {n.message}{" "}
