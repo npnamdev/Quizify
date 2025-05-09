@@ -1,14 +1,23 @@
 "use client"
 
 import * as React from "react"
-import { Bell } from "lucide-react";
+import { Bell , Terminal} from "lucide-react";
 import { Button } from "@/components/ui/button"
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter, DrawerTrigger, DrawerClose } from "@/components/ui/drawer"
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter, DrawerTrigger, DrawerClose } from "@/components/ui/drawer";
+ 
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert"
 
 const notifications = [
     { id: 1, title: "New Message", description: "You have received a new message from John.", time: "2 minutes ago" },
     { id: 2, title: "System Alert", description: "System maintenance scheduled at 11:00 PM.", time: "1 hour ago" },
     { id: 3, title: "New Comment", description: "Anna commented on your post.", time: "3 hours ago" },
+    { id: 4, title: "New Message", description: "You have received a new message from John.", time: "2 minutes ago" },
+    { id: 5, title: "System Alert", description: "System maintenance scheduled at 11:00 PM.", time: "1 hour ago" },
+    { id: 6, title: "New Comment", description: "Anna commented on your post.", time: "3 hours ago" },
 ]
 
 export function NotificationsDrawer() {
@@ -28,11 +37,18 @@ export function NotificationsDrawer() {
 
                     <div className="space-y-4 p-4">
                         {notifications.map((note) => (
-                            <div key={note.id} className="rounded-lg border border-gray-200 bg-white shadow-md hover:shadow-lg transition-shadow">
-                                <div className="font-medium text-lg text-gray-900 p-3">{note.title}</div>
-                                <div className="text-sm text-gray-700 p-3">{note.description}</div>
-                                <div className="text-xs text-gray-500 p-3">{note.time}</div>
-                            </div>
+                            // <div key={note.id} className="rounded-lg border border-gray-200 bg-white shadow-md hover:shadow-lg transition-shadow">
+                            //     <div className="font-medium text-lg text-gray-900 p-3">{note.title}</div>
+                            //     <div className="text-sm text-gray-700 p-3">{note.description}</div>
+                            //     <div className="text-xs text-gray-500 p-3">{note.time}</div>
+                            // </div>
+                            <Alert>
+      <Terminal className="h-4 w-4" />
+      <AlertTitle>Heads up!</AlertTitle>
+      <AlertDescription>
+        You can add components to your app using the cli.
+      </AlertDescription>
+    </Alert>
                         ))}
                     </div>
 
