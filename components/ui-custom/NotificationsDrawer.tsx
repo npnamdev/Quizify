@@ -3,30 +3,23 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import { Bell, Terminal } from "lucide-react";
+import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-    Drawer,
-    DrawerContent,
-    DrawerHeader,
-    DrawerTitle,
-    DrawerDescription,
-    DrawerFooter,
-    DrawerTrigger,
-    DrawerClose,
-} from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter, DrawerTrigger, DrawerClose } from "@/components/ui/drawer";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import clsx from "clsx";
 
 interface Notification {
     _id: string;
-    title: string;
-    description: string;
+    title?: string;
+    description?: string;
     time: string;
     type: "info" | "success" | "warning" | "error";
     message: string;
+    status: "read" | "unread";
 }
 
-const socketUrl = "https://api.wedly.info";
+const socketUrl = process.env.NEXT_PUBLIC_API_URL;
 let socket: Socket;
 
 export function NotificationsDrawer() {
@@ -60,53 +53,93 @@ export function NotificationsDrawer() {
         try {
             const res = await fetch(`${socketUrl}/api/notifications`);
             const data: Notification[] = await res.json();
-
-            console.log("check thông báo", data);
-
             setNotifications(data);
         } catch (error) {
             console.error("Failed to fetch notifications:", error);
         }
     };
 
+    const markAsRead = async (id: string) => {
+        try {
+            await fetch(`${socketUrl}/api/notifications/${id}/read`, {
+                method: "PATCH",
+            });
+
+            setNotifications((prev) =>
+                prev.map((n) =>
+                    n._id === id ? { ...n, status: "read" } : n
+                )
+            );
+        } catch (error) {
+            console.error("Failed to mark as read:", error);
+        }
+    };
+
+    const unreadCount = notifications.filter((n) => n.status === "unread").length;
+
     return (
         <Drawer>
             <DrawerTrigger asChild>
-                <Button className="w-9 h-9" variant="outline" size="icon">
+                <Button className="w-9 h-9 relative" variant="outline" size="icon">
                     <Bell strokeWidth={1.5} />
+                    {unreadCount > 0 && (
+                        <span className="absolute top-0.5 right-0.5 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
+                            {unreadCount}
+                        </span>
+                    )}
                 </Button>
             </DrawerTrigger>
             <DrawerContent>
                 <div className="mx-auto w-full max-w-sm h-dvh overflow-auto">
-                    <DrawerHeader>
+                    <DrawerHeader className="h-[60px] flex items-center justify-center">
                         <DrawerTitle>Notifications</DrawerTitle>
-                        <DrawerDescription>
-                            {notifications.length} new notifications
-                        </DrawerDescription>
                     </DrawerHeader>
 
-                    <div className="space-y-4 p-4 max-h-[60vh] overflow-y-auto">
+                    <div className="space-y-4 p-4  overflow-y-auto border h-[calc(100%-120px)]">
                         {notifications.length === 0 ? (
                             <p className="text-sm text-muted-foreground">
                                 No notifications found.
                             </p>
                         ) : (
                             notifications.map((note) => (
-                                <Alert key={note._id} className="border">
-                                    <Terminal className="h-4 w-4" />
-                                    <AlertTitle>{note.type}</AlertTitle>
-                                    <AlertDescription>
-                                        <div>{note.message}</div>
-                                        <div className="text-xs text-muted-foreground mt-1">
-                                            {note.time}
+                                <div
+                                    key={note._id}
+                                    onClick={() =>
+                                        note.status === "unread" && markAsRead(note._id)
+                                    }
+                                    className="cursor-pointer"
+                                >
+                                    <Alert
+                                        className={clsx(
+                                            "border",
+                                            note.status === "unread"
+                                                ? "border-primary bg-primary/10"
+                                                : "opacity-70"
+                                        )}
+                                    >
+                                        <div className="flex items-start gap-2">
+                                            <div className="flex-1">
+                                                <AlertTitle className="capitalize">
+                                                    {note.type}
+                                                </AlertTitle>
+                                                <AlertDescription>
+                                                    <div>{note.message}</div>
+                                                    <div className="text-xs text-muted-foreground mt-1">
+                                                        {note.time}
+                                                    </div>
+                                                </AlertDescription>
+                                            </div>
+                                            {note.status === "unread" && (
+                                                <span className="mt-1 ml-2 w-2 h-2 bg-red-500 rounded-full shrink-0" />
+                                            )}
                                         </div>
-                                    </AlertDescription>
-                                </Alert>
+                                    </Alert>
+                                </div>
                             ))
                         )}
                     </div>
 
-                    <DrawerFooter>
+                    <DrawerFooter className="h-[60px] flex items-center justify-center">
                         <DrawerClose asChild>
                             <Button variant="outline">Close</Button>
                         </DrawerClose>
