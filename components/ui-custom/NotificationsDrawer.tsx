@@ -89,8 +89,8 @@ export function NotificationsDrawer() {
                     )}
                 </Button>
             </DrawerTrigger>
-            <DrawerContent>
-                <div className="mx-auto w-full max-w-sm h-dvh overflow-auto">
+            <DrawerContent className="border border-black">
+                <div className="mx-auto w-full  max-w-[100%] h-dvh overflow-auto">
                     <DrawerHeader className="h-[60px] flex items-center justify-center">
                         <DrawerTitle>Notifications</DrawerTitle>
                     </DrawerHeader>
@@ -113,10 +113,16 @@ export function NotificationsDrawer() {
                                         className={clsx(
                                             "border",
                                             note.status === "unread"
-                                                ? "border-primary bg-primary/10"
+                                                ? {
+                                                    info: "border-blue-500 bg-blue-100",
+                                                    success: "border-green-500 bg-green-100",
+                                                    warning: "border-yellow-500 bg-yellow-100",
+                                                    error: "border-red-500 bg-red-100",
+                                                }[note.type]
                                                 : "opacity-70"
                                         )}
                                     >
+
                                         <div className="flex items-start gap-2">
                                             <div className="flex-1">
                                                 <AlertTitle className="capitalize">
