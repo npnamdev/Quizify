@@ -3,11 +3,16 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import { Bell } from "lucide-react";
+import { Bell, CheckCircle, Info, AlertTriangle, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter, DrawerTrigger, DrawerClose } from "@/components/ui/drawer";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import clsx from "clsx";
+
+import moment from "moment"
+import "moment/locale/vi"
+
+moment.locale("vi")
 
 interface Notification {
     _id: string;
@@ -21,6 +26,10 @@ interface Notification {
 
 const socketUrl = process.env.NEXT_PUBLIC_API_URL;
 let socket: Socket;
+
+function formatRelativeTime(dateStr: string) {
+    return moment(dateStr).fromNow()
+}
 
 export function NotificationsDrawer() {
     const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -77,6 +86,21 @@ export function NotificationsDrawer() {
 
     const unreadCount = notifications.filter((n) => n.status === "unread").length;
 
+    const getIconByType = (type: string) => {
+            switch (type) {
+                case "info":
+                    return <Info className="text-blue-500" />
+                case "success":
+                    return <CheckCircle className="text-green-500" />
+                case "warning":
+                    return <AlertTriangle className="text-yellow-500" />
+                case "error":
+                    return <XCircle className="text-red-500" />
+                default:
+                    return null
+            }
+        }
+
     return (
         <Drawer>
             <DrawerTrigger asChild>
@@ -95,7 +119,7 @@ export function NotificationsDrawer() {
                         <DrawerTitle>Notifications</DrawerTitle>
                     </DrawerHeader>
 
-                    <div className="space-y-4 p-4  overflow-y-auto border h-[calc(100%-120px)]">
+                    {/* <div className="space-y-4 p-4  overflow-y-auto border h-[calc(100%-120px)]">
                         {notifications.length === 0 ? (
                             <p className="text-sm text-muted-foreground">
                                 No notifications found.
@@ -143,7 +167,29 @@ export function NotificationsDrawer() {
                                 </div>
                             ))
                         )}
-                    </div>
+                    </div> */}
+
+                     <div className="h-[calc(100dvh-60px)] lg:h-[400px] w-full px-5 overflow-auto select-none py-4 flex flex-col gap-2.5">
+                    {notifications.map((noti, index) => (
+                        <div
+                            key={index}
+                            className="relative flex items-center gap-4 py-2.5 px-3 border rounded-md shadow-sm"
+                        >
+                            {/* Dot if unread */}
+                            {/* {!noti.isRead && (
+                                <span className="absolute right-4 w-2.5 h-2.5 bg-red-500 rounded-full" />
+                            )} */}
+                            <div className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 shrink-0">
+                                {getIconByType(noti.type)}
+                            </div>
+                            <div>
+                                <p className="font-semibold text-sm">{noti.message}</p>
+                                <p className="text-sm text-gray-500 mt-1">5 giờ trước</p>
+                                {/* <p className="text-sm text-gray-500 mt-1">{formatRelativeTime(noti.date)}</p> */}
+                            </div>
+                        </div>
+                    ))}
+                </div>
 
                     <DrawerFooter className="h-[60px] flex items-center justify-center">
                         <DrawerClose asChild>
