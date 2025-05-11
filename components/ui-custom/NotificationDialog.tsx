@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
+    DialogClose,
     DialogFooter,
     DialogHeader,
     DialogTitle,
@@ -15,6 +15,66 @@ import "moment/locale/vi"
 moment.locale("vi") // Thiết lập ngôn ngữ tiếng Việt
 
 const notifications = [
+    {
+        type: "info",
+        message: "Hệ thống sẽ bảo trì lúc 22:00.",
+        date: "2025-05-11T13:10:00Z",
+    },
+    {
+        type: "success",
+        message: "Bạn đã đăng ký khóa học thành công.",
+        date: "2025-05-11T07:10:00Z",
+    },
+    {
+        type: "warning",
+        message: "Mật khẩu của bạn sắp hết hạn.",
+        date: "2025-05-10T14:10:00Z",
+    },
+    {
+        type: "error",
+        message: "Không thể kết nối đến máy chủ.",
+        date: "2025-04-11T10:10:00Z",
+    },
+    {
+        type: "info",
+        message: "Hệ thống sẽ bảo trì lúc 22:00.",
+        date: "2025-05-11T13:10:00Z",
+    },
+    {
+        type: "success",
+        message: "Bạn đã đăng ký khóa học thành công.",
+        date: "2025-05-11T07:10:00Z",
+    },
+    {
+        type: "warning",
+        message: "Mật khẩu của bạn sắp hết hạn.",
+        date: "2025-05-10T14:10:00Z",
+    },
+    {
+        type: "error",
+        message: "Không thể kết nối đến máy chủ.",
+        date: "2025-04-11T10:10:00Z",
+    },
+    {
+        type: "info",
+        message: "Hệ thống sẽ bảo trì lúc 22:00.",
+        date: "2025-05-11T13:10:00Z",
+    },
+    {
+        type: "success",
+        message: "Bạn đã đăng ký khóa học thành công.",
+        date: "2025-05-11T07:10:00Z",
+    },
+    {
+        type: "warning",
+        message: "Mật khẩu của bạn sắp hết hạn.",
+        date: "2025-05-10T14:10:00Z",
+    },
+    {
+        type: "error",
+        message: "Không thể kết nối đến máy chủ.",
+        date: "2025-04-11T10:10:00Z",
+    },
     {
         type: "info",
         message: "Hệ thống sẽ bảo trì lúc 22:00.",
@@ -54,12 +114,12 @@ export default function NotificationDialog() {
             <DialogTrigger asChild>
                 <Button variant="outline">Mở thông báo</Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md h-dvh">
-                <DialogHeader className="h-[60px]">
+            <DialogContent className="max-w-2xl flex flex-col items-start p-0 gap-0">
+                <DialogHeader className="border-b w-full h-[60px] justify-center px-6">
                     <DialogTitle>Thông báo</DialogTitle>
                 </DialogHeader>
 
-                <div className="space-y-4 sm:max-h-[800px] overflow-y-auto h-[calc(100%-120px)]">
+                <div className="h-[calc(100dvh-120px)] lg:h-[400px] w-full px-4 overflow-auto select-none py-4">
                     {notifications.map((noti, index) => (
                         <div
                             key={index}
@@ -76,8 +136,12 @@ export default function NotificationDialog() {
                     ))}
                 </div>
 
-                <DialogFooter className="h-[60px]">
-                    <Button type="button">Đã hiểu</Button>
+                <DialogFooter className="flex sm:justify-center border-t w-full h-[60px] items-center px-4">
+                   <div className="flex items-center h-full justify-end w-full gap-2">
+                        <DialogClose asChild>
+                            <Button variant="outline">Đóng thông báo</Button>
+                        </DialogClose>
+                    </div>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
