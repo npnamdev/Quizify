@@ -116,14 +116,14 @@ export default function NotificationDialog() {
             </DialogTrigger>
             <DialogContent className="max-w-2xl flex flex-col items-start p-0 gap-0">
                 <DialogHeader className="border-b w-full h-[60px] justify-center px-6">
-                    <DialogTitle>Thông báo</DialogTitle>
+                    <DialogTitle className="text-md font-bold">Thông báo</DialogTitle>
                 </DialogHeader>
 
-                <div className="h-[calc(100dvh-120px)] lg:h-[400px] w-full px-4 overflow-auto select-none py-4">
+                <div className="h-[calc(100dvh-60px)] lg:h-[400px] w-full px-4 overflow-auto select-none py-4 flex flex-col gap-2.5">
                     {notifications.map((noti, index) => (
                         <div
                             key={index}
-                            className="flex items-start gap-4 py-2.5 p-3 border rounded-md shadow-sm"
+                            className="flex items-start gap-4 py-2.5 px-3 border rounded-md shadow-sm"
                         >
                             <div className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100">
                                 {iconMap[noti.type as keyof typeof iconMap]}
@@ -136,13 +136,13 @@ export default function NotificationDialog() {
                     ))}
                 </div>
 
-                <DialogFooter className="flex sm:justify-center border-t w-full h-[60px] items-center px-4">
+                {/* <DialogFooter className="flex sm:justify-center border-t w-full h-[60px] items-center px-4">
                    <div className="flex items-center h-full justify-end w-full gap-2">
                         <DialogClose asChild>
                             <Button variant="outline">Đóng thông báo</Button>
                         </DialogClose>
                     </div>
-                </DialogFooter>
+                </DialogFooter> */}
             </DialogContent>
         </Dialog>
     )
