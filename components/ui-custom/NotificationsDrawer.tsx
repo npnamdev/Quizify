@@ -20,7 +20,7 @@ interface Notification {
     type: "info" | "success" | "warning" | "error";
     message: string;
     status: "read" | "unread";
-    note.status === "unread"
+    // note.status === "unread"
 }
 
 const socketUrl = process.env.NEXT_PUBLIC_API_URL;
