@@ -114,7 +114,7 @@ export function NotificationsDrawer() {
                 </Button>
             </DrawerTrigger>
             <DrawerContent className="border border-black">
-                <div className="mx-auto w-full  max-w-[100%] h-[90%] overflow-auto">
+                <div className="mx-auto w-full  max-w-[100%] h-dvh overflow-auto">
                     <DrawerHeader className="h-[50px] flex items-center justify-center border-b text-md font-bold">
                         <DrawerTitle>Thông báo</DrawerTitle>
                     </DrawerHeader>
@@ -169,7 +169,7 @@ export function NotificationsDrawer() {
                         )}
                     </div> */}
 
-                    <div className="h-[calc(100dvh-50px)] lg:h-[400px] w-full px-5 overflow-auto select-none py-4 flex flex-col gap-2.5">
+                    <div className="h-[calc(100%-50px)] lg:h-[400px] w-full px-5 overflow-auto select-none py-4 flex flex-col gap-2.5">
                         {notifications.map((noti, index) => (
                             <div
                                 key={index}
