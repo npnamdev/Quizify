@@ -113,7 +113,7 @@ export function NotificationsDrawer() {
                 </Button>
             </DrawerTrigger>
             <DrawerContent className="border border-black">
-                <div className="mx-auto w-full  max-w-[100%] h-[80%] overflow-auto">
+                <div className="mx-auto w-full  max-w-[100%] h-dvh overflow-auto">
                     <DrawerHeader className="h-[50px] flex items-center justify-center border-b text-md font-bold">
                         <DrawerTitle>Thông báo</DrawerTitle>
                     </DrawerHeader>
