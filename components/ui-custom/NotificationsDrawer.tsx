@@ -115,7 +115,7 @@ export function NotificationsDrawer() {
             </DrawerTrigger>
             <DrawerContent className="border border-black">
                 <div className="mx-auto w-full  max-w-[100%] h-dvh overflow-auto">
-                    <DrawerHeader className="h-[60px] flex items-center justify-center">
+                    <DrawerHeader className="h-[60px] flex items-center justify-center border-b">
                         <DrawerTitle>Notifications</DrawerTitle>
                     </DrawerHeader>
 
@@ -191,11 +191,11 @@ export function NotificationsDrawer() {
                     ))}
                 </div>
 
-                    <DrawerFooter className="h-[60px] flex items-center justify-center">
+                    {/* <DrawerFooter className="h-[60px] flex items-center justify-center">
                         <DrawerClose asChild>
                             <Button variant="outline">Close</Button>
                         </DrawerClose>
-                    </DrawerFooter>
+                    </DrawerFooter> */}
                 </div>
             </DrawerContent>
         </Drawer>
