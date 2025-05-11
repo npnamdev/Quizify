@@ -87,19 +87,19 @@ export function NotificationsDrawer() {
     const unreadCount = notifications.filter((n) => n.status === "unread").length;
 
     const getIconByType = (type: string) => {
-            switch (type) {
-                case "info":
-                    return <Info className="text-blue-500" />
-                case "success":
-                    return <CheckCircle className="text-green-500" />
-                case "warning":
-                    return <AlertTriangle className="text-yellow-500" />
-                case "error":
-                    return <XCircle className="text-red-500" />
-                default:
-                    return null
-            }
+        switch (type) {
+            case "info":
+                return <Info className="text-blue-500" />
+            case "success":
+                return <CheckCircle className="text-green-500" />
+            case "warning":
+                return <AlertTriangle className="text-yellow-500" />
+            case "error":
+                return <XCircle className="text-red-500" />
+            default:
+                return null
         }
+    }
 
     return (
         <Drawer>
@@ -116,7 +116,7 @@ export function NotificationsDrawer() {
             <DrawerContent className="border border-black">
                 <div className="mx-auto w-full  max-w-[100%] h-dvh overflow-auto">
                     <DrawerHeader className="h-[60px] flex items-center justify-center border-b">
-                        <DrawerTitle>Notifications</DrawerTitle>
+                        <DrawerTitle>Thông báo</DrawerTitle>
                     </DrawerHeader>
 
                     {/* <div className="space-y-4 p-4  overflow-y-auto border h-[calc(100%-120px)]">
@@ -169,27 +169,30 @@ export function NotificationsDrawer() {
                         )}
                     </div> */}
 
-                     <div className="h-[calc(100dvh-60px)] lg:h-[400px] w-full px-5 overflow-auto select-none py-4 flex flex-col gap-2.5">
-                    {notifications.map((noti, index) => (
-                        <div
-                            key={index}
-                            className="relative flex items-center gap-4 py-2.5 px-3 border rounded-md shadow-sm"
-                        >
-                            {/* Dot if unread */}
-                            {/* {!noti.isRead && (
+                    <div className="h-[calc(100dvh-60px)] lg:h-[400px] w-full px-5 overflow-auto select-none py-4 flex flex-col gap-2.5">
+                        {notifications.map((noti, index) => (
+                            <div
+                                key={index}
+                                className="relative flex items-center gap-4 py-2.5 px-3 border rounded-md shadow-sm"
+                                onClick={() =>
+                                    noti.status === "unread" && markAsRead(noti._id)
+                                }
+                            >
+                                {/* Dot if unread */}
+                                {/* {!noti.isRead && (
                                 <span className="absolute right-4 w-2.5 h-2.5 bg-red-500 rounded-full" />
                             )} */}
-                            <div className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 shrink-0">
-                                {getIconByType(noti.type)}
+                                <div className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 shrink-0">
+                                    {getIconByType(noti.type)}
+                                </div>
+                                <div>
+                                    <p className="font-semibold text-sm">{noti.message}</p>
+                                    <p className="text-sm text-gray-500 mt-1">5 giờ trước</p>
+                                    {/* <p className="text-sm text-gray-500 mt-1">{formatRelativeTime(noti.date)}</p> */}
+                                </div>
                             </div>
-                            <div>
-                                <p className="font-semibold text-sm">{noti.message}</p>
-                                <p className="text-sm text-gray-500 mt-1">5 giờ trước</p>
-                                {/* <p className="text-sm text-gray-500 mt-1">{formatRelativeTime(noti.date)}</p> */}
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
 
                     {/* <DrawerFooter className="h-[60px] flex items-center justify-center">
                         <DrawerClose asChild>
