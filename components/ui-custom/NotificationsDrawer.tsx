@@ -122,7 +122,7 @@ export function NotificationsDrawer() {
                         {notifications.map((noti, index) => (
                             <div
                                 key={index}
-                                className={`relative flex items-center gap-3 py-2.5 px-3 rounded-md shadow-sm border ${noti.status === "unread" ? "border-r-4 border-r-red-500" : "border-gray-200"}`}
+                                className={`relative flex items-center gap-3 py-2.5 px-3 rounded-md shadow-sm border ${noti.status === "unread" ? "border-r-8 border-r-red-500" : "border-gray-200"}`}
                                 onClick={() =>
                                     noti.status === "unread" && markAsRead(noti._id)
                                 }
