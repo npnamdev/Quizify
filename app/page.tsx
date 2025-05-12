@@ -1,10 +1,10 @@
+import ImageCropUploader from "@/components/ui-custom/ImageCropUploader";
 import NotificationList from "@/components/ui-custom/NotificationList";
-import { NotificationsDrawerDemo } from "@/components/ui-custom/NotificationsDrawer-copy";
 
 export default function Home() {
   return (
     <div>
-      <NotificationsDrawerDemo />
+      <ImageCropUploader />
       <NotificationList />
     </div>
   );
