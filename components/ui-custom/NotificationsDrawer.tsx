@@ -6,7 +6,6 @@ import { io, Socket } from "socket.io-client";
 import { Bell, CheckCircle, Info, AlertTriangle, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter, DrawerTrigger, DrawerClose } from "@/components/ui/drawer";
-import { useSwipeable } from 'react-swipeable';
 import moment from "moment"
 import "moment/locale/vi"
 
@@ -106,8 +105,8 @@ export function NotificationsDrawer() {
                 <Button className="w-9 h-9 relative" variant="outline" size="icon">
                     <Bell strokeWidth={1.5} />
                     {unreadCount > 0 && (
-                        <span className="absolute top-[-2px] right-[-3px] bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
-                            {unreadCount}
+                        <span className="absolute top-[-2px] right-[-3px] bg-red-500 text-white text-[10px] rounded-full min-w-4 h-4 px-1 flex items-center justify-center">
+                            {unreadCount > 9 ? "9+" : unreadCount}
                         </span>
                     )}
                 </Button>
@@ -119,48 +118,23 @@ export function NotificationsDrawer() {
                     </DrawerHeader>
 
                     <div className="h-[calc(100%-50px)] w-full px-5 overflow-auto select-none py-4 flex flex-col gap-2.5">
-                        {notifications.map((noti, index) => {
-                            const [showMenu, setShowMenu] = useState(false);
-
-                            const handlers = useSwipeable({
-                                onSwipedLeft: () => setShowMenu(true),
-                                onSwipedRight: () => setShowMenu(false),
-                                trackMouse: true,
-                            });
-
-                            return (
-                                <div key={index} {...handlers}>
-                                    <div
-                                        className={`relative flex items-center justify-between gap-3 py-2.5 px-3 rounded-md shadow-sm border ${noti.status === "unread" ? "border-r-8 border-r-red-500" : "border-gray-200"}`}
-                                        onClick={() =>
-                                            noti.status === "unread" && markAsRead(noti._id)
-                                        }
-                                    >
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 shrink-0">
-                                                {getIconByType(noti.type)}
-                                            </div>
-                                            <div>
-                                                <p className="font-semibold text-sm">{noti.message}</p>
-                                                <p className="text-sm text-gray-500 mt-0.5 text-[12px]">
-                                                    {formatRelativeTime(noti.createdAt)}
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        {showMenu && (
-                                            <button
-                                                onClick={() => alert("OK")}
-                                                className="text-gray-500 hover:text-black text-xl px-2"
-                                            >
-                                                ...
-                                            </button>
-                                        )}
-                                    </div>
+                        {notifications.map((noti, index) => (
+                            <div
+                                key={index}
+                                className={`relative flex items-center gap-3 py-2.5 px-3 rounded-md shadow-sm border ${noti.status === "unread" ? "border-r-8 border-r-red-500" : "border-gray-200"}`}
+                                onClick={() =>
+                                    noti.status === "unread" && markAsRead(noti._id)
+                                }
+                            >
+                                <div className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 shrink-0">
+                                    {getIconByType(noti.type)}
                                 </div>
-                            );
-                        })}
-
+                                <div>
+                                    <p className="font-semibold text-sm">{noti.message}</p>
+                                    <p className="text-sm text-gray-500 mt-0.5 text-[12px]">{formatRelativeTime(noti.createdAt)}</p>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </DrawerContent>
