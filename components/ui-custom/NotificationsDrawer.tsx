@@ -17,7 +17,6 @@ import "moment/locale/vi";
 
 moment.locale("vi");
 
-// Custom locale config to use "1 giờ" instead of "một giờ"
 moment.updateLocale("vi", {
     relativeTime: {
         future: "trong %s",
@@ -48,7 +47,19 @@ interface Notification {
     status: "read" | "unread";
 }
 
-const socketUrl = process.env.NEXT_PUBLIC_API_URL;
+interface NotificationResponse {
+    status: string;
+    message: string;
+    data: Notification[];
+    pagination: {
+        currentPage: number;
+        totalPages: number;
+        totalItems: number;
+        limit: number;
+    };
+}
+
+const socketUrl = process.env.NEXT_PUBLIC_API_URL!;
 
 function formatRelativeTime(dateStr: string) {
     return moment(dateStr).fromNow();
@@ -58,7 +69,7 @@ export function NotificationsDrawer() {
     const socketRef = useRef<Socket | null>(null);
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [loading, setLoading] = useState(true);
-    const [, forceUpdate] = useState(0); // force re-render
+    const [, forceUpdate] = useState(0);
 
     useEffect(() => {
         fetchNotifications();
@@ -78,6 +89,14 @@ export function NotificationsDrawer() {
             setNotifications((prev) => prev.filter((n) => n._id !== id));
         });
 
+        socket.on("markAsRead", ({ id }: { id: string }) => {
+            setNotifications((prev) =>
+                prev.map((n) =>
+                    n._id === id ? { ...n, status: "read" } : n
+                )
+            );
+        });
+
         return () => {
             socket.disconnect();
         };
@@ -86,7 +105,7 @@ export function NotificationsDrawer() {
     useEffect(() => {
         const interval = setInterval(() => {
             forceUpdate((prev) => prev + 1);
-        }, 60000); // update every minute
+        }, 60000);
 
         return () => clearInterval(interval);
     }, []);
@@ -94,8 +113,8 @@ export function NotificationsDrawer() {
     const fetchNotifications = async () => {
         try {
             const res = await fetch(`${socketUrl}/api/notifications`);
-            const data: Notification[] = await res.json();
-            setNotifications(data);
+            const result: NotificationResponse = await res.json();
+            setNotifications(result.data || []);
         } catch (error) {
             console.error("Error fetching notifications:", error);
         } finally {
@@ -105,15 +124,17 @@ export function NotificationsDrawer() {
 
     const markAsRead = async (id: string) => {
         try {
-            await fetch(`${socketUrl}/api/notifications/${id}/read`, {
+            const res = await fetch(`${socketUrl}/api/notifications/${id}/read`, {
                 method: "PATCH",
             });
-
-            setNotifications((prev) =>
-                prev.map((n) =>
-                    n._id === id ? { ...n, status: "read" } : n
-                )
-            );
+            const result = await res.json();
+            if (result.status === "success") {
+                setNotifications((prev) =>
+                    prev.map((n) =>
+                        n._id === id ? { ...n, status: "read" } : n
+                    )
+                );
+            }
         } catch (error) {
             console.error("Failed to mark as read:", error);
         }
@@ -163,11 +184,10 @@ export function NotificationsDrawer() {
                             notifications.map((noti) => (
                                 <div
                                     key={noti._id}
-                                    className={`relative flex items-center gap-3 py-2.5 px-3 rounded-md shadow-sm border cursor-pointer transition-all ${
-                                        noti.status === "unread"
-                                            ? "border-r-8 border-r-red-500"
-                                            : "border-gray-200 opacity-80"
-                                    }`}
+                                    className={`relative flex items-center gap-3 py-2.5 px-3 rounded-md shadow-sm border cursor-pointer transition-all ${noti.status === "unread"
+                                        ? "border-r-8 border-r-red-500"
+                                        : "border-gray-200"
+                                        }`}
                                     onClick={() =>
                                         noti.status === "unread" && markAsRead(noti._id)
                                     }
