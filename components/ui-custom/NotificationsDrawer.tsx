@@ -6,10 +6,10 @@ import { io, Socket } from "socket.io-client";
 import { Bell, CheckCircle, Info, AlertTriangle, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter, DrawerTrigger, DrawerClose } from "@/components/ui/drawer";
-import moment from "moment"
-import "moment/locale/vi"
+import moment from "moment";
+import "moment/locale/vi";
 
-moment.locale("vi")
+moment.locale("vi");
 
 interface Notification {
     _id: string;
@@ -26,7 +26,7 @@ const socketUrl = process.env.NEXT_PUBLIC_API_URL;
 let socket: Socket;
 
 function formatRelativeTime(dateStr: string) {
-    return moment(dateStr).fromNow()
+    return moment(dateStr).fromNow();
 }
 
 export function NotificationsDrawer() {
@@ -51,8 +51,19 @@ export function NotificationsDrawer() {
             setNotifications((prev) => prev.filter((n) => n._id !== id));
         });
 
+        // Set an interval to update the relative time every minute
+        const interval = setInterval(() => {
+            setNotifications((prevNotifications) =>
+                prevNotifications.map((noti) => ({
+                    ...noti,
+                    createdAt: noti.createdAt, // Triggers a re-render to update time
+                }))
+            );
+        }, 60000); // 60000ms = 1 minute
+
         return () => {
             socket.disconnect();
+            clearInterval(interval); // Clear the interval on unmount
         };
     }, []);
 
@@ -87,17 +98,17 @@ export function NotificationsDrawer() {
     const getIconByType = (type: string) => {
         switch (type) {
             case "info":
-                return <Info size={18} className="text-blue-500" />
+                return <Info size={18} className="text-blue-500" />;
             case "success":
-                return <CheckCircle size={18} className="text-green-500" />
+                return <CheckCircle size={18} className="text-green-500" />;
             case "warning":
-                return <AlertTriangle size={18} className="text-yellow-500" />
+                return <AlertTriangle size={18} className="text-yellow-500" />;
             case "error":
-                return <XCircle size={18} className="text-red-500" />
+                return <XCircle size={18} className="text-red-500" />;
             default:
-                return null
+                return null;
         }
-    }
+    };
 
     return (
         <Drawer>
