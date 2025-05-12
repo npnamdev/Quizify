@@ -19,8 +19,8 @@ interface Notification {
     time: string;
     type: "info" | "success" | "warning" | "error";
     message: string;
+    createdAt: string;
     status: "read" | "unread";
-    // note.status === "unread"
 }
 
 const socketUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -88,13 +88,13 @@ export function NotificationsDrawer() {
     const getIconByType = (type: string) => {
         switch (type) {
             case "info":
-                return <Info className="text-blue-500" />
+                return <Info size={18} className="text-blue-500" />
             case "success":
-                return <CheckCircle className="text-green-500" />
+                return <CheckCircle size={18} className="text-green-500" />
             case "warning":
-                return <AlertTriangle className="text-yellow-500" />
+                return <AlertTriangle size={18} className="text-yellow-500" />
             case "error":
-                return <XCircle className="text-red-500" />
+                return <XCircle size={18} className="text-red-500" />
             default:
                 return null
         }
@@ -106,14 +106,14 @@ export function NotificationsDrawer() {
                 <Button className="w-9 h-9 relative" variant="outline" size="icon">
                     <Bell strokeWidth={1.5} />
                     {unreadCount > 0 && (
-                        <span className="absolute top-0.5 right-0.5 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
+                        <span className="absolute top-[-2px] right-[-3px] bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
                             {unreadCount}
                         </span>
                     )}
                 </Button>
             </DrawerTrigger>
-            <DrawerContent className="border border-black">
-                <div className="mx-auto w-full max-w-[100%] h-[640px] overflow-auto">
+            <DrawerContent className="">
+                <div className="mx-auto w-full max-w-[100%] h-[calc(100dvh-120px)] overflow-auto">
                     <DrawerHeader className="h-[50px] flex items-center justify-center border-b text-md font-bold">
                         <DrawerTitle>Thông báo</DrawerTitle>
                     </DrawerHeader>
@@ -122,18 +122,17 @@ export function NotificationsDrawer() {
                         {notifications.map((noti, index) => (
                             <div
                                 key={index}
-                                className={`relative flex items-center gap-4 py-2.5 px-3 border rounded-md shadow-sm ${noti.status === "unread" ? "border-red-500" : "border"
-                                    }`}
+                                className={`relative flex items-center gap-3 py-2.5 px-3 rounded-md shadow-sm border ${noti.status === "unread" ? "border-r-4 border-r-red-500" : "border-gray-200"}`}
                                 onClick={() =>
                                     noti.status === "unread" && markAsRead(noti._id)
                                 }
                             >
-                                <div className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 shrink-0">
+                                <div className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 shrink-0">
                                     {getIconByType(noti.type)}
                                 </div>
                                 <div>
                                     <p className="font-semibold text-sm">{noti.message}</p>
-                                    <p className="text-sm text-gray-500 mt-1">{formatRelativeTime(noti.time)}</p>
+                                    <p className="text-sm text-gray-500 mt-0.5 text-[12px]">{formatRelativeTime(noti.createdAt)}</p>
                                 </div>
                             </div>
                         ))}

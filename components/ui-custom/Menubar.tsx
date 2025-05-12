@@ -52,7 +52,7 @@ export default function Menubar() {
                 ],
             },
             {
-                title: "Quản lý khóa học",
+                title: "Quản lý trắc nghiệm",
                 url: "#",
                 icon: BookOpen,
                 items: [

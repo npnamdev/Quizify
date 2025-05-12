@@ -1,11 +1,10 @@
 import NotificationList from "@/components/ui-custom/NotificationList";
-import NotificationDialog from "@/components/ui-custom/NotificationDialog";
-import Image from "next/image";
+import { NotificationsDrawerDemo } from "@/components/ui-custom/NotificationsDrawer-copy";
 
 export default function Home() {
   return (
     <div>
-      <NotificationDialog />
+      <NotificationsDrawerDemo />
       <NotificationList />
     </div>
   );
