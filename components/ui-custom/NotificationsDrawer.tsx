@@ -82,8 +82,11 @@ export function NotificationsDrawer() {
         });
 
         socket.on("notify", (notification: Notification) => {
-            setNotifications((prev) => [notification, ...prev]);
-        });
+    setNotifications((prev) => [notification, ...prev]);
+    if (notification.status === "unread") {
+        setUnreadCount((prev) => prev + 1);
+    }
+});
 
         socket.on("deleteNotify", (id: string) => {
             setNotifications((prev) => prev.filter((n) => n._id !== id));
