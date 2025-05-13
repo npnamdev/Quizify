@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import { Bell, CheckCircle, Info, AlertTriangle, XCircle } from "lucide-react";
+import { Bell, CheckCircle, Info, AlertTriangle, XCircle, EllipsisVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import moment from "moment";
@@ -213,10 +213,15 @@ export function NotificationsDrawer() {
             <DrawerContent>
                 <div className="mx-auto w-full max-w-[100%] h-[calc(100dvh-120px)]">
                     <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as any)} className="w-full pt-2.5">
-                        <TabsList className="w-full h-[55px] flex justify-center gap-2">
-                            <TabsTrigger className="px-4 py-2" value="all">Tất cả</TabsTrigger>
-                            <TabsTrigger className="px-4 py-2" value="unread">Chưa đọc</TabsTrigger>
-                            <TabsTrigger className="px-4 py-2" value="read">Đã đọc</TabsTrigger>
+                        <TabsList className="w-full h-[55px] flex justify-between px-5 gap-2">
+                            <div>
+                                <TabsTrigger className="px-4 py-2" value="all">Tất cả</TabsTrigger>
+                                <TabsTrigger className="px-4 py-2" value="unread">Chưa đọc</TabsTrigger>
+                                <TabsTrigger className="px-4 py-2" value="read">Đã đọc</TabsTrigger>
+                            </div>
+                            <Button variant="outline" size="icon" className="w-7 h-7 p-0">
+                                <EllipsisVertical strokeWidth={1.25} className="h-4 w-4" />
+                            </Button>
                         </TabsList>
 
                         <div className=" h-[calc(100dvh-120px-55px)] overflow-auto">
