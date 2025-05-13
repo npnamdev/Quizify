@@ -218,13 +218,13 @@ export function NotificationsDrawer() {
                 </Button>
             </DrawerTrigger>
             <DrawerContent>
-                <div className="mx-auto w-full max-w-[100%] h-[calc(100dvh-100px)] overflow-auto">
-                    <DrawerHeader className="h-[50px] flex items-center justify-center border-b text-md font-bold">
+                <div className="mx-auto w-full max-w-[100%] h-[calc(100dvh-120px)] overflow-auto">
+                    {/* <DrawerHeader className="h-[50px] flex items-center justify-center border-b text-md font-bold">
                         <DrawerTitle>Thông báo</DrawerTitle>
-                    </DrawerHeader>
+                    </DrawerHeader> */}
 
                     <Tabs defaultValue="all" className="w-full">
-                        <TabsList className="flex justify-center px-5 pt-3 gap-2">
+                        <TabsList className="flex px-4 gap-2">
                             <TabsTrigger value="all">Tất cả</TabsTrigger>
                             <TabsTrigger value="unread">Chưa đọc</TabsTrigger>
                             <TabsTrigger value="read">Đã đọc</TabsTrigger>
