@@ -41,9 +41,9 @@ export default function RegisterPage() {
                 throw new Error(errorData.message || "Đăng ký thất bại");
             }
 
+            router.push("/verify-email-info");
             toast.success("Đăng ký thành công!");
-            await login(email, password);
-            router.push("/");
+            // await login(email, password);
         } catch (error: any) {
             console.error("Lỗi đăng ký:", error.message);
             alert(error.message);
