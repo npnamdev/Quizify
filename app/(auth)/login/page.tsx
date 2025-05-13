@@ -16,12 +16,18 @@ export default function LoginPage() {
     const [password, setPassword] = useState("namdev");
     const router = useRouter();
 
+    // const handleLogin = async () => {
+    //     try {
+    //         await login(email, password);
+    //         router.push("/");
+    //     } catch (error) {
+    //         console.error("Login failed:", error);
+    //     }
+    // };
     const handleLogin = async () => {
-        try {
-            await login(email, password);
+        const success = await login(email, password);
+        if (success) {
             router.push("/");
-        } catch (error) {
-            console.error("Login failed:", error);
         }
     };
 

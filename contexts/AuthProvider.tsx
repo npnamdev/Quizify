@@ -5,7 +5,8 @@ import { toast } from "sonner"
 
 interface AuthContextType {
     user: any;
-    login: (email: string, password: string) => Promise<void>;
+    // login: (email: string, password: string) => Promise<void>;
+    login: (email: string, password: string) => Promise<boolean>;
     logout: () => Promise<void>;
     isAuthenticated: boolean;
     loading: boolean;
@@ -69,29 +70,55 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         fetchUser();
     }, []);
 
-    const login = async (email: string, password: string) => {
+    // const login = async (email: string, password: string) => {
+    //     try {
+    //         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
+    //             method: "POST",
+    //             credentials: 'include',
+    //             headers: { "Content-Type": "application/json" },
+    //             body: JSON.stringify({ email, password }),
+    //         });
+
+    //         if (!response.ok) {
+    //             throw new Error("Login failed");
+    //         }
+
+    //         toast.success("Login successfully");
+
+    //         const data = await response.json();
+
+    //         console.log("data", data.user);
+
+    //         localStorage.setItem("accessToken", data.accessToken);
+    //         setUser(data.user);
+    //     } catch (err) {
+    //         console.error("Login failed", err);
+    //     }
+    // };
+    const login = async (email: string, password: string): Promise<boolean> => {
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
                 method: "POST",
-                credentials: 'include',
+                credentials: "include",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
             });
 
             if (!response.ok) {
-                throw new Error("Login failed");
+                const errData = await response.json();
+                toast.error(errData.message || "Login failed");
+                return false;
             }
 
-            toast.success("Login successfully");
-
             const data = await response.json();
-
-            console.log("data", data.user);
-
             localStorage.setItem("accessToken", data.accessToken);
             setUser(data.user);
+            toast.success("Login successfully");
+            return true;
         } catch (err) {
-            console.error("Login failed", err);
+            toast.error("Login failed");
+            console.error(err);
+            return false;
         }
     };
 
