@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import { Bell, CheckCircle, Info, AlertTriangle, XCircle, EllipsisVertical, List, Mail, Check, Eye, Pencil, Trash2 } from "lucide-react";
+import { Bell, CheckCircle, Info, AlertTriangle, XCircle, Settings, List, Mail, Check, Eye, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import moment from "moment";
@@ -184,7 +184,7 @@ export function NotificationsDrawer() {
                     <div
                         key={noti._id}
                         className={`relative flex items-center gap-3 py-2.5 px-3 rounded-md shadow-sm border cursor-pointer transition-all ${noti.status === "unread"
-                            ? "border-r-8 border-r-red-500"
+                            ? "border-r-8 border-r-primary"
                             : "border-gray-200"
                             }`}
                         onClick={() =>
@@ -255,7 +255,7 @@ export function NotificationsDrawer() {
                             <Popover open={open} onOpenChange={setOpen}>
                                 <PopoverTrigger asChild>
                                     <Button variant="outline" size="icon" className="w-8 h-8 p-0">
-                                        <EllipsisVertical strokeWidth={1.5} className="h-4 w-4" />
+                                        <Settings strokeWidth={1.5} className="h-4 w-4" />
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent side="bottom" align="end" className="w-30 p-0">
