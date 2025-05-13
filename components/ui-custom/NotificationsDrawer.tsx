@@ -124,7 +124,8 @@ export function NotificationsDrawer() {
             requestAnimationFrame(() => {
                 setTimeout(() => {
                     scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
-                }, 10); // Delay nhẹ để đảm bảo render hoàn tất
+                    // scrollRef.current?.scrollTo({ top: 0 });
+                }, 20); // Delay nhẹ để đảm bảo render hoàn tất
             });
         } catch (error) {
             console.error("Error fetching notifications:", error);
@@ -239,15 +240,15 @@ export function NotificationsDrawer() {
             <DrawerContent>
                 <div className="mx-auto w-full max-w-[100%] h-[calc(100dvh-120px)]">
                     <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as any)} className="w-full pt-2.5">
-                        <TabsList className="w-full h-[55px] flex justify-between px-5 gap-2">
+                        <TabsList className="w-full h-[50px] flex justify-between px-5 gap-2">
                             <div className="flex gap-1">
-                                <TabsTrigger className="px-2.5 py-2 flex items-center gap-2" value="all">
+                                <TabsTrigger className="px-2.5 py-2 flex items-center gap-1.5" value="all">
                                     <List className="w-4 h-4" />Tất cả
                                 </TabsTrigger>
-                                <TabsTrigger className="px-2.5 py-2 flex items-center gap-2" value="unread">
+                                <TabsTrigger className="px-2.5 py-2 flex items-center gap-1.5" value="unread">
                                     <Mail className="w-4 h-4" />Chưa đọc
                                 </TabsTrigger>
-                                <TabsTrigger className="px-2.5 py-2 flex items-center gap-2" value="read">
+                                <TabsTrigger className="px-2.5 py-2 flex items-center gap-1.5" value="read">
                                     <CheckCircle className="w-4 h-4" />Đã đọc
                                 </TabsTrigger>
                             </div>
@@ -281,7 +282,7 @@ export function NotificationsDrawer() {
                             </Popover>
                         </TabsList>
 
-                        <div ref={scrollRef} className="h-[calc(100dvh-120px-55px)] overflow-auto">
+                        <div ref={scrollRef} className="h-[calc(100dvh-120px-50px)] overflow-auto">
                             <TabsContent className="mt-0 pb-3" value={activeTab}>
                                 {renderNotifications()}
                             </TabsContent>
