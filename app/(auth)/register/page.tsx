@@ -7,6 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthProvider";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner"
 
 export default function RegisterPage() {
     const [username, setUsername] = useState("");
@@ -15,9 +18,12 @@ export default function RegisterPage() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
+    const { login } = useAuth();
+    const router = useRouter();
+
     const handleRegister = async () => {
         try {
-            const res = await fetch("http://api.wedly.info/api/auth/register", {
+            const res = await fetch("https://api.wedly.info/api/auth/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -35,7 +41,9 @@ export default function RegisterPage() {
                 throw new Error(errorData.message || "Đăng ký thất bại");
             }
 
-            alert("Đăng ký thành công!");
+            toast.success("Đăng ký thành công!");
+            await login(email, password);
+            router.push("/");
         } catch (error: any) {
             console.error("Lỗi đăng ký:", error.message);
             alert(error.message);
