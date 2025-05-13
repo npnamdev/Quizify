@@ -20,9 +20,7 @@ export default function VerifyEmailPage() {
             }
 
             try {
-                const res = await fetch(`https://api.wedly.info/api/auth/verify-email?token=${token}`, {
-                    method: 'POST',
-                });
+                const res = await fetch(`https://api.wedly.info/api/auth/verify-email?token=${token}`);
 
                 const data = await res.json();
 
