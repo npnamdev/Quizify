@@ -82,6 +82,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 throw new Error("Login failed");
             }
 
+            toast.success("Login successfully");
+
             const data = await response.json();
 
             console.log("data", data.user);
@@ -111,8 +113,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             }
 
             toast.success("Logged out successfully");
-            
-              
+
+
 
             localStorage.removeItem("accessToken");
             setUser(null);
