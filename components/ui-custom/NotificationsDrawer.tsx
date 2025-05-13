@@ -138,22 +138,23 @@ export function NotificationsDrawer() {
     };
 
     const markAsRead = async (id: string) => {
-        try {
-            const res = await fetch(`${socketUrl}/api/notifications/${id}/read`, {
-                method: "PATCH",
-            });
-            const result = await res.json();
-            if (result.status === "success") {
-                setNotifications((prev) =>
-                    prev.map((n) =>
-                        n._id === id ? { ...n, status: "read" } : n
-                    )
-                );
-            }
-        } catch (error) {
-            console.error("Failed to mark as read:", error);
+    try {
+        const res = await fetch(`${socketUrl}/api/notifications/${id}/read`, {
+            method: "PATCH",
+        });
+        const result = await res.json();
+        if (result.status === "success") {
+            setNotifications((prev) =>
+                prev.map((n) =>
+                    n._id === id ? { ...n, status: "read" } : n
+                )
+            );
+            setUnreadCount((prev) => Math.max(prev - 1, 0)); // giảm số lượng chưa đọc
         }
-    };
+    } catch (error) {
+        console.error("Failed to mark as read:", error);
+    }
+};
 
     //const unreadCount = notifications.filter((n) => n.status === "unread").length;
 
