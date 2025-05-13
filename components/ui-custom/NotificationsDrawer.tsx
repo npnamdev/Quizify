@@ -10,6 +10,24 @@ import moment from "moment";
 import "moment/locale/vi";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+import {
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+} from "@/components/ui/popover";
+import {
+    Command,
+    CommandList,
+    CommandGroup,
+    CommandItem,
+    CommandEmpty,
+} from "@/components/ui/command";
+import {
+    Eye,
+    Pencil,
+    Trash2,
+} from "lucide-react";
+
 moment.locale("vi");
 moment.updateLocale("vi", {
     relativeTime: {
@@ -198,6 +216,25 @@ export function NotificationsDrawer() {
         );
     };
 
+    const [open, setOpen] = useState(false);
+
+    const handleAction = (action: string) => {
+        setOpen(false);
+        switch (action) {
+            case "view":
+                console.log("Xem chi tiết");
+                break;
+            case "edit":
+                console.log("Chỉnh sửa");
+                break;
+            case "delete":
+                console.log("Xóa mục");
+                break;
+            default:
+                break;
+        }
+    };
+
     return (
         <Drawer>
             <DrawerTrigger asChild>
@@ -225,9 +262,46 @@ export function NotificationsDrawer() {
                                     <CheckCircle className="w-4 h-4" />Đã đọc
                                 </TabsTrigger>
                             </div>
-                            <Button variant="outline" size="icon" className="w-8 h-8 p-0">
+                            {/* <Button variant="outline" size="icon" className="w-8 h-8 p-0">
                                 <EllipsisVertical strokeWidth={1.5} className="h-4 w-4" />
-                            </Button>
+                            </Button> */}
+                            <Popover open={open} onOpenChange={setOpen}>
+                                <PopoverTrigger asChild>
+                                    <Button variant="outline" size="icon" className="w-8 h-8 p-0">
+                                        <EllipsisVertical strokeWidth={1.5} className="h-4 w-4" />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent side="bottom" align="end" className="w-40 p-0">
+                                    <Command>
+                                        <CommandList>
+                                            <CommandEmpty>Không tìm thấy hành động.</CommandEmpty>
+                                            <CommandGroup>
+                                                <CommandItem
+                                                    className="flex items-center gap-2"
+                                                    onSelect={() => handleAction("view")}
+                                                >
+                                                    <Eye className="w-4 h-4" />
+                                                    Xem
+                                                </CommandItem>
+                                                <CommandItem
+                                                    className="flex items-center gap-2"
+                                                    onSelect={() => handleAction("edit")}
+                                                >
+                                                    <Pencil className="w-4 h-4" />
+                                                    Sửa
+                                                </CommandItem>
+                                                <CommandItem
+                                                    className="flex items-center gap-2 text-red-500"
+                                                    onSelect={() => handleAction("delete")}
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                    Xóa
+                                                </CommandItem>
+                                            </CommandGroup>
+                                        </CommandList>
+                                    </Command>
+                                </PopoverContent>
+                            </Popover>
                         </TabsList>
 
                         <div className=" h-[calc(100dvh-120px-55px)] overflow-auto">
