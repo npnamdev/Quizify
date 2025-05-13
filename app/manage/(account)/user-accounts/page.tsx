@@ -7,10 +7,19 @@ import moment from 'moment';
 import { toast } from "sonner";
 import copy from 'clipboard-copy';
 import TableView from '@/components/ui-custom/TableView';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 
 type User = {
     id: string;
@@ -64,6 +73,7 @@ export default function App() {
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [role, setRole] = useState('');
 
     useEffect(() => {
@@ -183,61 +193,81 @@ export default function App() {
                 ]}
             />
             <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-                <DialogContent>
+                <DialogContent className='w-[94%] rounded-lg'>
                     <DialogHeader>
-                        <DialogTitle>Thêm người dùng mới</DialogTitle>
-                        <DialogDescription>Điền đầy đủ thông tin bên dưới để thêm người dùng.</DialogDescription>
+                        <DialogTitle className='text-md'>Thêm người dùng mới</DialogTitle>
                     </DialogHeader>
 
                     <div className="space-y-4">
                         <div>
                             <Label htmlFor="fullName">Họ tên</Label>
                             <Input
+                                className='text-sm h-10'
                                 id="fullName"
                                 value={fullName}
                                 onChange={(e) => setFullName(e.target.value)}
-                                placeholder="Nguyễn Văn A"
+                                placeholder="Nhập họ và tên đầy đủ"
                             />
                         </div>
 
                         <div>
                             <Label htmlFor="email">Email</Label>
                             <Input
+                                className='text-sm h-10'
                                 id="email"
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                placeholder="example@gmail.com"
+                                placeholder="Nhập địa chỉ email (vd: example@gmail.com)"
                             />
                         </div>
 
                         <div>
                             <Label htmlFor="password">Mật khẩu</Label>
                             <Input
+                                className='text-sm h-10'
                                 id="password"
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                placeholder="••••••••"
+                                placeholder="Tạo mật khẩu (ít nhất 8 ký tự)"
+                            />
+                        </div>
+
+                        <div>
+                            <Label htmlFor="confirmPassword">Nhập lại mật khẩu</Label>
+                            <Input
+                                className="text-sm h-10"
+                                id="confirmPassword"
+                                type="password"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                placeholder="Xác nhận lại mật khẩu"
                             />
                         </div>
 
                         <div>
                             <Label htmlFor="role">Vai trò</Label>
-                            <select
-                                id="role"
-                                value={role}
-                                onChange={(e) => setRole(e.target.value)}
-                                className="w-full border rounded px-3 py-2"
-                            >
-                                <option value="">Chọn vai trò</option>
-                                <option value="admin">Quản trị viên</option>
-                                <option value="user">Người dùng</option>
-                            </select>
+                            <Select onValueChange={(value: string) => setRole(value)} value={role}>
+                                <SelectTrigger className="w-full h-10">
+                                    <SelectValue placeholder="Chọn vai trò người dùng" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="user">Người dùng</SelectItem>
+                                        <SelectItem value="admin">Quản trị viên</SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
                         </div>
 
-                        <div className="flex justify-end pt-2">
-                            <Button onClick={handleSubmit}>Lưu</Button>
+                        <div className="flex justify-end pt-2 gap-2">
+                            <DialogClose asChild>
+                                <Button type="button" variant="secondary">
+                                    Trở lại
+                                </Button>
+                            </DialogClose>
+                            <Button onClick={handleSubmit}>Tạo người dùng</Button>
                         </div>
                     </div>
                 </DialogContent>
