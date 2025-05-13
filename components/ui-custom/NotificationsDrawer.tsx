@@ -16,6 +16,7 @@ moment.updateLocale("vi", {
         future: "trong %s",
         past: "%s trước",
         s: "vài giây",
+        // s: "%d giây",
         ss: "%d giây",
         m: "1 phút",
         mm: "%d phút",
@@ -29,6 +30,8 @@ moment.updateLocale("vi", {
         yy: "%d năm",
     },
 });
+
+// moment.relativeTimeThreshold("s", 60);
 
 interface Notification {
     _id: string;
@@ -100,7 +103,7 @@ export function NotificationsDrawer() {
     useEffect(() => {
         const interval = setInterval(() => {
             forceUpdate((prev) => prev + 1);
-        }, 15000);
+        }, 20000);
 
         return () => clearInterval(interval);
     }, []);
@@ -209,7 +212,7 @@ export function NotificationsDrawer() {
             </DrawerTrigger>
             <DrawerContent>
                 <div className="mx-auto w-full max-w-[100%] h-[calc(100dvh-120px)]">
-                    <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as any)} className="w-full pt-2">
+                    <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as any)} className="w-full pt-2.5">
                         <TabsList className="w-full h-[55px] flex justify-center gap-2">
                             <TabsTrigger className="px-4 py-2" value="all">Tất cả</TabsTrigger>
                             <TabsTrigger className="px-4 py-2" value="unread">Chưa đọc</TabsTrigger>
