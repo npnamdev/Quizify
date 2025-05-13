@@ -53,7 +53,6 @@ interface NotificationResponse {
         totalItems: number;
         limit: number;
     };
-    unreadCount: number;
 }
 
 const socketUrl = process.env.NEXT_PUBLIC_API_URL!;
@@ -69,7 +68,6 @@ export function NotificationsDrawer() {
     const [, forceUpdate] = useState(0);
     const [activeTab, setActiveTab] = useState<"all" | "read" | "unread">("all");
     const scrollRef = useRef<HTMLDivElement>(null); // Add scroll ref
-    const [unreadCount, setUnreadCount] = useState(0); 
 
     useEffect(() => {
         fetchNotifications(activeTab);
@@ -82,11 +80,8 @@ export function NotificationsDrawer() {
         });
 
         socket.on("notify", (notification: Notification) => {
-    setNotifications((prev) => [notification, ...prev]);
-    if (notification.status === "unread") {
-        setUnreadCount((prev) => prev + 1);
-    }
-});
+            setNotifications((prev) => [notification, ...prev]);
+        });
 
         socket.on("deleteNotify", (id: string) => {
             setNotifications((prev) => prev.filter((n) => n._id !== id));
@@ -125,7 +120,6 @@ export function NotificationsDrawer() {
             const res = await fetch(`${socketUrl}/api/notifications${query}`);
             const result: NotificationResponse = await res.json();
             setNotifications(result.data || []);
-            setUnreadCount(result.unreadCount || 0)
 
             requestAnimationFrame(() => {
                 setTimeout(() => {
@@ -141,25 +135,24 @@ export function NotificationsDrawer() {
     };
 
     const markAsRead = async (id: string) => {
-    try {
-        const res = await fetch(`${socketUrl}/api/notifications/${id}/read`, {
-            method: "PATCH",
-        });
-        const result = await res.json();
-        if (result.status === "success") {
-            setNotifications((prev) =>
-                prev.map((n) =>
-                    n._id === id ? { ...n, status: "read" } : n
-                )
-            );
-            setUnreadCount((prev) => Math.max(prev - 1, 0)); // giảm số lượng chưa đọc
+        try {
+            const res = await fetch(`${socketUrl}/api/notifications/${id}/read`, {
+                method: "PATCH",
+            });
+            const result = await res.json();
+            if (result.status === "success") {
+                setNotifications((prev) =>
+                    prev.map((n) =>
+                        n._id === id ? { ...n, status: "read" } : n
+                    )
+                );
+            }
+        } catch (error) {
+            console.error("Failed to mark as read:", error);
         }
-    } catch (error) {
-        console.error("Failed to mark as read:", error);
-    }
-};
+    };
 
-    //const unreadCount = notifications.filter((n) => n.status === "unread").length;
+    const unreadCount = notifications.filter((n) => n.status === "unread").length;
 
     const getIconByType = (type: string) => {
         switch (type) {
