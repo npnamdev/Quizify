@@ -136,6 +136,26 @@ export default function App() {
         setIsAddModalOpen(false);
     };
 
+    const deleteUser = async (userId: string | number) => {
+        const isConfirmed = window.confirm("Are you sure you want to delete this user?");
+        if (!isConfirmed) {
+            return; 
+        }
+        try {
+            const response = await fetch(`http://api.wedly.info/api/users/${userId}`, { method: "DELETE" });
+
+            if (!response.ok) {
+                throw new Error("Failed to delete user");
+            }
+
+            const result = await response.json();
+            toast.success("User deleted successfully");
+            console.log(result); // Log or handle response data if necessary
+        } catch (error) {
+            console.error("Delete user failed:", error);
+        }
+    };
+
 
     return (
         <div className="space-y-4">
@@ -176,7 +196,7 @@ export default function App() {
                         value: 'delete',
                         label: 'Xoá',
                         icon: <Trash2 size={16} strokeWidth={1.5} />,
-                        action: (id) => console.log('Xoá user với id:', id),
+                        action: (id) => deleteUser(id)
                     },
                     {
                         value: 'ban',
