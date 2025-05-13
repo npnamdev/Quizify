@@ -12,7 +12,6 @@ export default function Home() {
     <div>
       <ImageCropUploader />
       <ConfirmDialog
-        trigger={<button className="btn btn-danger">Xóa tài khoản</button>}
         title="Bạn có chắc chắn muốn xóa?"
         description="Thao tác này không thể hoàn tác. Tài khoản và dữ liệu sẽ bị xóa vĩnh viễn."
         confirmText="Xác nhận xóa"
