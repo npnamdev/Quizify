@@ -183,8 +183,8 @@ export function NotificationsDrawer() {
                     <div
                         key={noti._id}
                         className={`relative flex items-center gap-3 py-2.5 px-3 rounded-md shadow-sm border cursor-pointer transition-all ${noti.status === "unread"
-                                ? "border-r-8 border-r-red-500"
-                                : "border-gray-200"
+                            ? "border-r-8 border-r-red-500"
+                            : "border-gray-200"
                             }`}
                         onClick={() =>
                             noti.status === "unread" && markAsRead(noti._id)
@@ -218,21 +218,25 @@ export function NotificationsDrawer() {
                 </Button>
             </DrawerTrigger>
             <DrawerContent>
-                <div className="mx-auto w-full max-w-[100%] h-[calc(100dvh-120px)] overflow-auto">
+                <div className="mx-auto w-full max-w-[100%] h-[calc(100dvh-120px)]">
                     {/* <DrawerHeader className="h-[50px] flex items-center justify-center border-b text-md font-bold">
                         <DrawerTitle>Thông báo</DrawerTitle>
                     </DrawerHeader> */}
 
-                    <Tabs defaultValue="all" className="w-full">
-                        <TabsList className="flex px-4 gap-2">
+                    <Tabs defaultValue="all" className="w-full mt-3">
+                        <TabsList className="w-full h-[50px]">
                             <TabsTrigger value="all">Tất cả</TabsTrigger>
                             <TabsTrigger value="unread">Chưa đọc</TabsTrigger>
                             <TabsTrigger value="read">Đã đọc</TabsTrigger>
                         </TabsList>
 
-                        <TabsContent value="all">{renderNotifications("all")}</TabsContent>
-                        <TabsContent value="unread">{renderNotifications("unread")}</TabsContent>
-                        <TabsContent value="read">{renderNotifications("read")}</TabsContent>
+                        <div className="border border-black h-[calc(100%-50px)] overflow-auto">
+                            <TabsContent value="all">{renderNotifications("all")}</TabsContent>
+                            <TabsContent value="unread">{renderNotifications("unread")}</TabsContent>
+                            <TabsContent value="read">{renderNotifications("read")}</TabsContent>
+                        </div>
+
+
                     </Tabs>
                 </div>
             </DrawerContent>

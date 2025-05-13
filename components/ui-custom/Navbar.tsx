@@ -12,6 +12,7 @@ const Navbar = () => {
         pathname === "/login" ||
         pathname === "/register" ||
         pathname === "/unauthorized" ||
+        pathname === "/device" ||
         pathname.startsWith("/manage");
     if (isHidden) return null;
 
