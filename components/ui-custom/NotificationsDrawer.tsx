@@ -219,24 +219,18 @@ export function NotificationsDrawer() {
             </DrawerTrigger>
             <DrawerContent>
                 <div className="mx-auto w-full max-w-[100%] h-[calc(100dvh-120px)]">
-                    {/* <DrawerHeader className="h-[50px] flex items-center justify-center border-b text-md font-bold">
-                        <DrawerTitle>Thông báo</DrawerTitle>
-                    </DrawerHeader> */}
-
-                    <Tabs defaultValue="all" className="w-full mt-3">
-                        <TabsList className="w-full h-[50px]">
-                            <TabsTrigger value="all">Tất cả</TabsTrigger>
-                            <TabsTrigger value="unread">Chưa đọc</TabsTrigger>
-                            <TabsTrigger value="read">Đã đọc</TabsTrigger>
+                    <Tabs defaultValue="all" className="w-full pt-2">
+                        <TabsList className="w-full h-[55px] flex justify-center">
+                            <TabsTrigger className="px-4 py-2" value="all">Tất cả</TabsTrigger>
+                            <TabsTrigger className="px-4 py-2" value="unread">Chưa đọc</TabsTrigger>
+                            <TabsTrigger className="px-4 py-2" value="read">Đã đọc</TabsTrigger>
                         </TabsList>
 
-                        <div className="border border-black h-[calc(100%-50px)] overflow-auto">
-                            <TabsContent value="all">{renderNotifications("all")}</TabsContent>
-                            <TabsContent value="unread">{renderNotifications("unread")}</TabsContent>
-                            <TabsContent value="read">{renderNotifications("read")}</TabsContent>
+                        <div className=" h-[calc(100dvh-120px-55px)] overflow-auto">
+                            <TabsContent className="mt-0 pb-3" value="all">{renderNotifications("all")}</TabsContent>
+                            <TabsContent className="mt-0 pb-3" value="unread">{renderNotifications("unread")}</TabsContent>
+                            <TabsContent className="mt-0 pb-3" value="read">{renderNotifications("read")}</TabsContent>
                         </div>
-
-
                     </Tabs>
                 </div>
             </DrawerContent>
