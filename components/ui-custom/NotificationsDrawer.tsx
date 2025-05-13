@@ -110,9 +110,13 @@ export function NotificationsDrawer() {
 
     useEffect(() => {
         fetchNotifications(activeTab);
-        // scrollRef.current?.scrollTo(0, 0); // Scroll to top when tab changes
-        scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
     }, [activeTab]);
+
+    useEffect(() => {
+        requestAnimationFrame(() => {
+            scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+        });
+    }, [notifications]);
 
     const fetchNotifications = async (status: "all" | "read" | "unread") => {
         try {
@@ -252,7 +256,7 @@ export function NotificationsDrawer() {
                                         <EllipsisVertical strokeWidth={1.5} className="h-4 w-4" />
                                     </Button>
                                 </PopoverTrigger>
-                                <PopoverContent side="bottom" align="end" className="w-40 p-0">
+                                <PopoverContent side="bottom" align="end" className="w-30 p-0">
                                     <Command>
                                         <CommandList>
                                             <CommandEmpty>Không tìm thấy hành động.</CommandEmpty>
