@@ -15,7 +15,7 @@ moment.updateLocale("vi", {
     relativeTime: {
         future: "trong %s",
         past: "%s trước",
-        s: "%d giây",
+        s: "vài giây",
         ss: "%d giây",
         m: "1 phút",
         mm: "%d phút",
@@ -29,7 +29,6 @@ moment.updateLocale("vi", {
         yy: "%d năm",
     },
 });
-moment.relativeTimeThreshold('s', 60);
 
 interface Notification {
     _id: string;
@@ -101,7 +100,7 @@ export function NotificationsDrawer() {
     useEffect(() => {
         const interval = setInterval(() => {
             forceUpdate((prev) => prev + 1);
-        }, 10000);
+        }, 15000);
 
         return () => clearInterval(interval);
     }, []);
