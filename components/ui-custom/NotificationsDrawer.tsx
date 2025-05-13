@@ -14,6 +14,12 @@ import {
 } from "@/components/ui/drawer";
 import moment from "moment";
 import "moment/locale/vi";
+import {
+    Tabs,
+    TabsContent,
+    TabsList,
+    TabsTrigger,
+} from "@/components/ui/tabs";
 
 moment.locale("vi");
 
@@ -157,6 +163,48 @@ export function NotificationsDrawer() {
         }
     };
 
+    const renderNotifications = (filter: "all" | "read" | "unread") => {
+        const filtered =
+            filter === "all"
+                ? notifications
+                : notifications.filter((n) => n.status === filter);
+
+        if (loading) {
+            return <p className="text-sm text-center text-gray-500 py-6">Đang tải thông báo...</p>;
+        }
+
+        if (filtered.length === 0) {
+            return <p className="text-sm text-center text-gray-500 py-6">Không có thông báo nào.</p>;
+        }
+
+        return (
+            <div className="px-5 py-4 flex flex-col gap-2.5">
+                {filtered.map((noti) => (
+                    <div
+                        key={noti._id}
+                        className={`relative flex items-center gap-3 py-2.5 px-3 rounded-md shadow-sm border cursor-pointer transition-all ${noti.status === "unread"
+                                ? "border-r-8 border-r-red-500"
+                                : "border-gray-200"
+                            }`}
+                        onClick={() =>
+                            noti.status === "unread" && markAsRead(noti._id)
+                        }
+                    >
+                        <div className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 shrink-0">
+                            {getIconByType(noti.type)}
+                        </div>
+                        <div>
+                            <p className="font-semibold text-sm">{noti.message}</p>
+                            <p className="text-sm text-gray-500 mt-0.5 text-[12px]">
+                                {formatRelativeTime(noti.createdAt)}
+                            </p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        );
+    };
+
     return (
         <Drawer>
             <DrawerTrigger asChild>
@@ -175,36 +223,17 @@ export function NotificationsDrawer() {
                         <DrawerTitle>Thông báo</DrawerTitle>
                     </DrawerHeader>
 
-                    <div className="h-[calc(100%-50px)] w-full px-5 overflow-auto select-none py-4 flex flex-col gap-2.5">
-                        {loading ? (
-                            <p className="text-sm text-center text-gray-500">Đang tải thông báo...</p>
-                        ) : notifications.length === 0 ? (
-                            <p className="text-sm text-center text-gray-500">Không có thông báo nào.</p>
-                        ) : (
-                            notifications.map((noti) => (
-                                <div
-                                    key={noti._id}
-                                    className={`relative flex items-center gap-3 py-2.5 px-3 rounded-md shadow-sm border cursor-pointer transition-all ${noti.status === "unread"
-                                        ? "border-r-8 border-r-red-500"
-                                        : "border-gray-200"
-                                        }`}
-                                    onClick={() =>
-                                        noti.status === "unread" && markAsRead(noti._id)
-                                    }
-                                >
-                                    <div className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 shrink-0">
-                                        {getIconByType(noti.type)}
-                                    </div>
-                                    <div>
-                                        <p className="font-semibold text-sm">{noti.message}</p>
-                                        <p className="text-sm text-gray-500 mt-0.5 text-[12px]">
-                                            {formatRelativeTime(noti.createdAt)}
-                                        </p>
-                                    </div>
-                                </div>
-                            ))
-                        )}
-                    </div>
+                    <Tabs defaultValue="all" className="w-full">
+                        <TabsList className="flex justify-center px-5 pt-3 gap-2">
+                            <TabsTrigger value="all">Tất cả</TabsTrigger>
+                            <TabsTrigger value="unread">Chưa đọc</TabsTrigger>
+                            <TabsTrigger value="read">Đã đọc</TabsTrigger>
+                        </TabsList>
+
+                        <TabsContent value="all">{renderNotifications("all")}</TabsContent>
+                        <TabsContent value="unread">{renderNotifications("unread")}</TabsContent>
+                        <TabsContent value="read">{renderNotifications("read")}</TabsContent>
+                    </Tabs>
                 </div>
             </DrawerContent>
         </Drawer>
