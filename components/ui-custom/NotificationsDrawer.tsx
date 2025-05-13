@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import { Bell, CheckCircle, Info, AlertTriangle, XCircle, Settings, List, Mail, Check, Eye, Pencil, Trash2 } from "lucide-react";
+import { Bell, CheckCircle, Info, AlertTriangle, XCircle, EllipsisVertical, List, Mail, Check, Eye, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import moment from "moment";
@@ -238,7 +238,7 @@ export function NotificationsDrawer() {
                 </Button>
             </DrawerTrigger>
             <DrawerContent>
-                <div className="mx-auto w-full max-w-[100%] h-[calc(100dvh-120px)]">
+                <div className="mx-auto w-full max-w-[100%] h-[calc(100dvh-140px)]">
                     <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as any)} className="w-full pt-2.5">
                         <TabsList className="w-full h-[50px] flex justify-between px-5 gap-2">
                             <div className="flex gap-1">
@@ -255,7 +255,7 @@ export function NotificationsDrawer() {
                             <Popover open={open} onOpenChange={setOpen}>
                                 <PopoverTrigger asChild>
                                     <Button variant="outline" size="icon" className="w-8 h-8 p-0">
-                                        <Settings strokeWidth={1.5} className="h-4 w-4" />
+                                        <EllipsisVertical strokeWidth={1.5} className="h-4 w-4" />
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent side="bottom" align="end" className="w-30 p-0">
