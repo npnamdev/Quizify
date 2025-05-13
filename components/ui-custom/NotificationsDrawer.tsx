@@ -112,11 +112,6 @@ export function NotificationsDrawer() {
         fetchNotifications(activeTab);
     }, [activeTab]);
 
-    useEffect(() => {
-        requestAnimationFrame(() => {
-            scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
-        });
-    }, [notifications]);
 
     const fetchNotifications = async (status: "all" | "read" | "unread") => {
         try {
@@ -125,6 +120,12 @@ export function NotificationsDrawer() {
             const res = await fetch(`${socketUrl}/api/notifications${query}`);
             const result: NotificationResponse = await res.json();
             setNotifications(result.data || []);
+
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+                }, 10); // Delay nhẹ để đảm bảo render hoàn tất
+            });
         } catch (error) {
             console.error("Error fetching notifications:", error);
         } finally {
