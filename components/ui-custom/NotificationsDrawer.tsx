@@ -68,6 +68,7 @@ export function NotificationsDrawer() {
     const [, forceUpdate] = useState(0);
     const [activeTab, setActiveTab] = useState<"all" | "read" | "unread">("all");
     const scrollRef = useRef<HTMLDivElement>(null); // Add scroll ref
+    const [unreadCount, setUnreadCount] = useState(0); 
 
     useEffect(() => {
         fetchNotifications(activeTab);
@@ -120,6 +121,7 @@ export function NotificationsDrawer() {
             const res = await fetch(`${socketUrl}/api/notifications${query}`);
             const result: NotificationResponse = await res.json();
             setNotifications(result.data || []);
+            setUnreadCount(result.unreadCount || 0)
 
             requestAnimationFrame(() => {
                 setTimeout(() => {
@@ -152,7 +154,7 @@ export function NotificationsDrawer() {
         }
     };
 
-    const unreadCount = notifications.filter((n) => n.status === "unread").length;
+    //const unreadCount = notifications.filter((n) => n.status === "unread").length;
 
     const getIconByType = (type: string) => {
         switch (type) {
