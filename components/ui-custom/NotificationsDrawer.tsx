@@ -53,6 +53,7 @@ interface NotificationResponse {
         totalItems: number;
         limit: number;
     };
+    unreadCount: number;
 }
 
 const socketUrl = process.env.NEXT_PUBLIC_API_URL!;
