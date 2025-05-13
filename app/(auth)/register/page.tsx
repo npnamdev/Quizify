@@ -5,52 +5,117 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Link from 'next/link';
-
+import Link from "next/link";
+import { useState } from "react";
 
 export default function RegisterPage() {
+    const [username, setUsername] = useState("");
+    const [fullName, setFullName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+
+    const handleRegister = async () => {
+        try {
+            const res = await fetch("http://api.wedly.info/api/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    username,
+                    fullName,
+                    email,
+                    password,
+                }),
+            });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.message || "Đăng ký thất bại");
+            }
+
+            alert("Đăng ký thành công!");
+        } catch (error: any) {
+            console.error("Lỗi đăng ký:", error.message);
+            alert(error.message);
+        }
+    };
+
     return (
         <div className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10">
-            <div className="w-full max-w-sm md:max-w-3xl">
+            <div className="w-full max-w-sm md:max-w-4xl">
                 <div className={cn("flex flex-col gap-6")}>
                     <Card className="overflow-hidden">
                         <CardContent className="grid p-0 md:grid-cols-2">
-                            <form className="p-6 md:p-8">
+                            <div className="p-6 md:p-8">
                                 <div className="flex flex-col gap-6">
                                     <div className="flex flex-col items-center text-center">
                                         <h1 className="text-2xl font-bold">Create an account</h1>
                                         <p className="text-balance text-muted-foreground">
-                                            Register your Acme Inc account
+                                            Register your Quizify account
                                         </p>
                                     </div>
                                     <div className="grid gap-2">
-                                        <Label htmlFor="name">Name</Label>
+                                        <Label htmlFor="username">Username</Label>
                                         <Input
-                                            id="name"
+                                            id="username"
                                             type="text"
-                                            placeholder="Your name"
+                                            placeholder="yourusername"
+                                            value={username}
+                                            onChange={(e) => setUsername(e.target.value)}
                                             required
                                         />
                                     </div>
+
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="fullName">Full Name</Label>
+                                        <Input
+                                            id="fullName"
+                                            type="text"
+                                            placeholder="Your full name"
+                                            value={fullName}
+                                            onChange={(e) => setFullName(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+
                                     <div className="grid gap-2">
                                         <Label htmlFor="email">Email</Label>
                                         <Input
                                             id="email"
                                             type="email"
                                             placeholder="m@example.com"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
                                             required
                                         />
                                     </div>
+
                                     <div className="grid gap-2">
                                         <Label htmlFor="password">Password</Label>
                                         <Input
                                             id="password"
                                             type="password"
-                                            placeholder="**********"
+                                            placeholder="********"
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
                                             required
                                         />
                                     </div>
-                                    <Button type="submit" className="w-full">
+
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="confirmPassword">Confirm Password</Label>
+                                        <Input
+                                            id="confirmPassword"
+                                            type="password"
+                                            placeholder="********"
+                                            value={confirmPassword}
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                    <Button className="w-full" onClick={handleRegister}>
                                         Register
                                     </Button>
                                     <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
@@ -94,7 +159,7 @@ export default function RegisterPage() {
                                         </Link>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
                             <div className="relative hidden bg-muted md:block">
                                 <img
                                     src="https://ui.shadcn.com/placeholder.svg"
