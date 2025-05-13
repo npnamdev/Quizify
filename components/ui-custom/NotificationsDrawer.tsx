@@ -3,30 +3,14 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import { Bell, CheckCircle, Info, AlertTriangle, XCircle, EllipsisVertical, List, Mail, Check } from "lucide-react";
+import { Bell, CheckCircle, Info, AlertTriangle, XCircle, EllipsisVertical, List, Mail, Check, Eye, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import moment from "moment";
 import "moment/locale/vi";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-import {
-    Popover,
-    PopoverTrigger,
-    PopoverContent,
-} from "@/components/ui/popover";
-import {
-    Command,
-    CommandList,
-    CommandGroup,
-    CommandItem,
-    CommandEmpty,
-} from "@/components/ui/command";
-import {
-    Eye,
-    Pencil,
-    Trash2,
-} from "lucide-react";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { Command, CommandList, CommandGroup, CommandItem, CommandEmpty } from "@/components/ui/command";
 
 moment.locale("vi");
 moment.updateLocale("vi", {
@@ -34,7 +18,6 @@ moment.updateLocale("vi", {
         future: "trong %s",
         past: "%s trước",
         s: "vài giây",
-        // s: "%d giây",
         ss: "%d giây",
         m: "1 phút",
         mm: "%d phút",
@@ -48,8 +31,6 @@ moment.updateLocale("vi", {
         yy: "%d năm",
     },
 });
-
-// moment.relativeTimeThreshold("s", 60);
 
 interface Notification {
     _id: string;
@@ -86,6 +67,7 @@ export function NotificationsDrawer() {
     const [loading, setLoading] = useState(true);
     const [, forceUpdate] = useState(0);
     const [activeTab, setActiveTab] = useState<"all" | "read" | "unread">("all");
+    const scrollRef = useRef<HTMLDivElement>(null); // Add scroll ref
 
     useEffect(() => {
         fetchNotifications(activeTab);
@@ -128,6 +110,8 @@ export function NotificationsDrawer() {
 
     useEffect(() => {
         fetchNotifications(activeTab);
+        // scrollRef.current?.scrollTo(0, 0); // Scroll to top when tab changes
+        scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
     }, [activeTab]);
 
     const fetchNotifications = async (status: "all" | "read" | "unread") => {
@@ -262,9 +246,6 @@ export function NotificationsDrawer() {
                                     <CheckCircle className="w-4 h-4" />Đã đọc
                                 </TabsTrigger>
                             </div>
-                            {/* <Button variant="outline" size="icon" className="w-8 h-8 p-0">
-                                <EllipsisVertical strokeWidth={1.5} className="h-4 w-4" />
-                            </Button> */}
                             <Popover open={open} onOpenChange={setOpen}>
                                 <PopoverTrigger asChild>
                                     <Button variant="outline" size="icon" className="w-8 h-8 p-0">
@@ -276,24 +257,15 @@ export function NotificationsDrawer() {
                                         <CommandList>
                                             <CommandEmpty>Không tìm thấy hành động.</CommandEmpty>
                                             <CommandGroup>
-                                                <CommandItem
-                                                    className="flex items-center gap-2"
-                                                    onSelect={() => handleAction("view")}
-                                                >
+                                                <CommandItem className="flex items-center gap-2" onSelect={() => handleAction("view")}>
                                                     <Eye className="w-4 h-4" />
                                                     Xem
                                                 </CommandItem>
-                                                <CommandItem
-                                                    className="flex items-center gap-2"
-                                                    onSelect={() => handleAction("edit")}
-                                                >
+                                                <CommandItem className="flex items-center gap-2" onSelect={() => handleAction("edit")}>
                                                     <Pencil className="w-4 h-4" />
                                                     Sửa
                                                 </CommandItem>
-                                                <CommandItem
-                                                    className="flex items-center gap-2 text-red-500"
-                                                    onSelect={() => handleAction("delete")}
-                                                >
+                                                <CommandItem className="flex items-center gap-2 text-red-500" onSelect={() => handleAction("delete")}>
                                                     <Trash2 className="w-4 h-4" />
                                                     Xóa
                                                 </CommandItem>
@@ -304,7 +276,7 @@ export function NotificationsDrawer() {
                             </Popover>
                         </TabsList>
 
-                        <div className=" h-[calc(100dvh-120px-55px)] overflow-auto">
+                        <div ref={scrollRef} className="h-[calc(100dvh-120px-55px)] overflow-auto">
                             <TabsContent className="mt-0 pb-3" value={activeTab}>
                                 {renderNotifications()}
                             </TabsContent>
