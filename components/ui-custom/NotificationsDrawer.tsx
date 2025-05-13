@@ -5,29 +5,17 @@ import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { Bell, CheckCircle, Info, AlertTriangle, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-    Drawer,
-    DrawerContent,
-    DrawerHeader,
-    DrawerTitle,
-    DrawerTrigger,
-} from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import moment from "moment";
 import "moment/locale/vi";
-import {
-    Tabs,
-    TabsContent,
-    TabsList,
-    TabsTrigger,
-} from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 moment.locale("vi");
-
 moment.updateLocale("vi", {
     relativeTime: {
         future: "trong %s",
         past: "%s trước",
-        s: "vài giây",
+        s: "%d giây",
         ss: "%d giây",
         m: "1 phút",
         mm: "%d phút",
@@ -41,6 +29,7 @@ moment.updateLocale("vi", {
         yy: "%d năm",
     },
 });
+moment.relativeTimeThreshold('s', 60);
 
 interface Notification {
     _id: string;
@@ -76,9 +65,10 @@ export function NotificationsDrawer() {
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [loading, setLoading] = useState(true);
     const [, forceUpdate] = useState(0);
+    const [activeTab, setActiveTab] = useState<"all" | "read" | "unread">("all");
 
     useEffect(() => {
-        fetchNotifications();
+        fetchNotifications(activeTab);
 
         const socket = io(socketUrl, { transports: ["websocket"] });
         socketRef.current = socket;
@@ -111,14 +101,20 @@ export function NotificationsDrawer() {
     useEffect(() => {
         const interval = setInterval(() => {
             forceUpdate((prev) => prev + 1);
-        }, 60000);
+        }, 10000);
 
         return () => clearInterval(interval);
     }, []);
 
-    const fetchNotifications = async () => {
+    useEffect(() => {
+        fetchNotifications(activeTab);
+    }, [activeTab]);
+
+    const fetchNotifications = async (status: "all" | "read" | "unread") => {
         try {
-            const res = await fetch(`${socketUrl}/api/notifications`);
+            setLoading(true);
+            const query = status === "all" ? "" : `?status=${status}`;
+            const res = await fetch(`${socketUrl}/api/notifications${query}`);
             const result: NotificationResponse = await res.json();
             setNotifications(result.data || []);
         } catch (error) {
@@ -163,23 +159,18 @@ export function NotificationsDrawer() {
         }
     };
 
-    const renderNotifications = (filter: "all" | "read" | "unread") => {
-        const filtered =
-            filter === "all"
-                ? notifications
-                : notifications.filter((n) => n.status === filter);
-
+    const renderNotifications = () => {
         if (loading) {
             return <p className="text-sm text-center text-gray-500 py-6">Đang tải thông báo...</p>;
         }
 
-        if (filtered.length === 0) {
+        if (notifications.length === 0) {
             return <p className="text-sm text-center text-gray-500 py-6">Không có thông báo nào.</p>;
         }
 
         return (
             <div className="px-5 py-4 flex flex-col gap-2.5">
-                {filtered.map((noti) => (
+                {notifications.map((noti) => (
                     <div
                         key={noti._id}
                         className={`relative flex items-center gap-3 py-2.5 px-3 rounded-md shadow-sm border cursor-pointer transition-all ${noti.status === "unread"
@@ -219,17 +210,17 @@ export function NotificationsDrawer() {
             </DrawerTrigger>
             <DrawerContent>
                 <div className="mx-auto w-full max-w-[100%] h-[calc(100dvh-120px)]">
-                    <Tabs defaultValue="all" className="w-full pt-2">
-                        <TabsList className="w-full h-[55px] flex justify-center">
+                    <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as any)} className="w-full pt-2">
+                        <TabsList className="w-full h-[55px] flex justify-center gap-2">
                             <TabsTrigger className="px-4 py-2" value="all">Tất cả</TabsTrigger>
                             <TabsTrigger className="px-4 py-2" value="unread">Chưa đọc</TabsTrigger>
                             <TabsTrigger className="px-4 py-2" value="read">Đã đọc</TabsTrigger>
                         </TabsList>
 
                         <div className=" h-[calc(100dvh-120px-55px)] overflow-auto">
-                            <TabsContent className="mt-0 pb-3" value="all">{renderNotifications("all")}</TabsContent>
-                            <TabsContent className="mt-0 pb-3" value="unread">{renderNotifications("unread")}</TabsContent>
-                            <TabsContent className="mt-0 pb-3" value="read">{renderNotifications("read")}</TabsContent>
+                            <TabsContent className="mt-0 pb-3" value={activeTab}>
+                                {renderNotifications()}
+                            </TabsContent>
                         </div>
                     </Tabs>
                 </div>
