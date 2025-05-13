@@ -1,3 +1,5 @@
+"use client";
+
 import ConfirmDialog from "@/components/common/ConfirmDialog";
 import ImageCropUploader from "@/components/ui-custom/ImageCropUploader";
 import { toast } from "sonner"
