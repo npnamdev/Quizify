@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import { Bell, CheckCircle, Info, AlertTriangle, XCircle, EllipsisVertical } from "lucide-react";
+import { Bell, CheckCircle, Info, AlertTriangle, XCircle, EllipsisVertical, List, Mail, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import moment from "moment";
@@ -214,13 +214,19 @@ export function NotificationsDrawer() {
                 <div className="mx-auto w-full max-w-[100%] h-[calc(100dvh-120px)]">
                     <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as any)} className="w-full pt-2.5">
                         <TabsList className="w-full h-[55px] flex justify-between px-5 gap-2">
-                            <div className="flex gap-2.5">
-                                <TabsTrigger className="px-4 py-2" value="all">Tất cả</TabsTrigger>
-                                <TabsTrigger className="px-4 py-2" value="unread">Chưa đọc</TabsTrigger>
-                                <TabsTrigger className="px-4 py-2" value="read">Đã đọc</TabsTrigger>
+                            <div className="flex gap-1">
+                                <TabsTrigger className="px-2.5 py-2 flex items-center gap-2" value="all">
+                                    <List className="w-4 h-4" />Tất cả
+                                </TabsTrigger>
+                                <TabsTrigger className="px-2.5 py-2 flex items-center gap-2" value="unread">
+                                    <Mail className="w-4 h-4" />Chưa đọc
+                                </TabsTrigger>
+                                <TabsTrigger className="px-2.5 py-2 flex items-center gap-2" value="read">
+                                    <CheckCircle className="w-4 h-4" />Đã đọc
+                                </TabsTrigger>
                             </div>
-                            <Button variant="outline" size="icon" className="w-7 h-7 p-0">
-                                <EllipsisVertical strokeWidth={1.25} className="h-4 w-4" />
+                            <Button variant="outline" size="icon" className="w-8 h-8 p-0">
+                                <EllipsisVertical strokeWidth={1.5} className="h-4 w-4" />
                             </Button>
                         </TabsList>
 
