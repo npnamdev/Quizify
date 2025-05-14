@@ -11,6 +11,7 @@ import "moment/locale/vi";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Command, CommandList, CommandGroup, CommandItem, CommandEmpty } from "@/components/ui/command";
+import { Skeleton } from "@/components/ui/skeleton";
 
 moment.locale("vi");
 moment.updateLocale("vi", {
@@ -72,7 +73,14 @@ export function NotificationsDrawer() {
     useEffect(() => {
         fetchNotifications(activeTab);
 
-        const socket = io(socketUrl, { transports: ["websocket"] });
+        //const socket = io(socketUrl, { transports: ["websocket"] });
+        const socket = io(socketUrl, {
+    transports: ["websocket"],
+    reconnection: true,
+    reconnectionAttempts: Infinity,
+    reconnectionDelay: 2000,
+ });
+     
         socketRef.current = socket;
 
         socket.on("connect", () => {
@@ -170,8 +178,24 @@ export function NotificationsDrawer() {
     };
 
     const renderNotifications = () => {
+        // if (loading) {
+        //     return <p className="text-sm text-center text-gray-500 py-6">Đang tải thông báo...</p>;
+        // }
+
         if (loading) {
-            return <p className="text-sm text-center text-gray-500 py-6">Đang tải thông báo...</p>;
+            return (
+                <div className="px-5 py-4 space-y-3">
+                    {[...Array(4)].map((_, i) => (
+                        <div key={i} className="flex items-center space-x-4">
+                            <Skeleton className="h-9 w-9 rounded-full" />
+                            <div className="space-y-2 w-full">
+                                <Skeleton className="h-3 w-3/4" />
+                                <Skeleton className="h-3 w-1/2" />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            );
         }
 
         if (notifications.length === 0) {
