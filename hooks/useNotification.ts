@@ -37,7 +37,7 @@ export const useNotification = () => {
         setLoading(true);
         setError(null);
         try {
-            const res = await axios.get<NotificationResponse>(`${apiBaseUrl}/api/notifications`);
+            const res = await axios.get<NotificationResponse>(`${apiBaseUrl}/api/notifications?page=1&limit=100`);
             setNotifications(res.data.data);
         } catch (err) {
             console.error(err);
