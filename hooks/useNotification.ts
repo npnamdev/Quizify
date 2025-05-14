@@ -47,6 +47,30 @@ export const useNotification = () => {
         }
     }, []);
 
+    const markAsRead = async (id: string) => {
+        try {
+            await axios.patch(`${apiBaseUrl}/api/notifications/${id}/read`);
+            socketRef.current?.emit("markAsRead", { id });
+
+            setNotifications(prev =>
+                prev.map(n => (n._id === id ? { ...n, status: "read" } : n))
+            );
+        } catch (err) {
+            console.error("Failed to mark as read:", err);
+        }
+    };
+
+    const deleteNotification = async (id: string) => {
+        try {
+            await axios.delete(`${apiBaseUrl}/api/notifications/${id}`);
+            socketRef.current?.emit("deleteNotify", id);
+
+            setNotifications(prev => prev.filter(n => n._id !== id));
+        } catch (err) {
+            console.error("Failed to delete notification:", err);
+        }
+    };
+
     useEffect(() => {
         fetchNotifications();
 
@@ -63,25 +87,20 @@ export const useNotification = () => {
             console.log("Connected to socket:", socket.id);
         });
 
-        // Nhận thông báo mới
         socket.on("notify", (notification: Notification) => {
             console.log("New notification received:", notification);
             setNotifications(prev => [notification, ...prev]);
         });
 
-        // Xóa thông báo
         socket.on("deleteNotify", (id: string) => {
             console.log("Notification deleted with ID:", id);
             setNotifications(prev => prev.filter(n => n._id !== id));
         });
 
-        // Đánh dấu đã đọc
         socket.on("markAsRead", ({ id }: { id: string }) => {
             console.log("Notification marked as read with ID:", id);
             setNotifications(prev =>
-                prev.map(n =>
-                    n._id === id ? { ...n, status: "read" } : n
-                )
+                prev.map(n => (n._id === id ? { ...n, status: "read" } : n))
             );
         });
 
@@ -92,33 +111,5 @@ export const useNotification = () => {
 
     const unreadCount = notifications.filter(n => n.status === "unread").length;
 
-    return {
-        notifications,
-        unreadCount,
-        loading,
-        error,
-        markAsRead: async (id: string) => {
-            try {
-                await axios.patch(`${apiBaseUrl}/api/notifications/${id}/read`);
-                socketRef.current?.emit("markAsRead", { id });
-
-                setNotifications(prev =>
-                    prev.map(n => (n._id === id ? { ...n, status: "read" } : n))
-                );
-            } catch (err) {
-                console.error("Failed to mark as read:", err);
-            }
-        },
-        deleteNotification: async (id: string) => {
-            try {
-                await axios.delete(`${apiBaseUrl}/api/notifications/${id}`);
-                socketRef.current?.emit("deleteNotify", id);
-
-                setNotifications(prev => prev.filter(n => n._id !== id));
-            } catch (err) {
-                console.error("Failed to delete notification:", err);
-            }
-        },
-    };
-
+    return { notifications, unreadCount, loading, error, markAsRead, deleteNotification };
 };
