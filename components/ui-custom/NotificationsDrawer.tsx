@@ -124,7 +124,7 @@ export function NotificationsDrawer() {
                                             }
                                         >
                                             <div className="flex items-center gap-3">
-                                                <div className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 shrink-0">
+                                                <div className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 shrink-0">
                                                     {noti.type === "info" && <Info size={19} className="text-blue-500" />}
                                                     {noti.type === "success" && <CheckCircle size={19} className="text-green-500" />}
                                                     {noti.type === "warning" && <AlertTriangle size={19} className="text-yellow-500" />}
@@ -140,7 +140,7 @@ export function NotificationsDrawer() {
                                                     </p>
                                                 </div>
                                             </div>
-                                            <Button variant="outline" size="icon" className="min-w-8 min-h-8 p-0 ml-2" onClick={(e) => {
+                                            <Button variant="outline" size="icon" className="min-w-8 min-h-8 p-0 ml-2.5" onClick={(e) => {
                                                 e.stopPropagation();
                                                 deleteNotification(noti._id)
                                             }}>
