@@ -62,6 +62,9 @@ export const useNotification = () => {
     };
 
     const deleteNotification = async (id: string) => {
+        const confirmDelete = window.confirm("Bạn có chắc chắn muốn xoá thông báo này không?");
+        if (!confirmDelete) return;
+
         try {
             await axios.delete(`${apiBaseUrl}/api/notifications/${id}`);
             socketRef.current?.emit("deleteNotify", id);

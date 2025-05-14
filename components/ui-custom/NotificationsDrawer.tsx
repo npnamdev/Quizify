@@ -115,29 +115,34 @@ export function NotificationsDrawer() {
                                     {!loading && filteredNotifications.length > 0 && filteredNotifications.map((noti) => (
                                         <div
                                             key={noti._id}
-                                            className={`relative flex items-center gap-3 py-2.5 px-3 rounded-md shadow-sm border cursor-pointer transition-all ${noti.status === "unread"
+                                            className={`relative flex items-center justify-between py-2.5 px-3 rounded-md shadow-sm border cursor-pointer transition-all ${noti.status === "unread"
                                                 ? "border-r-8 border-r-primary bg-sky-50"
-                                                : "border-gray-200"
+                                                : "border-gray-200 border-r-8 "
                                                 }`}
                                             onClick={() =>
                                                 noti.status === "unread" && markAsRead(noti._id)
                                             }
                                         >
-                                            <div className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 shrink-0">
-                                                {noti.type === "info" && <Info size={19} className="text-blue-500" />}
-                                                {noti.type === "success" && <CheckCircle size={19} className="text-green-500" />}
-                                                {noti.type === "warning" && <AlertTriangle size={19} className="text-yellow-500" />}
-                                                {noti.type === "error" && <XCircle size={19} className="text-red-500" />}
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 shrink-0">
+                                                    {noti.type === "info" && <Info size={19} className="text-blue-500" />}
+                                                    {noti.type === "success" && <CheckCircle size={19} className="text-green-500" />}
+                                                    {noti.type === "warning" && <AlertTriangle size={19} className="text-yellow-500" />}
+                                                    {noti.type === "error" && <XCircle size={19} className="text-red-500" />}
+                                                </div>
+                                                <div>
+                                                    <div
+                                                        className="font-semibold text-sm"
+                                                        dangerouslySetInnerHTML={{ __html: noti.message }}
+                                                    />
+                                                    <p className="text-sm text-gray-500 mt-0.5 text-[12px]">
+                                                        {moment(noti.createdAt).fromNow()}
+                                                    </p>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <div
-                                                    className="font-semibold text-sm"
-                                                    dangerouslySetInnerHTML={{ __html: noti.message }}
-                                                />
-                                                <p className="text-sm text-gray-500 mt-0.5 text-[12px]">
-                                                    {moment(noti.createdAt).fromNow()}
-                                                </p>
-                                            </div>
+                                            <Button variant="outline" size="icon" className="w-8 h-8 p-0" onClick={() => deleteNotification}>
+                                                <Trash2 strokeWidth={1.5} className="h-4 w-4" />
+                                            </Button>
                                         </div>
                                     ))}
                                 </div>
