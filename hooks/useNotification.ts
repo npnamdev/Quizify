@@ -11,6 +11,7 @@ export interface Notification {
     _id: string;
     title: string;
     message: string;
+    type: "info" | "success" | "warning" | "error";
     status: "unread" | "read";
     createdAt: string;
 }

@@ -5,18 +5,43 @@ import { useNotification } from "@/hooks/useNotification";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { Command, CommandList, CommandGroup, CommandItem, CommandEmpty } from "@/components/ui/command";
 import { Bell, CheckCircle, Info, AlertTriangle, XCircle, EllipsisVertical, List, Mail, Check, Eye, Pencil, Trash2 } from "lucide-react";
+import moment from "moment";
+import "moment/locale/vi";
+
+moment.locale("vi");
+moment.updateLocale("vi", {
+    relativeTime: {
+        future: "trong %s",
+        past: "%s trước",
+        s: "vài giây",
+        ss: "%d giây",
+        m: "1 phút",
+        mm: "%d phút",
+        h: "1 giờ",
+        hh: "%d giờ",
+        d: "1 ngày",
+        dd: "%d ngày",
+        M: "1 tháng",
+        MM: "%d tháng",
+        y: "1 năm",
+        yy: "%d năm",
+    },
+});
 
 export function NotificationsDrawer() {
     const { notifications, unreadCount, loading, error, markAsRead, deleteNotification } = useNotification();
     const [activeTab, setActiveTab] = React.useState<string>('all');
+    const scrollRef = React.useRef<HTMLDivElement>(null);
 
-    // Log the active tab whenever it changes
     React.useEffect(() => {
-        console.log(`Active tab changed to: ${activeTab}`);
+        if (scrollRef.current) {
+            scrollRef.current.scrollTop = 0;
+        }
     }, [activeTab]);
 
-    // Lọc thông báo theo trạng thái
     const filteredNotifications = notifications.filter((noti) => {
         if (activeTab === 'all') return true;
         if (activeTab === 'unread') return noti.status === 'unread';
@@ -51,18 +76,42 @@ export function NotificationsDrawer() {
                                     <CheckCircle className="w-4 h-4" />Đã đọc
                                 </TabsTrigger>
                             </div>
+
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button variant="outline" size="icon" className="w-8 h-8 p-0">
+                                        <EllipsisVertical strokeWidth={1.5} className="h-4 w-4" />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent side="bottom" align="end" className="w-30 p-0">
+                                    <Command>
+                                        <CommandList>
+                                            <CommandEmpty>Không tìm thấy hành động.</CommandEmpty>
+                                            <CommandGroup>
+                                                <CommandItem className="flex items-center gap-2">
+                                                    <Eye className="w-4 h-4" />
+                                                    Xem
+                                                </CommandItem>
+                                                <CommandItem className="flex items-center gap-2">
+                                                    <Pencil className="w-4 h-4" />
+                                                    Sửa
+                                                </CommandItem>
+                                                <CommandItem className="flex items-center gap-2 text-red-500">
+                                                    <Trash2 className="w-4 h-4" />
+                                                    Xóa
+                                                </CommandItem>
+                                            </CommandGroup>
+                                        </CommandList>
+                                    </Command>
+                                </PopoverContent>
+                            </Popover>
                         </TabsList>
 
-                        <div className="h-[calc(100dvh-120px-50px)] overflow-auto">
+                        <div ref={scrollRef} className="h-[calc(100dvh-120px-50px)] overflow-auto">
                             <TabsContent className="mt-0 pb-8" value={activeTab}>
                                 <div className="px-5 py-4 flex flex-col gap-2.5">
-                                    {/* Loading state */}
                                     {loading && <p>Đang tải thông báo...</p>}
-
-                                    {/* No notifications */}
                                     {!loading && filteredNotifications.length === 0 && <p>Không có thông báo nào.</p>}
-
-                                    {/* Render notifications */}
                                     {!loading && filteredNotifications.length > 0 && filteredNotifications.map((noti) => (
                                         <div
                                             key={noti._id}
@@ -75,12 +124,15 @@ export function NotificationsDrawer() {
                                             }
                                         >
                                             <div className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 shrink-0">
-                                                <Info size={18} className="text-blue-500" />
+                                                {noti.type === "info" && <Info size={19} className="text-blue-500" />}
+                                                {noti.type === "success" && <CheckCircle size={19} className="text-green-500" />}
+                                                {noti.type === "warning" && <AlertTriangle size={19} className="text-yellow-500" />}
+                                                {noti.type === "error" && <XCircle size={19} className="text-red-500" />}
                                             </div>
                                             <div>
                                                 <p className="font-semibold text-sm">{noti.message}</p>
                                                 <p className="text-sm text-gray-500 mt-0.5 text-[12px]">
-                                                    {noti.createdAt}
+                                                    {moment(noti.createdAt).fromNow()}
                                                 </p>
                                             </div>
                                         </div>
