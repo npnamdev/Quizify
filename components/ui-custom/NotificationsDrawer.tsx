@@ -116,8 +116,8 @@ export function NotificationsDrawer() {
                                         <div
                                             key={noti._id}
                                             className={`relative flex items-center justify-between py-2.5 px-3 rounded-md shadow-sm border cursor-pointer transition-all ${noti.status === "unread"
-                                                ? "border-r-8 border-r-primary bg-sky-50"
-                                                : "border-gray-200 border-r-8 "
+                                                ? "border-r-primary bg-sky-50"
+                                                : "border-gray-200"
                                                 }`}
                                             onClick={() =>
                                                 noti.status === "unread" && markAsRead(noti._id)
@@ -140,7 +140,10 @@ export function NotificationsDrawer() {
                                                     </p>
                                                 </div>
                                             </div>
-                                            <Button variant="outline" size="icon" className="w-8 h-8 p-0" onClick={() => deleteNotification}>
+                                            <Button variant="outline" size="icon" className="min-w-8 min-h-8 p-0 ml-2" onClick={(e) => {
+                                                e.stopPropagation();
+                                                deleteNotification(noti._id)
+                                            }}>
                                                 <Trash2 strokeWidth={1.5} className="h-4 w-4" />
                                             </Button>
                                         </div>
