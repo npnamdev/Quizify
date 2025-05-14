@@ -73,7 +73,16 @@ export function NotificationsDrawer() {
     useEffect(() => {
         fetchNotifications(activeTab);
 
-        const socket = io(socketUrl, { transports: ["websocket"] });
+        //const socket = io(socketUrl, { transports: ["websocket"] });
+        const socket = io(socketUrl, {
+    transports: ["websocket"],
+    reconnection: true,
+    reconnectionAttempts: Infinity,
+    reconnectionDelay: 2000,
+    pingInterval: 25000,    // khoảng thời gian gửi ping
+    pingTimeout: 60000,     // timeout nếu không có pong trả về
+});
+     
         socketRef.current = socket;
 
         socket.on("connect", () => {
