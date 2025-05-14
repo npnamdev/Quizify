@@ -116,7 +116,7 @@ export function NotificationsDrawer() {
                                         <div
                                             key={noti._id}
                                             className={`relative flex items-center gap-3 py-2.5 px-3 rounded-md shadow-sm border cursor-pointer transition-all ${noti.status === "unread"
-                                                ? "border-r-8 border-r-primary bg-blue-50"
+                                                ? "border-r-8 border-r-primary bg-sky-50"
                                                 : "border-gray-200"
                                                 }`}
                                             onClick={() =>
@@ -130,7 +130,10 @@ export function NotificationsDrawer() {
                                                 {noti.type === "error" && <XCircle size={19} className="text-red-500" />}
                                             </div>
                                             <div>
-                                                <p className="font-semibold text-sm">{noti.message}</p>
+                                                <div
+                                                    className="font-semibold text-sm"
+                                                    dangerouslySetInnerHTML={{ __html: noti.message }}
+                                                />
                                                 <p className="text-sm text-gray-500 mt-0.5 text-[12px]">
                                                     {moment(noti.createdAt).fromNow()}
                                                 </p>
