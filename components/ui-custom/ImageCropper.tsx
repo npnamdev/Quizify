@@ -48,7 +48,7 @@ export default function ImageCropper() {
                 <Button variant="outline">Tải ảnh lên</Button>
             </DialogTrigger>
 
-            <DialogContent className="sm:max-w-[1000px] p-0 h-dvh md:h-auto overflow-hidden">
+            <DialogContent className="w-full sm:max-w-[1000px] p-0 h-dvh md:h-auto overflow-hidden">
                 <Tabs defaultValue="upload" className="w-full h-full">
                     <TabsList className="w-full h-[60px] overflow-x-auto flex gap-3 justify-start shadow rounded-none px-4">
                         <TabsTrigger className="py-2.5 px-4 flex items-center gap-2" value="upload">
