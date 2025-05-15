@@ -3,24 +3,24 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger, DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-    UploadCloud,
-    Cloud,
-    FolderDown,
-    Globe,
-    Image as ImageIcon,
-    Camera,
-    X,
-} from "lucide-react";
+import { UploadCloud, Cloud, FolderDown, Globe, Image as ImageIcon, Camera, X } from "lucide-react";
 
+type FileWithPreview = {
+    file: File;
+    preview: string;
+};
 export default function ImageCropper() {
-    const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+    const [selectedFiles, setSelectedFiles] = useState<FileWithPreview[]>([]);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
-            const filesArray = Array.from(event.target.files);
+            const filesArray = Array.from(event.target.files).map((file) => ({
+                file,
+                preview: URL.createObjectURL(file),
+            }));
+
             setSelectedFiles((prev) => [...prev, ...filesArray]);
         }
     };
@@ -28,7 +28,6 @@ export default function ImageCropper() {
     const handleUpload = () => {
         console.log("Uploading files:", selectedFiles);
         alert(`Uploading ${selectedFiles.length} file(s)`);
-        // TODO: Implement real upload logic
     };
 
     const formatBytes = (bytes: number) => {
@@ -39,7 +38,10 @@ export default function ImageCropper() {
     };
 
     const handleRemoveFile = (index: number) => {
-        setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
+        setSelectedFiles((prev) => {
+            URL.revokeObjectURL(prev[index].preview);
+            return prev.filter((_, i) => i !== index);
+        });
     };
 
     return (
@@ -48,37 +50,24 @@ export default function ImageCropper() {
                 <Button variant="outline">Tải ảnh lên</Button>
             </DialogTrigger>
 
-            <DialogContent className="sm:max-w-[1000px] p-0 h-dvh md:h-auto overflow-hidden">
-                <Tabs defaultValue="upload" className="w-full h-full">
-                    <TabsList className="w-full h-[60px] overflow-x-auto flex gap-3 justify-start shadow rounded-none px-4">
-                        <TabsTrigger className="py-2.5 px-4 flex items-center gap-2" value="upload">
-                            <UploadCloud className="w-4 h-4" />
-                            Từ thiết bị
-                        </TabsTrigger>
-                        <TabsTrigger className="py-2.5 px-4 flex items-center gap-2" value="url">
-                            <Cloud className="w-4 h-4" />
-                            Từ URL
-                        </TabsTrigger>
-                        <TabsTrigger className="py-2.5 px-4 flex items-center gap-2" value="googledrive">
-                            <FolderDown className="w-4 h-4" />
-                            Google Drive
-                        </TabsTrigger>
-                        <TabsTrigger className="py-2.5 px-4 flex items-center gap-2" value="unsplash">
-                            <Globe className="w-4 h-4" />
-                            Unsplash
-                        </TabsTrigger>
-                        <TabsTrigger className="py-2.5 px-4 flex items-center gap-2" value="imagegently">
-                            <ImageIcon className="w-4 h-4" />
-                            ImageGently
-                        </TabsTrigger>
-                        <TabsTrigger className="py-2.5 px-4 flex items-center gap-2" value="camera">
-                            <Camera className="w-4 h-4" />
-                            Máy ảnh
-                        </TabsTrigger>
-                    </TabsList>
+            <DialogContent className="sm:max-w-[1000px] p-0 md:h-auto overflow-hidden" onInteractOutside={(e) => e.preventDefault()}>
+                <Tabs defaultValue="upload" className="w-full h-dvh md:h-[700px]">
+                    {selectedFiles.length === 0 && (
+                        <TabsList className="w-full h-[60px] overflow-auto flex gap-3 justify-start shadow rounded-none px-4">
+                            <TabsTrigger className="py-2.5 px-4 flex items-center gap-2" value="upload">
+                                <UploadCloud className="w-4 h-4" />
+                                <span className="hidden md:flex">Tải lên từ thiết bị</span>
+                            </TabsTrigger>
+                            <TabsTrigger className="py-2.5 px-4 flex items-center gap-2" value="imagegently">
+                                <ImageIcon className="w-4 h-4" />
 
-                    <div className="h-full md:h-[640px] p-4 overflow-y-auto">
-                        <TabsContent value="upload" className="h-full mt-0">
+                                <span className="hidden md:flex">Thư viện hình ảnh</span>
+                            </TabsTrigger>
+                        </TabsList>
+                    )}
+
+                    <div className="h-[calc(100%-60px)] p-4 w-full overflow-y-auto">
+                        <TabsContent value="upload" className="w-full h-full my-0">
                             {selectedFiles.length === 0 && (
                                 <label
                                     htmlFor="file-upload"
@@ -98,11 +87,11 @@ export default function ImageCropper() {
                             )}
 
                             {selectedFiles.length > 0 && (
-                                <div className="space-y-4">
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                                        {selectedFiles.map((file, index) => (
+                                <div className="h-full">
+                                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                                        {selectedFiles.map(({ file, preview }, index) => (
                                             <div
-                                                key={index}
+                                                key={preview}
                                                 className="relative border rounded-lg overflow-hidden shadow-sm bg-white"
                                             >
                                                 <button
@@ -116,7 +105,7 @@ export default function ImageCropper() {
 
                                                 <div className="relative w-full h-40">
                                                     <Image
-                                                        src={URL.createObjectURL(file)}
+                                                        src={preview}
                                                         alt={`selected-${index}`}
                                                         fill
                                                         style={{ objectFit: "cover" }}
@@ -130,33 +119,45 @@ export default function ImageCropper() {
                                         ))}
                                     </div>
 
-                                    <div className="flex justify-end mt-4">
+                                    {/* <div className="flex justify-end mt-4 h-[60px] items-center">
                                         <Button onClick={handleUpload}>
                                             Upload {selectedFiles.length > 1 ? `(${selectedFiles.length} ảnh)` : ""}
                                         </Button>
-                                    </div>
+                                    </div> */}
                                 </div>
                             )}
                         </TabsContent>
 
-                        <TabsContent value="url" className="h-full mt-0">
-                            <p>Nhập URL của ảnh để tải lên.</p>
-                        </TabsContent>
+                        <TabsContent value="imagegently" className="h-full w-full my-0">
+                            <div className="h-full">
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    {[...Array(20)].map((_, index) => {
+                                        const dummyImage = `https://picsum.photos/id/${index + 10}/300/200`;
+                                        const dummyName = `image_${index + 1}.jpg`;
+                                        const dummySize = `${(Math.random() * 2 + 0.5).toFixed(2)} MB`;
 
-                        <TabsContent value="googledrive" className="h-full mt-0">
-                            <p>Tích hợp Google Drive hoặc chọn file.</p>
-                        </TabsContent>
-
-                        <TabsContent value="unsplash" className="h-full mt-0">
-                            <p>Duyệt và chọn ảnh từ Unsplash.</p>
-                        </TabsContent>
-
-                        <TabsContent value="imagegently" className="h-full mt-0">
-                            <p>Tìm kiếm hoặc chọn ảnh từ ImageGently.</p>
-                        </TabsContent>
-
-                        <TabsContent value="camera" className="h-full mt-0">
-                            <p>Chụp ảnh bằng máy ảnh thiết bị.</p>
+                                        return (
+                                            <div
+                                                key={index}
+                                                className="relative border rounded-lg overflow-hidden shadow-sm bg-white"
+                                            >
+                                                <div className="relative w-full h-40">
+                                                    <Image
+                                                        src={dummyImage}
+                                                        alt={`library-${index}`}
+                                                        fill
+                                                        style={{ objectFit: "cover" }}
+                                                    />
+                                                </div>
+                                                <div className="p-3">
+                                                    <p className="text-sm font-medium truncate">{dummyName}</p>
+                                                    <p className="text-xs text-gray-500">{dummySize}</p>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
                         </TabsContent>
                     </div>
                 </Tabs>
