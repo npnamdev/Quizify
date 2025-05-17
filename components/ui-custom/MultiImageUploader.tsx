@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useRef, useState } from 'react';
-import axios from 'axios';
-import { CheckCircle, XCircle } from 'lucide-react';
+import React, { useRef, useState } from "react";
+import axios from "axios";
+import { CheckCircle, XCircle } from "lucide-react";
 
 type ImageUpload = {
     file: File;
     previewUrl: string;
     progress: number;
-    status: 'idle' | 'uploading' | 'success' | 'error';
+    status: "idle" | "uploading" | "success" | "error";
     uploadTime: number | null;
 };
 
@@ -24,7 +24,7 @@ const MultiImageUploader = () => {
             file,
             previewUrl: URL.createObjectURL(file),
             progress: 0,
-            status: 'idle',
+            status: "idle",
             uploadTime: null,
         }));
 
@@ -37,16 +37,16 @@ const MultiImageUploader = () => {
         for (let i = 0; i < newState.length; i++) {
             const image = newState[i];
             const formData = new FormData();
-            formData.append('file', image.file);
+            formData.append("file", image.file);
 
-            image.status = 'uploading';
+            image.status = "uploading";
             setImages([...newState]);
 
             const start = performance.now();
 
             try {
-                await axios.post('https://your-api.com/upload', formData, {
-                    headers: { 'Content-Type': 'multipart/form-data' },
+                await axios.post("https://api.wedly.info/api/media", formData, {
+                    headers: { "Content-Type": "multipart/form-data" },
                     onUploadProgress: (e) => {
                         const percent = Math.round((e.loaded * 100) / (e.total || 1));
                         newState[i].progress = percent;
@@ -55,11 +55,11 @@ const MultiImageUploader = () => {
                 });
 
                 const end = performance.now();
-                image.status = 'success';
+                image.status = "success";
                 image.uploadTime = +((end - start) / 1000).toFixed(2);
                 setImages([...newState]);
             } catch (err) {
-                image.status = 'error';
+                image.status = "error";
                 image.uploadTime = null;
                 setImages([...newState]);
             }
@@ -90,11 +90,11 @@ const MultiImageUploader = () => {
                     />
                     <circle
                         stroke={
-                            img.status === 'error'
-                                ? '#ef4444'
-                                : img.status === 'success'
-                                    ? '#10b981'
-                                    : '#3b82f6'
+                            img.status === "error"
+                                ? "#ef4444"
+                                : img.status === "success"
+                                    ? "#10b981"
+                                    : "#3b82f6"
                         }
                         fill="transparent"
                         strokeWidth={stroke}
@@ -104,19 +104,19 @@ const MultiImageUploader = () => {
                         r={normalizedRadius}
                         cx={radius}
                         cy={radius}
-                        style={{ transition: 'stroke-dashoffset 0.3s ease' }}
+                        style={{ transition: "stroke-dashoffset 0.3s ease" }}
                     />
                 </svg>
 
                 {/* Icon overlay */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                    {img.status === 'success' && (
+                    {img.status === "success" && (
                         <CheckCircle className="w-5 h-5 text-green-500" />
                     )}
-                    {img.status === 'error' && (
+                    {img.status === "error" && (
                         <XCircle className="w-5 h-5 text-red-500" />
                     )}
-                    {img.status === 'uploading' && (
+                    {img.status === "uploading" && (
                         <span className="text-xs font-medium text-blue-600">
                             {img.progress}%
                         </span>
@@ -165,7 +165,7 @@ const MultiImageUploader = () => {
                             alt={`preview-${index}`}
                             className="w-full h-40 object-cover"
                         />
-                        {img.status !== 'idle' && renderProgress(img)}
+                        {img.status !== "idle" && renderProgress(img)}
                     </div>
                 ))}
             </div>
