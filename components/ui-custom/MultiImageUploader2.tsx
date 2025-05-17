@@ -176,13 +176,12 @@ const MultiImageUploader2 = () => {
             <img
               src={img.previewUrl}
               alt={`preview-${index}`}
-              className={`w-full h-40 object-cover transition-opacity duration-300 ${
-                img.status === "success"
+              className={`w-full h-40 object-cover transition-opacity duration-300 ${img.status === "success"
                   ? "opacity-100"
                   : img.status === "uploading" || img.status === "error"
-                  ? "opacity-50"
-                  : "opacity-100"
-              }`}
+                    ? "opacity-50"
+                    : "opacity-100"
+                }`}
             />
 
             {(img.status === "uploading" || img.status === "error") && (
