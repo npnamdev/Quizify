@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/tabs";
 import {
     UploadCloud,
-    Image as ImageIcon,
+    Image as ImageIcon, Plus
 } from "lucide-react";
 import MediaGallery from "@/components/ui-custom/MediaGallery";
 import DropzoneArea from "@/components/ui-custom/DropzoneArea";
@@ -28,7 +28,10 @@ export default function ImageCropper() {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline">Tải ảnh lên</Button>
+                <Button onClick={() => console.log('Tạo mới')} className='gap-1'>
+                    <Plus className="w-4 h-4" />
+                    Thêm hình ảnh
+                </Button>
             </DialogTrigger>
 
             <DialogContent

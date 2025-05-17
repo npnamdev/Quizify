@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import useSWR from 'swr';
-import { Pencil, Trash2, Eye, Ban, Mail, Clipboard } from 'lucide-react';
+import { Pencil, Trash2, Eye, Ban, Mail, Clipboard, Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import moment from 'moment';
 import { toast } from "sonner";
 import copy from 'clipboard-copy';
@@ -10,7 +11,6 @@ import TableView from '@/components/ui-custom/TableView';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
 import {
     Select,
     SelectContent,
@@ -132,7 +132,7 @@ export default function App() {
     const deleteUser = async (userId: string | number) => {
         const isConfirmed = window.confirm("Are you sure you want to delete this user?");
         if (!isConfirmed) {
-            return; 
+            return;
         }
         try {
             const response = await fetch(`http://api.wedly.info/api/users/${userId}`, { method: "DELETE" });
@@ -166,6 +166,13 @@ export default function App() {
                 setSearchInput={setSearchInput}
                 isLoading={isLoading}
                 onActionAdd={handleAddUser}
+                actionButton={
+                    <Button onClick={() => console.log('Tạo mới')} className='gap-1'>
+                        <Plus className="w-4 h-4" />
+                        Thêm người dùng
+                    </Button>
+                }
+
                 options={[
                     {
                         value: "copy",

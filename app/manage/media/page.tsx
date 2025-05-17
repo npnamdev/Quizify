@@ -3,9 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import useSWR from 'swr';
 import TableView from '@/components/ui-custom/TableView';
-import { Eye, Trash2 } from 'lucide-react';
+import { Eye, Trash2, Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import moment from 'moment';
 import { formatBytes } from "@/utils/utils";
+import ImageCropper from "@/components/ui-custom/ImageCropper";
 
 type Media = {
     id: string;
@@ -91,6 +93,9 @@ export default function MediaListPage() {
                 searchInput={searchInput}
                 setSearchInput={setSearchInput}
                 isLoading={isLoading}
+                actionButton={
+                    <ImageCropper />
+                }
                 options={[
                     {
                         value: 'view',

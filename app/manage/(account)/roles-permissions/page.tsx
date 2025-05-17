@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import useSWR from 'swr';
 import TableView from '@/components/ui-custom/TableView';
-import { Pencil, Trash2, Eye } from 'lucide-react';
+import { Pencil, Trash2, Eye, Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import moment from 'moment';
 import { toast } from 'sonner';
 
@@ -89,6 +90,12 @@ export default function RoleListPage() {
                 searchInput={searchInput}
                 setSearchInput={setSearchInput}
                 isLoading={isLoading}
+                actionButton={
+                    <Button onClick={() => console.log('Tạo mới')} className='gap-1'>
+                        <Plus className="w-4 h-4" />
+                        Thêm vai trò
+                    </Button>
+                }
                 options={[
                     {
                         value: 'view',

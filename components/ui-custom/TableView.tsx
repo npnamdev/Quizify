@@ -51,10 +51,11 @@ type TableViewProps<T extends { id: number | string }> = {
   isLoading?: boolean;
   options?: ActionOption[];
   onActionAdd?: () => void;
+  actionButton?: React.ReactNode;
 };
 
 export default function TableView<T extends { id: number | string, image?: string }>({
-  columns, data, pageSize, currentPage, total, options, onActionAdd,
+  columns, data, pageSize, currentPage, total, options, onActionAdd, actionButton,
   onSelect, onPageChange, onPageSizeChange,
   selectedIds, setSelectedIds, searchInput, setSearchInput, isLoading
 }: TableViewProps<T>) {
@@ -141,10 +142,7 @@ export default function TableView<T extends { id: number | string, image?: strin
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button className="px-2.5 gap-1 text-[13.5px]" onClick={() => onActionAdd?.()}>
-            <Plus strokeWidth="1.5" />
-            <span className='hidden md:flex'>Thêm người dùng</span>
-          </Button>
+          {actionButton}
         </div>
       </div>
 
@@ -217,6 +215,8 @@ export default function TableView<T extends { id: number | string, image?: strin
                           return (
                             <div className="flex items-center gap-2">
                               <Image
+                                width={50}
+                                height={50}
                                 src={String(value)}
                                 alt="Preview"
                                 className="w-10 h-10 object-cover rounded shadow border"
