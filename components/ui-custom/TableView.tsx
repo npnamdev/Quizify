@@ -26,13 +26,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from "@/components/ui/input";
 import { Checkbox } from '@/components/ui/checkbox';
-
-type Column<T> = {
-  header: string;
-  accessor: keyof T;
-  visible?: boolean;
-  type?: 'group' | 'image' | 'system' | 'badge';
-};
+import Image from 'next/image';
 
 type ActionOption = {
   value: string;
@@ -193,27 +187,57 @@ export default function TableView<T extends { id: number | string, image?: strin
                 </TableCell>
                 {visibleColumns.map((col, idx) => (
                   <TableCell key={idx} className="px-4 py-0 whitespace-nowrap">
-                    {col.type === 'group' ? (
-                      String(row[col.accessor])
-                    ) : col.type === 'badge' ? (
-                      <div
-                        className={`rounded-lg px-2 py-1 text-xs w-min text-white ${row[col.accessor] ? 'bg-[#3eca65]' : 'bg-[#f45d5d]'
-                          }`}
-                      >
-                        {row[col.accessor] ? 'Hoạt động' : 'Không hoạt động'}
-                      </div>
-                    ) : col.type === 'system' ? (
-                      <div
-                        className={`rounded-lg px-2 py-1 text-xs w-min text-white ${row[col.accessor] ? 'bg-[#3eca65]' : 'bg-[#f45d5d]'
-                          }`}
-                      >
-                        {String(row[col.accessor])}
-                      </div>
-                    ) : (
-                      <span className={`${col.accessor == "fullName" ? 'font-bold text-[13.5px]' : ''}`}>
-                        {String(row[col.accessor])}
-                      </span>
-                    )}
+                    {(() => {
+                      const value = row[col.accessor];
+
+                      switch (col.type) {
+                        case 'group':
+                          return String(value);
+
+                        case 'badge':
+                          return (
+                            <div
+                              className={`rounded-lg px-2 py-1 text-xs w-min text-white ${value ? 'bg-[#3eca65]' : 'bg-[#f45d5d]'
+                                }`}
+                            >
+                              {value ? 'Hoạt động' : 'Không hoạt động'}
+                            </div>
+                          );
+
+                        case 'system':
+                          return (
+                            <div
+                              className={`rounded-lg px-2 py-1 text-xs w-min text-white ${value ? 'bg-[#3eca65]' : 'bg-[#f45d5d]'
+                                }`}
+                            >
+                              {String(value)}
+                            </div>
+                          );
+                        case 'image-preview':
+                          return (
+                            <div className="flex items-center gap-2">
+                              <Image
+                                src={String(value)}
+                                alt="Preview"
+                                className="w-10 h-10 object-cover rounded shadow border"
+                              />
+                            </div>
+                          );
+
+                        default:
+                          return (
+                            <span
+                              className={
+                                col.accessor === 'fullName'
+                                  ? 'font-bold text-[13.5px]'
+                                  : ''
+                              }
+                            >
+                              {String(value)}
+                            </span>
+                          );
+                      }
+                    })()}
                   </TableCell>
                 ))}
                 <TableCell>

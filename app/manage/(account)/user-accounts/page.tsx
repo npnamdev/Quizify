@@ -38,13 +38,6 @@ type User = {
     address: string;
 };
 
-type Column<T> = {
-    header: string;
-    accessor: keyof T;
-    visible?: boolean;
-    type?: 'group' | 'image' | 'system' | 'badge';
-};
-
 const columns: Column<User>[] = [
     { header: 'Họ và tên', accessor: 'fullName' },
     { header: 'Tên người dùng', accessor: 'username', visible: false },

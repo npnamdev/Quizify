@@ -3,30 +3,34 @@
 import React, { useState, useEffect } from 'react';
 import useSWR from 'swr';
 import TableView from '@/components/ui-custom/TableView';
-import { Pencil, Trash2, Eye } from 'lucide-react';
+import { Eye, Trash2 } from 'lucide-react';
 import moment from 'moment';
-import { toast } from 'sonner';
+import { formatBytes } from "@/utils/utils";
 
-type Role = {
+type Media = {
     id: string;
-    name: string;
-    isSystem: boolean;
-    permissions: number;
+    url: string;
+    secure_url: string;
+    format: string;
+    resource_type: string;
+    bytes: number;
+    original_filename: string;
     createdAt: string;
     updatedAt: string;
 };
 
-const columns: Column<Role>[] = [
-    { header: 'Tên vai trò', accessor: 'name' },
-    { header: 'Loại vai trò', accessor: 'isSystem', type: 'system' },
-    { header: 'Quyền', accessor: 'permissions' },
+const columns: Column<Media>[] = [
+    { header: 'Hình ảnh', accessor: 'secure_url', type: 'image-preview' },
+    { header: 'Loại', accessor: 'resource_type' },
+    { header: 'Định dạng', accessor: 'format', type: "system" },
+    { header: 'Kích thước', accessor: 'bytes' },
     { header: 'Ngày tạo', accessor: 'createdAt' },
     { header: 'Ngày cập nhật', accessor: 'updatedAt' },
 ];
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-export default function RoleListPage() {
+export default function MediaListPage() {
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
     const [selectedIds, setSelectedIds] = useState<(string | number)[]>([]);
@@ -48,34 +52,32 @@ export default function RoleListPage() {
 
     if (debouncedSearch) {
         queryParams.append('search', debouncedSearch);
-        queryParams.append('searchFields', 'name');
+        queryParams.append('searchFields', 'original_filename');
     }
 
-    const url = `https://api.wedly.info/api/roles?${queryParams.toString()}`;
-
+    const url = `https://api.wedly.info/api/media?${queryParams.toString()}`;
     const { data, isLoading } = useSWR(url, fetcher);
 
-    const roles: Role[] = (data?.data || []).map((role: any) => ({
-        id: role._id,
-        name:
-            role.name === 'admin'
-                ? 'Quản trị viên'
-                : role.name === 'user'
-                    ? 'Người dùng'
-                    : role.name,
-        isSystem: role.isSystem || 'Hệ thống',
-        permissions: 20,
-        createdAt: moment(role.createdAt).format('DD/MM/YYYY'),
-        updatedAt: moment(role.updatedAt).format('DD/MM/YYYY'),
+    const mediaList: Media[] = (data?.data || []).map((item: any) => ({
+        id: item._id,
+        url: item.url,
+        secure_url: item.secure_url,
+        format: item.format,
+        resource_type: item.resource_type,
+        bytes: formatBytes(item.bytes),
+        original_filename: item.original_filename,
+        createdAt: moment(item.createdAt).format('DD/MM/YYYY'),
+        updatedAt: moment(item.updatedAt).format('DD/MM/YYYY'),
     }));
 
-    const total = data?.pagination?.total || 0;
+    // ✅ Sử dụng totalMedias từ pagination
+    const total = data?.pagination?.totalMedias || 0;
 
     return (
         <div className="space-y-4">
-            <TableView<Role>
+            <TableView<Media>
                 columns={columns}
-                data={roles}
+                data={mediaList}
                 pageSize={pageSize}
                 currentPage={page}
                 total={total}
@@ -92,21 +94,21 @@ export default function RoleListPage() {
                 options={[
                     {
                         value: 'view',
-                        label: 'Xem chi tiết',
-                        icon: <Eye size={16} strokeWidth={1.5} />,
-                        action: (id) => console.log('Xem chi tiết vai trò với id:', id),
-                    },
-                    {
-                        value: 'edit',
-                        label: 'Chỉnh sửa',
-                        icon: <Pencil size={16} strokeWidth={1.5} />,
-                        action: (id) => console.log('Chỉnh sửa vai trò với id:', id),
+                        label: 'Xem ảnh',
+                        icon: <Eye size={16} />,
+                        action: (id) => {
+                            const media = mediaList.find((m) => m.id === id);
+                            if (media) window.open(media.secure_url, '_blank');
+                        },
                     },
                     {
                         value: 'delete',
                         label: 'Xoá',
-                        icon: <Trash2 size={16} strokeWidth={1.5} />,
-                        action: (id) => console.log('Xoá vai trò với id:', id),
+                        icon: <Trash2 size={16} />,
+                        action: (id) => {
+                            console.log('Xoá media với id:', id);
+                            // Gọi API xoá nếu cần
+                        },
                     },
                 ]}
             />

@@ -62,24 +62,21 @@ export default function Menubar() {
                     { title: "Mã kích hoạt", url: "/manage/activate-course" },
                 ],
             },
-            {
-                title: "Quản lý doanh thu",
-                url: "#",
-                icon: ShoppingCart,
-                items: [
-                    { title: "Danh sách đơn hàng", url: "/manage/order-list" },
-                    { title: "Quản lý COD", url: "/manage/cod-management" },
-                    { title: "Xử lý đơn hàng COD", url: "/manage/process-cod-orders" },
-                ],
-            },
+            // {
+            //     title: "Quản lý doanh thu",
+            //     url: "#",
+            //     icon: ShoppingCart,
+            //     items: [
+            //         { title: "Danh sách đơn hàng", url: "/manage/order-list" },
+            //         { title: "Quản lý COD", url: "/manage/cod-management" },
+            //         { title: "Xử lý đơn hàng COD", url: "/manage/process-cod-orders" },
+            //     ],
+            // },
             {
                 title: "Quản lý thư viện",
-                url: "/manage/liblarys",
+                url: "/manage/media",
                 icon: SwatchBook,
-                items: [
-                    { title: "Danh sách CTV", url: "/manage/affiliate-list" },
-                    { title: "Thanh toán CTV", url: "/manage/affiliate-payments" },
-                ],
+                items: [],
             },
         ],
         settings: [
