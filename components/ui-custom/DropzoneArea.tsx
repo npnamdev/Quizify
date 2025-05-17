@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import Cropper from "react-easy-crop";
-import { UploadCloud, Trash2, Edit3, X, CheckCircle2, XCircle } from "lucide-react";
+import { UploadCloud, Trash2, Edit3, X, CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -19,7 +19,7 @@ type FileWithPreview = {
     status: FileStatus;
 };
 
-function DropzoneArea() {
+function DropzoneArea({ setActiveTab }: { setActiveTab: (tab: string) => void; }) {
     const [files, setFiles] = useState<FileWithPreview[]>([]);
     const [cropMode, setCropMode] = useState(false);
     const [cropIndex, setCropIndex] = useState<number | null>(null);
@@ -27,6 +27,7 @@ function DropzoneArea() {
     const [zoom, setZoom] = useState(1);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
     const [aspectRatio, setAspectRatio] = useState<number | null>(4 / 3);
+    const [isUploading, setIsUploading] = useState(false); // ✅ NEW
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
         const mappedFiles: FileWithPreview[] = acceptedFiles.map((file) => ({
@@ -102,14 +103,16 @@ function DropzoneArea() {
     };
 
     const handleUpload = async () => {
-        for (let i = 0; i < files.length; i++) {
-            setFiles((prev) => {
-                const updated = [...prev];
-                updated[i].status = "uploading";
-                updated[i].progress = 0;
-                return [...updated];
-            });
+        setIsUploading(true); // ✅ Bắt đầu upload
+        setFiles((prev) =>
+            prev.map((file) => ({
+                ...file,
+                status: "uploading",
+                progress: 0,
+            }))
+        );
 
+        for (let i = 0; i < files.length; i++) {
             const formData = new FormData();
             formData.append("media", files[i].file);
 
@@ -121,7 +124,7 @@ function DropzoneArea() {
                         setFiles((prev) => {
                             const updated = [...prev];
                             updated[i].progress = percent;
-                            return [...updated];
+                            return updated;
                         });
                     },
                 });
@@ -129,19 +132,22 @@ function DropzoneArea() {
                 setFiles((prev) => {
                     const updated = [...prev];
                     updated[i].status = "success";
-                    return [...updated];
+                    return updated;
                 });
             } catch (error) {
                 setFiles((prev) => {
                     const updated = [...prev];
                     updated[i].status = "error";
-                    return [...updated];
+                    return updated;
                 });
                 toast.error(`Tải ảnh ${files[i].file.name} thất bại!`);
                 console.error(error);
             }
         }
 
+        setIsUploading(false);
+        setFiles([]);
+        setActiveTab("imagegently")
         toast.success("Tải ảnh lên hoàn tất!");
         files.forEach((f) => URL.revokeObjectURL(f.preview));
     };
@@ -186,16 +192,18 @@ function DropzoneArea() {
                                     <div className="relative">
                                         <img src={fileWithPreview.preview} alt={`preview-${index}`} className="w-full h-40 object-cover" />
                                         {fileWithPreview.status === "uploading" && (
-                                            <div className="absolute top-2 right-2 w-10 h-10 bg-white rounded-full p-1 shadow">
-                                                <CircularProgressbar
-                                                    value={fileWithPreview.progress}
-                                                    text={`${fileWithPreview.progress}%`}
-                                                    styles={buildStyles({
-                                                        pathColor: "#3b82f6",
-                                                        textSize: "28px",
-                                                        textColor: "#000",
-                                                    })}
-                                                />
+                                            <div className="absolute z-50 top-0 left-0 w-full h-full bg-black/40 flex items-center justify-center">
+                                                <div className=" w-10 h-10 bg-white rounded-full p-1 shadow">
+                                                    <CircularProgressbar
+                                                        value={fileWithPreview.progress}
+                                                        text={`${fileWithPreview.progress}%`}
+                                                        styles={buildStyles({
+                                                            pathColor: "#3b82f6",
+                                                            textSize: "28px",
+                                                            textColor: "#000",
+                                                        })}
+                                                    />
+                                                </div>
                                             </div>
                                         )}
                                         {fileWithPreview.status === "success" && (
@@ -205,6 +213,7 @@ function DropzoneArea() {
                                             <XCircle className="absolute top-2 right-2 text-red-500 w-6 h-6 bg-white rounded-full shadow p-1" />
                                         )}
                                     </div>
+
                                     <div className="py-2.5 px-3 text-sm flex justify-between items-center">
                                         <div>
                                             <p className="text-[13px] font-semibold truncate">{fileWithPreview.file.name}</p>
@@ -213,20 +222,22 @@ function DropzoneArea() {
                                             </p>
                                         </div>
                                         <div className="flex space-x-2">
-                                            <button
+                                            <Button
                                                 onClick={() => startCrop(index)}
-                                                className="bg-white rounded-sm shadow p-1 hover:bg-blue-100"
+                                                className="bg-white rounded-sm shadow p-1 hover:bg-blue-100 w-8 h-8"
                                                 title="Chỉnh sửa ảnh"
+                                                disabled={isUploading}
                                             >
                                                 <Edit3 className="w-4 h-4 text-gray-600" />
-                                            </button>
-                                            <button
+                                            </Button>
+                                            <Button
                                                 onClick={() => removeFile(index)}
-                                                className="bg-white rounded-sm shadow p-1 hover:bg-red-100"
+                                                className="bg-white rounded-sm shadow p-1 hover:bg-red-100 w-8 h-8"
                                                 title="Xoá ảnh"
+                                                disabled={isUploading}
                                             >
                                                 <Trash2 className="w-4 h-4 text-gray-600" />
-                                            </button>
+                                            </Button>
                                         </div>
                                     </div>
                                 </div>
@@ -235,7 +246,16 @@ function DropzoneArea() {
                     </div>
 
                     <div className="h-[65px] border-t bg-grey-300 flex items-center px-5 justify-end">
-                        <Button onClick={handleUpload}>Tải {files.length} ảnh lên</Button>
+                        <Button onClick={handleUpload} disabled={isUploading}>
+                            {isUploading ? (
+                                <div className="flex items-center gap-2">
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                    <span>Đang tải...</span>
+                                </div>
+                            ) : (
+                                `Tải ${files.length} ảnh lên`
+                            )}
+                        </Button>
                     </div>
                 </div>
             )}
