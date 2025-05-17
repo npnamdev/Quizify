@@ -22,17 +22,17 @@ export default function ImageCropper() {
             </DialogTrigger>
 
             <DialogContent className="sm:max-w-[1000px] p-0 md:h-auto overflow-hidden" onInteractOutside={(e) => e.preventDefault()}>
-                <Tabs defaultValue="upload" className="w-full">
+                <Tabs defaultValue="imagegently" className="w-full">
                     <TabsList className="w-full h-[60px] overflow-auto flex gap-3 justify-start shadow rounded-none px-4">
-                        <TabsTrigger className="py-2.5 px-4 flex items-center gap-2" value="upload">
-                            <UploadCloud className="w-4 h-4" /> <span className="hidden md:flex">Tải lên từ thiết bị</span>
-                        </TabsTrigger>
                         <TabsTrigger className="py-2.5 px-4 flex items-center gap-2" value="imagegently">
                             <ImageIcon className="w-4 h-4" /> <span className="hidden md:flex">Thư viện hình ảnh</span>
                         </TabsTrigger>
+                        <TabsTrigger className="py-2.5 px-4 flex items-center gap-2" value="upload">
+                            <UploadCloud className="w-4 h-4" /> <span className="hidden md:flex">Tải lên từ thiết bị</span>
+                        </TabsTrigger>
                     </TabsList>
 
-                    <div className="overflow-auto h-[640px]">
+                    <div className="overflow-auto h-[620px]">
                         <TabsContent value="upload" className="h-full w-full my-0">
                             <div className="p-5 h-full">
                                 <DropzoneArea />
