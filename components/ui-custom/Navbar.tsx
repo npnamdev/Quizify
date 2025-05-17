@@ -12,6 +12,9 @@ const Navbar = () => {
     const isHidden =
         pathname === "/login" ||
         pathname === "/register" ||
+        pathname === "/forgot-password" ||
+        pathname === "/verify-email" ||
+        pathname === "/verify-email-info" ||
         pathname === "/unauthorized" ||
         pathname === "/device" ||
         pathname.startsWith("/manage");

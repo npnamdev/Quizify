@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { CircleHelp, BadgeCheck, Bell, BookOpen, UsersRound, ChevronRight, ChevronsUpDown, ShoppingCart, CreditCard, Folder, Forward, SlidersVertical, ChartBarDecreasing, LogOut, GitBranch, MoreHorizontal, SwatchBook, Package, Settings, Sparkles, LayoutGrid, Trash2, Palette, GalleryVerticalEnd, AudioWaveform, Command } from "lucide-react";
+import { CircleHelp, BadgeCheck, Bell, BookOpen, UsersRound, ChevronRight, ChevronsUpDown, ShoppingCart, CreditCard, Folder, Forward, SlidersVertical, ChartBarDecreasing, LogOut, GitBranch, MoreHorizontal, SwatchBook, Package, Settings, Sparkles, LayoutGrid, Trash2, Palette, GalleryVerticalEnd, AudioWaveform, Command, Home, House } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -62,22 +62,27 @@ export default function Menubar() {
                     { title: "Mã kích hoạt", url: "/manage/activate-course" },
                 ],
             },
-            // {
-            //     title: "Quản lý doanh thu",
-            //     url: "#",
-            //     icon: ShoppingCart,
-            //     items: [
-            //         { title: "Danh sách đơn hàng", url: "/manage/order-list" },
-            //         { title: "Quản lý COD", url: "/manage/cod-management" },
-            //         { title: "Xử lý đơn hàng COD", url: "/manage/process-cod-orders" },
-            //     ],
-            // },
+            {
+                title: "Quản lý doanh thu",
+                url: "#",
+                icon: ShoppingCart,
+                items: [
+                    { title: "Danh sách đơn hàng", url: "/manage/order-list" },
+                    { title: "Quản lý COD", url: "/manage/cod-management" },
+                    { title: "Xử lý đơn hàng COD", url: "/manage/process-cod-orders" },
+                ],
+            },
             {
                 title: "Quản lý thư viện",
-                url: "/manage/media",
+                url: "#",
                 icon: SwatchBook,
-                items: [],
-            },
+                items: [
+                    { title: "Hình ảnh", url: "/manage/media" },
+                    { title: "Video", url: "/manage/media/videos" },
+                    { title: "Tài liệu", url: "/manage/media/files" },
+                    { title: "Thùng rác", url: "/manage/media/trash" },
+                ],
+            }
         ],
         settings: [
             { name: "Cài đặt hiển thị", url: "/manage/display-settings", icon: SlidersVertical },
@@ -254,6 +259,10 @@ export default function Menubar() {
                                     </div>
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={() => router.push("/")}>
+                                    <House />
+                                    Trang chủ
+                                </DropdownMenuItem>
                                 <DropdownMenuItem onClick={handleLogout}>
                                     <LogOut />
                                     Đăng xuất

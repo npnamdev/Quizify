@@ -7,9 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
-import { useAuth } from "@/contexts/AuthProvider";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner"
+import { Loader2 } from "lucide-react";
 
 export default function RegisterPage() {
     const [username, setUsername] = useState("");
@@ -17,11 +17,11 @@ export default function RegisterPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-
-    const { login } = useAuth();
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
 
     const handleRegister = async () => {
+        setLoading(true);
         try {
             const res = await fetch("https://api.wedly.info/api/auth/register", {
                 method: "POST",
@@ -41,9 +41,12 @@ export default function RegisterPage() {
                 throw new Error(errorData.message || "Đăng ký thất bại");
             }
 
-            router.push("/verify-email-info");
-            toast.success("Đăng ký thành công!");
-            // await login(email, password);
+            setTimeout(() => {
+                router.push("/verify-email-info");
+                toast.success("Đăng ký thành công!");
+                setLoading(false);
+            }, 3000);
+
         } catch (error: any) {
             console.error("Lỗi đăng ký:", error.message);
             alert(error.message);
@@ -123,8 +126,15 @@ export default function RegisterPage() {
                                             required
                                         />
                                     </div>
-                                    <Button className="w-full" onClick={handleRegister}>
-                                        Register
+                                    <Button className="w-full" onClick={handleRegister} disabled={loading}>
+                                        {loading ? (
+                                            <>
+                                                <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                                                Please wait
+                                            </>
+                                        ) : (
+                                            "Register"
+                                        )}
                                     </Button>
                                     <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
                                         <span className="relative z-10 bg-background px-2 text-muted-foreground">

@@ -70,31 +70,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         fetchUser();
     }, []);
 
-    // const login = async (email: string, password: string) => {
-    //     try {
-    //         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
-    //             method: "POST",
-    //             credentials: 'include',
-    //             headers: { "Content-Type": "application/json" },
-    //             body: JSON.stringify({ email, password }),
-    //         });
-
-    //         if (!response.ok) {
-    //             throw new Error("Login failed");
-    //         }
-
-    //         toast.success("Login successfully");
-
-    //         const data = await response.json();
-
-    //         console.log("data", data.user);
-
-    //         localStorage.setItem("accessToken", data.accessToken);
-    //         setUser(data.user);
-    //     } catch (err) {
-    //         console.error("Login failed", err);
-    //     }
-    // };
     const login = async (email: string, password: string): Promise<boolean> => {
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
@@ -123,9 +98,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const logout = async () => {
-        // const confirmLogout = window.confirm("Are you sure you want to logout?");
-        // if (!confirmLogout) return;
-
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
                 method: "POST",

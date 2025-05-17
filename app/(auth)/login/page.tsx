@@ -6,28 +6,28 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from 'next/link';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "@/contexts/AuthProvider";
 import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 export default function LoginPage() {
     const { login, isAuthenticated } = useAuth();
     const [email, setEmail] = useState("admin@gmail.com");
     const [password, setPassword] = useState("namdev");
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
 
-    // const handleLogin = async () => {
-    //     try {
-    //         await login(email, password);
-    //         router.push("/");
-    //     } catch (error) {
-    //         console.error("Login failed:", error);
-    //     }
-    // };
     const handleLogin = async () => {
+        setLoading(true);
         const success = await login(email, password);
         if (success) {
-            router.push("/");
+            setTimeout(() => {
+                router.push("/");
+                setLoading(false);
+            }, 3000);
+        } else {
+            setLoading(false);
         }
     };
 
@@ -59,12 +59,12 @@ export default function LoginPage() {
                                     <div className="grid gap-2">
                                         <div className="flex items-center">
                                             <Label htmlFor="password">Password</Label>
-                                            <a
-                                                href="#"
+                                            <Link
+                                                href="/forgot-password"
                                                 className="ml-auto text-sm underline-offset-2 hover:underline"
                                             >
                                                 Forgot your password?
-                                            </a>
+                                            </Link>
                                         </div>
                                         <Input
                                             id="password"
@@ -75,8 +75,15 @@ export default function LoginPage() {
                                             required
                                         />
                                     </div>
-                                    <Button className="w-full" onClick={handleLogin}>
-                                        Login
+                                    <Button className="w-full" onClick={handleLogin} disabled={loading}>
+                                        {loading ? (
+                                            <>
+                                                <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                                                Please wait
+                                            </>
+                                        ) : (
+                                            "Login"
+                                        )}
                                     </Button>
                                     <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
                                         <span className="relative z-10 bg-background px-2 text-muted-foreground">
