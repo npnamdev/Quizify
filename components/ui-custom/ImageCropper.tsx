@@ -22,8 +22,8 @@ import {
 import MediaGallery from "@/components/ui-custom/MediaGallery";
 import DropzoneArea from "@/components/ui-custom/DropzoneArea";
 
-export default function ImageCropper() {
-    const [activeTab, setActiveTab] = useState("imagegently");
+export default function ImageCropper({ mutate }: { mutate?: () => void }) {
+    const [activeTab, setActiveTab] = useState("upload");
 
     return (
         <Dialog>
@@ -46,15 +46,6 @@ export default function ImageCropper() {
                     <TabsList className="w-full h-[60px] overflow-auto flex gap-3 justify-start shadow rounded-none px-4">
                         <TabsTrigger
                             className="py-2.5 px-4 flex items-center gap-2"
-                            value="imagegently"
-                        >
-                            <ImageIcon className="w-4 h-4" />
-                            <span className="hidden md:flex">
-                                Thư viện hình ảnh
-                            </span>
-                        </TabsTrigger>
-                        <TabsTrigger
-                            className="py-2.5 px-4 flex items-center gap-2"
                             value="upload"
                         >
                             <UploadCloud className="w-4 h-4" />
@@ -62,12 +53,21 @@ export default function ImageCropper() {
                                 Tải lên từ thiết bị
                             </span>
                         </TabsTrigger>
+                        <TabsTrigger
+                            className="py-2.5 px-4 flex items-center gap-2"
+                            value="imagegently"
+                        >
+                            <ImageIcon className="w-4 h-4" />
+                            <span className="hidden md:flex">
+                                Thư viện hình ảnh
+                            </span>
+                        </TabsTrigger>
                     </TabsList>
 
                     <div className="overflow-auto h-[620px]">
                         <TabsContent value="upload" className="h-full w-full my-0">
                             <div className="p-5 h-full">
-                                <DropzoneArea setActiveTab={setActiveTab} />
+                                <DropzoneArea setActiveTab={setActiveTab} mutate={mutate}/>
                             </div>
                         </TabsContent>
 

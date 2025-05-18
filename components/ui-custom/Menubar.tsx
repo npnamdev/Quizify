@@ -77,10 +77,10 @@ export default function Menubar() {
                 url: "#",
                 icon: SwatchBook,
                 items: [
-                    { title: "Hình ảnh", url: "/manage/media" },
-                    { title: "Video", url: "/manage/media/videos" },
-                    { title: "Tài liệu", url: "/manage/media/files" },
-                    { title: "Thùng rác", url: "/manage/media/trash" },
+                    { title: "Hình ảnh", url: "/manage/images" },
+                    { title: "Video", url: "/manage/videos" },
+                    { title: "Audio", url: "/manage/audios" },
+                    { title: "Tài liệu", url: "/manage/files" },
                 ],
             }
         ],

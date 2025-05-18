@@ -19,7 +19,7 @@ type FileWithPreview = {
     status: FileStatus;
 };
 
-function DropzoneArea({ setActiveTab }: { setActiveTab: (tab: string) => void; }) {
+function DropzoneArea({ setActiveTab, mutate }: { setActiveTab: (tab: string) => void; mutate?: () => void }) {
     const [files, setFiles] = useState<FileWithPreview[]>([]);
     const [cropMode, setCropMode] = useState(false);
     const [cropIndex, setCropIndex] = useState<number | null>(null);
@@ -144,6 +144,7 @@ function DropzoneArea({ setActiveTab }: { setActiveTab: (tab: string) => void; }
                 console.error(error);
             }
         }
+        if (mutate) await mutate();
 
         setIsUploading(false);
         setFiles([]);

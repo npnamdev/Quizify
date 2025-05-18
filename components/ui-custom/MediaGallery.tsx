@@ -49,13 +49,13 @@ const MediaGallery = () => {
                         <img
                             src={item.secure_url}
                             alt={item.original_filename}
-                            className="w-full h-[140px] object-cover object-center"
+                            className="w-full h-[145px] object-contain object-center bg-gray-100"
                         />
-                        <div className="p-4 text-sm border-t">
+                        <div className="px-4 py-2 text-sm border-t">
                             <p className="font-semibold truncate">
-                                {item.original_filename}.{item.format}
+                                {item.original_filename}
                             </p>
-                            <p className="text-gray-500">{formatBytes(item.bytes)}</p>
+                            <p className="text-gray-500 mt-0.5">{formatBytes(item.bytes)}</p>
                         </div>
                     </div>
                 ))}

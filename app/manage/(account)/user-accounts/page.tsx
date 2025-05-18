@@ -11,15 +11,7 @@ import TableView from '@/components/ui-custom/TableView';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 type User = {
     id: string;
@@ -89,7 +81,7 @@ export default function App() {
 
     const url = `https://api.wedly.info/api/users?${queryParams.toString()}`;
 
-    const { data, isLoading } = useSWR(url, fetcher);
+    const { data, isLoading, mutate } = useSWR(url, fetcher);
 
     const users: User[] = (data?.data || []).map((user: any) => ({
         id: user._id,
@@ -135,7 +127,7 @@ export default function App() {
             return;
         }
         try {
-            const response = await fetch(`http://api.wedly.info/api/users/${userId}`, { method: "DELETE" });
+            const response = await fetch(`https://api.wedly.info/api/users/${userId}`, { method: "DELETE" });
 
             if (!response.ok) {
                 throw new Error("Failed to delete user");
@@ -143,6 +135,7 @@ export default function App() {
 
             const result = await response.json();
             toast.success("User deleted successfully");
+            await mutate(); // ✅ cập nhật lại giao diện
             console.log(result); // Log or handle response data if necessary
         } catch (error) {
             console.error("Delete user failed:", error);

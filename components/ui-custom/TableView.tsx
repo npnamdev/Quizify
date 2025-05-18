@@ -142,6 +142,10 @@ export default function TableView<T extends { id: number | string, image?: strin
             </DropdownMenuContent>
           </DropdownMenu>
 
+          {/* {selectedIds.length > 0 && (
+            <Button>Xóa {selectedIds.length} mục</Button>
+          )} */}
+
           {actionButton}
         </div>
       </div>
@@ -227,11 +231,9 @@ export default function TableView<T extends { id: number | string, image?: strin
                         default:
                           return (
                             <span
-                              className={
-                                col.accessor === 'fullName'
-                                  ? 'font-bold text-[13.5px]'
-                                  : ''
-                              }
+                              className={`text-[13.5px] ${col.accessor === 'fullName' ? 'font-bold' : ''
+                                } ${col.accessor === 'original_filename' ? 'max-w-[150px] truncate inline-block align-middle' : ''
+                                }`}
                             >
                               {String(value)}
                             </span>
@@ -292,7 +294,7 @@ export default function TableView<T extends { id: number | string, image?: strin
               <SelectValue placeholder="Chọn số lượng" />
             </SelectTrigger>
             <SelectContent className="min-w-[65px]">
-              {[5, 10, 15, 20, 50].map((size) => (
+              {[5, 10, 15, 20, 50, 100, 200].map((size) => (
                 <SelectItem key={size} value={size.toString()}>
                   {size}
                 </SelectItem>
