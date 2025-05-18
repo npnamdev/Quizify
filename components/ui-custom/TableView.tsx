@@ -199,10 +199,10 @@ export default function TableView<T extends { id: number | string, image?: strin
                         case 'badge':
                           return (
                             <div
-                              className={`rounded-lg px-2 py-1 text-xs w-min text-white ${value ? 'bg-[#3eca65]' : 'bg-[#f45d5d]'
+                              className={`rounded-lg px-2 py-1 text-xs w-min text-white ${value === true ? 'bg-[#3eca65]' : 'bg-[#f45d5d]'
                                 }`}
                             >
-                              {value ? 'Hoạt động' : 'Không hoạt động'}
+                              {value === true ? 'Hoạt động' : 'Không hoạt động'}
                             </div>
                           );
 

@@ -93,7 +93,7 @@ export default function App() {
         phoneNumber: user.phoneNumber,
         avatarUrl: user.avatarUrl,
         role: user.role?.name === 'admin' ? 'Quản trị viên' : user.role?.name === 'user' ? 'Người dùng' : user.role?.name || '',
-        isActive: user.isActive,
+        isVerified: user.isVerified,
         emailVerified: user.emailVerified,
         createdAt: moment(user.createdAt).format('DD/MM/YYYY'),
         updatedAt: moment(user.updatedAt).format('DD/MM/YYYY'),
