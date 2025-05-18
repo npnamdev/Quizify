@@ -50,6 +50,7 @@ export default function RegisterPage() {
         } catch (error: any) {
             console.error("Lỗi đăng ký:", error.message);
             alert(error.message);
+            setLoading(false);
         }
     };
 
