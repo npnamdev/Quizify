@@ -22,10 +22,7 @@ export default function LoginPage() {
         setLoading(true);
         const success = await login(email, password);
         if (success) {
-            setTimeout(() => {
-                router.push("/");
-                setLoading(false);
-            }, 3000);
+            setLoading(false);
         } else {
             setLoading(false);
         }
