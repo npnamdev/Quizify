@@ -23,7 +23,7 @@ type User = {
     phoneNumber: string;
     avatarUrl: string;
     role: string;
-    isActive: boolean;
+    isVerified: boolean;
     emailVerified: boolean;
     createdAt: string;
     updatedAt: string;
@@ -36,7 +36,7 @@ const columns: Column<User>[] = [
     { header: 'Email', accessor: 'email' },
     { header: 'Số điện thoại', accessor: 'phoneNumber', visible: false },
     { header: 'Vai trò', accessor: 'role' },
-    { header: 'Trạng thái', accessor: 'isActive', type: "badge" },
+    { header: 'Trạng thái', accessor: 'isVerified', type: "badge" },
     { header: 'Ngày sinh', accessor: 'dateOfBirth', visible: false },
     { header: 'Giới tính', accessor: 'gender', visible: false },
     { header: 'Địa chỉ', accessor: 'address', visible: false },
@@ -48,7 +48,7 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function App() {
     const [page, setPage] = useState(0);
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(20);
     const [selectedIds, setSelectedIds] = useState<(string | number)[]>([]);
 
     const [searchInput, setSearchInput] = useState('');
