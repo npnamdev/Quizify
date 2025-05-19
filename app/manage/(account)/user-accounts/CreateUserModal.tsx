@@ -1,9 +1,10 @@
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState, useEffect } from "react";
+import { verify } from "crypto";
 
 interface Role {
     _id: string;
@@ -23,7 +24,6 @@ export default function CreateUserModal({ open, onOpenChange }: { open: boolean;
     const [roles, setRoles] = useState<Role[]>([]);
     const [loadingRoles, setLoadingRoles] = useState(false);
 
-    // Load roles mỗi khi modal mở
     useEffect(() => {
         if (open) {
             setLoadingRoles(true);
@@ -43,7 +43,6 @@ export default function CreateUserModal({ open, onOpenChange }: { open: boolean;
                 })
                 .finally(() => setLoadingRoles(false));
         } else {
-            // Reset form và roles khi đóng modal (tùy chọn)
             setFormData({
                 username: "",
                 fullName: "",
@@ -61,10 +60,6 @@ export default function CreateUserModal({ open, onOpenChange }: { open: boolean;
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        console.log("formData", formData);
-
 
         if (formData.password !== formData.confirmPassword) {
             alert("Mật khẩu và Nhập lại mật khẩu không khớp.");
@@ -83,6 +78,7 @@ export default function CreateUserModal({ open, onOpenChange }: { open: boolean;
                     email: formData.email,
                     password: formData.password,
                     role: formData.role,
+                    isVerified: true,
                 }),
             });
 
@@ -104,24 +100,11 @@ export default function CreateUserModal({ open, onOpenChange }: { open: boolean;
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Thêm mới người dùng</DialogTitle>
-                    <DialogDescription>
-                        Nhập thông tin người dùng để thêm vào hệ thống.
-                    </DialogDescription>
+            <DialogContent className="sm:max-w-[540px] p-0">
+                <DialogHeader className="h-[55px] flex justify-center border-b px-7">
+                    <DialogTitle className="text-md font-bold">Thêm mới người dùng</DialogTitle>
                 </DialogHeader>
-                <form className="space-y-4" onSubmit={handleSubmit}>
-                    <div className="grid gap-2">
-                        <Label htmlFor="username">Tên đăng nhập</Label>
-                        <Input
-                            id="username"
-                            value={formData.username}
-                            onChange={(e) => handleChange("username", e.target.value)}
-                            placeholder="Nhập tên đăng nhập"
-                            required
-                        />
-                    </div>
+                <div className="space-y-4 px-7">
                     <div className="grid gap-2">
                         <Label htmlFor="fullName">Họ tên</Label>
                         <Input
@@ -132,6 +115,17 @@ export default function CreateUserModal({ open, onOpenChange }: { open: boolean;
                             required
                         />
                     </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="username">Tên đăng nhập</Label>
+                        <Input
+                            id="username"
+                            value={formData.username}
+                            onChange={(e) => handleChange("username", e.target.value)}
+                            placeholder="Nhập tên đăng nhập"
+                            required
+                        />
+                    </div>
+
                     <div className="grid gap-2">
                         <Label htmlFor="email">Email</Label>
                         <Input
@@ -190,10 +184,15 @@ export default function CreateUserModal({ open, onOpenChange }: { open: boolean;
                             </SelectContent>
                         </Select>
                     </div>
-                    <div className="flex justify-end pt-4">
-                        <Button type="submit">Tạo người dùng</Button>
-                    </div>
-                </form>
+                </div>
+                <DialogFooter className="flex justify-end items-center border-t h-[60px] px-7 gap-1">
+                    <DialogClose asChild>
+                        <Button type="button" variant="secondary">
+                            Đóng
+                        </Button>
+                    </DialogClose>
+                    <Button onClick={handleSubmit}>Tạo người dùng</Button>
+                </DialogFooter>
             </DialogContent>
         </Dialog>
     );
