@@ -7,6 +7,7 @@ import { Pencil, Trash2, Eye, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import moment from 'moment';
 import { toast } from 'sonner';
+import PermissionsModal from './PermissionsModal';
 
 type Role = {
     id: string;
@@ -33,6 +34,8 @@ export default function RoleListPage() {
     const [selectedIds, setSelectedIds] = useState<(string | number)[]>([]);
     const [searchInput, setSearchInput] = useState('');
     const [debouncedSearch, setDebouncedSearch] = useState('');
+
+    const [isPermissionsModalOpen, setIsPermissionsModalOpen] = useState(false);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -107,7 +110,9 @@ export default function RoleListPage() {
                         value: 'edit',
                         label: 'Chỉnh sửa',
                         icon: <Pencil size={16} strokeWidth={1.5} />,
-                        action: (id) => console.log('Chỉnh sửa vai trò với id:', id),
+                        action: (id) => {
+                            setIsPermissionsModalOpen(true)
+                        },
                     },
                     {
                         value: 'delete',
@@ -116,6 +121,11 @@ export default function RoleListPage() {
                         action: (id) => console.log('Xoá vai trò với id:', id),
                     },
                 ]}
+            />
+
+            <PermissionsModal
+                open={isPermissionsModalOpen}
+                onOpenChange={setIsPermissionsModalOpen}
             />
         </div>
     );
