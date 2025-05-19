@@ -50,12 +50,11 @@ type TableViewProps<T extends { id: number | string }> = {
   setSearchInput: (value: string) => void;
   isLoading?: boolean;
   options?: ActionOption[];
-  onActionAdd?: () => void;
   actionButton?: React.ReactNode;
 };
 
 export default function TableView<T extends { id: number | string, image?: string }>({
-  columns, data, pageSize, currentPage, total, options, onActionAdd, actionButton,
+  columns, data, pageSize, currentPage, total, options, actionButton,
   onSelect, onPageChange, onPageSizeChange,
   selectedIds, setSelectedIds, searchInput, setSearchInput, isLoading
 }: TableViewProps<T>) {
