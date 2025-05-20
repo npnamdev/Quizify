@@ -1,21 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { toast } from "sonner";
 
 type Permission = {
@@ -31,11 +19,7 @@ interface RolePermissionEditorProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export default function RolePermissionEditor({
-  roleId,
-  open,
-  onOpenChange,
-}: RolePermissionEditorProps) {
+export default function RolePermissionEditor({ roleId, open, onOpenChange }: RolePermissionEditorProps) {
   const [allPermissions, setAllPermissions] = useState<Permission[]>([]);
   const [rolePermissions, setRolePermissions] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -74,10 +58,7 @@ export default function RolePermissionEditor({
   const handleUpdatePermissions = async () => {
     setUpdating(true);
     try {
-      await axios.put(`https://api.wedly.info/api/roles/${roleId}/permissions`, {
-        permissionIds: rolePermissions,
-      });
-
+      await axios.put(`https://api.wedly.info/api/roles/${roleId}/permissions`, { permissionIds: rolePermissions });
       toast.success("Cập nhật quyền thành công!");
     } catch (error) {
       console.error("Update error", error);
@@ -89,54 +70,58 @@ export default function RolePermissionEditor({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Phân quyền cho vai trò</DialogTitle>
-          <DialogDescription>
-            Bật/tắt các quyền bên dưới để điều chỉnh quyền của vai trò này.
-          </DialogDescription>
+      <DialogContent className="max-w-md sm:max-w-[850px] p-0">
+        <DialogHeader className="h-[60px] flex items-start justify-center border-b px-7">
+          <DialogTitle className="text-md font-bold">Phân quyền cho vai trò</DialogTitle>
         </DialogHeader>
 
-        {loading ? (
-          <p className="text-sm text-muted-foreground">Đang tải quyền...</p>
-        ) : (
-          <Accordion type="multiple" className="w-full max-h-[60vh] overflow-y-auto pr-2">
-            {Object.entries(
-              allPermissions.reduce((acc: Record<string, Permission[]>, perm) => {
-                if (!acc[perm.group]) acc[perm.group] = [];
-                acc[perm.group].push(perm);
-                return acc;
-              }, {})
-            ).map(([groupName, perms]) => (
-              <AccordionItem key={groupName} value={groupName}>
-                <AccordionTrigger>{groupName}</AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-3">
-                    {perms.map((perm) => (
-                      <div
-                        key={perm._id}
-                        className="flex flex-col gap-1 border-b pb-2"
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium">{perm.name}</span>
+        <div className="px-7 h-[500px] overflow-auto py-0">
+          {loading ? (
+            <p className="text-sm text-muted-foreground">Đang tải quyền...</p>
+          ) : (
+            <Accordion type="multiple" className="w-full py-0 my-0">
+              {Object.entries(
+                allPermissions.reduce((acc: Record<string, Permission[]>, perm) => {
+                  if (!acc[perm.group]) acc[perm.group] = [];
+                  acc[perm.group].push(perm);
+                  return acc;
+                }, {})
+              ).map(([groupName, perms]) => (
+                <AccordionItem key={groupName} value={groupName} className="border-0 mb-2">
+                  <AccordionTrigger className="border shadow px-3 rounded mb-2">{groupName}</AccordionTrigger>
+                  <AccordionContent className="border shadow rounded px-3 py-2">
+                    <div className="">
+                      {perms.map((perm) => (
+                        <div
+                          key={perm._id}
+                          className="flex justify-between items-center gap-1 border-b"
+                        >
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium">{perm.name}</span>
+                            {perm.description && (
+                              <p className="text-xs text-muted-foreground">{perm.description}</p>
+                            )}
+                          </div>
                           <Switch
                             checked={rolePermissions.includes(perm._id)}
                             onCheckedChange={() => togglePermission(perm._id)}
                           />
                         </div>
-                        {perm.description && (
-                          <p className="text-xs text-muted-foreground">{perm.description}</p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        )}
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          )}
+        </div>
 
-        <DialogFooter className="mt-4">
+        <DialogFooter className="h-[60px] flex items-center justify-end border-t px-7 gap-2">
+          <DialogClose asChild>
+            <Button type="button" variant="secondary">
+              Đóng
+            </Button>
+          </DialogClose>
           <Button
             onClick={handleUpdatePermissions}
             disabled={updating || loading}
