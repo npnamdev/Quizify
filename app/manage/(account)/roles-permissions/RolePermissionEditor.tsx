@@ -17,7 +17,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { toast } from "sonner"; // Sử dụng thư viện toast nếu có
+import { toast } from "sonner";
 
 type Permission = {
   _id: string;
@@ -42,7 +42,8 @@ export default function RolePermissionEditor({ roleId }: { roleId: string }) {
         ]);
 
         setAllPermissions(allRes.data.data);
-        setRolePermissions(roleRes.data.data.map((perm: any) => perm.name));
+        // ✅ Lưu _id thay vì name
+        setRolePermissions(roleRes.data.data.map((perm: any) => perm._id));
       } catch (error) {
         console.error("Error fetching permissions", error);
         toast.error("Lỗi tải quyền");
@@ -54,11 +55,12 @@ export default function RolePermissionEditor({ roleId }: { roleId: string }) {
     fetchPermissions();
   }, [roleId]);
 
-  const togglePermission = (perm: string) => {
+  // ✅ toggle theo _id
+  const togglePermission = (permId: string) => {
     setRolePermissions((prev) =>
-      prev.includes(perm)
-        ? prev.filter((p) => p !== perm)
-        : [...prev, perm]
+      prev.includes(permId)
+        ? prev.filter((p) => p !== permId)
+        : [...prev, permId]
     );
   };
 
@@ -71,9 +73,7 @@ export default function RolePermissionEditor({ roleId }: { roleId: string }) {
         permissionIds: rolePermissions,
       });
 
-
       console.log("check res", res);
-
       toast.success("Cập nhật quyền thành công!");
     } catch (error) {
       console.error("Update error", error);
@@ -118,9 +118,10 @@ export default function RolePermissionEditor({ roleId }: { roleId: string }) {
                       >
                         <div className="flex items-center justify-between">
                           <span className="text-sm font-medium">{perm.name}</span>
+                          {/* ✅ Dùng _id thay vì name */}
                           <Switch
-                            checked={rolePermissions.includes(perm.name)}
-                            onCheckedChange={() => togglePermission(perm.name)}
+                            checked={rolePermissions.includes(perm._id)}
+                            onCheckedChange={() => togglePermission(perm._id)}
                           />
                         </div>
                         {perm.description && (
