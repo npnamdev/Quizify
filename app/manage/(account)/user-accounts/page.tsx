@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import useSWR from 'swr';
-import { Pencil, Trash2, Eye, Ban, Mail, Clipboard, Plus } from 'lucide-react';
+import { Pencil, Trash2, Eye, CopyPlus, Clipboard, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import moment from 'moment';
 import { toast } from "sonner";
@@ -135,6 +135,15 @@ export default function App() {
                 setCurrentId(id);
                 setIsUserUpdateModalOpen(true)
             },
+        },
+        {
+            value: 'duplicate',
+            label: 'Nhân bản',
+            icon: <CopyPlus size={16} strokeWidth={1.5} />,
+            action: (id: string | number) => {
+                // 👉 Bạn có thể tùy biến logic nhân bản ở đây
+                // handleDuplicateUser(id);
+            }
         },
         {
             value: 'delete',

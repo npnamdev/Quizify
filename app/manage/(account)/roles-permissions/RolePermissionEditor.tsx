@@ -25,27 +25,29 @@ export default function RolePermissionEditor({ roleId, open, onOpenChange }: Rol
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
 
-  useEffect(() => {
-    const fetchPermissions = async () => {
-      setLoading(true);
-      try {
-        const [allRes, roleRes] = await Promise.all([
-          axios.get("https://api.wedly.info/api/permissions"),
-          axios.get(`https://api.wedly.info/api/roles/${roleId}/permissions`)
-        ]);
+useEffect(() => {
+  if (!roleId) return;
 
-        setAllPermissions(allRes.data.data);
-        setRolePermissions(roleRes.data.data.map((perm: any) => perm._id));
-      } catch (error) {
-        console.error("Error fetching permissions", error);
-        toast.error("Lỗi tải quyền");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchPermissions = async () => {
+    setLoading(true);
+    try {
+      const [allRes, roleRes] = await Promise.all([
+        axios.get("https://api.wedly.info/api/permissions"),
+        axios.get(`https://api.wedly.info/api/roles/${roleId}/permissions`)
+      ]);
 
-    fetchPermissions();
-  }, [roleId]);
+      setAllPermissions(allRes.data.data);
+      setRolePermissions(roleRes.data.data.map((perm: any) => perm._id));
+    } catch (error) {
+      console.error("Error fetching permissions", error);
+      toast.error("Lỗi tải quyền");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchPermissions();
+}, [roleId]);
 
   const togglePermission = (permId: string) => {
     setRolePermissions((prev) =>
@@ -70,12 +72,12 @@ export default function RolePermissionEditor({ roleId, open, onOpenChange }: Rol
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md sm:max-w-[850px] p-0">
+      <DialogContent className="max-w-md sm:max-w-[750px] p-0 m-0">
         <DialogHeader className="h-[60px] flex items-start justify-center border-b px-7">
           <DialogTitle className="text-md font-bold">Phân quyền cho vai trò</DialogTitle>
         </DialogHeader>
 
-        <div className="px-7 h-[500px] overflow-auto py-0">
+        <div className="px-7 h-[440px] overflow-auto py-0">
           {loading ? (
             <p className="text-sm text-muted-foreground">Đang tải quyền...</p>
           ) : (
@@ -87,16 +89,16 @@ export default function RolePermissionEditor({ roleId, open, onOpenChange }: Rol
                   return acc;
                 }, {})
               ).map(([groupName, perms]) => (
-                <AccordionItem key={groupName} value={groupName} className="border-0 mb-2">
-                  <AccordionTrigger className="border shadow px-3 rounded mb-2">{groupName}</AccordionTrigger>
-                  <AccordionContent className="border shadow rounded px-3 py-2">
+                <AccordionItem key={groupName} value={groupName} className="mb-3 shadow border border-b-0 rounded-md">
+                  <AccordionTrigger className="border-b px-5 mb-0 hover:no-underline data-[state=open]:bg-gray-100" >{groupName}</AccordionTrigger>
+                  <AccordionContent className="py-0">
                     <div className="">
                       {perms.map((perm) => (
                         <div
                           key={perm._id}
-                          className="flex justify-between items-center gap-1 border-b"
+                          className="flex justify-between items-center gap-1 border-b h-[55px] px-5"
                         >
-                          <div className="flex flex-col">
+                          <div className="flex flex-col gap-1">
                             <span className="text-sm font-medium">{perm.name}</span>
                             {perm.description && (
                               <p className="text-xs text-muted-foreground">{perm.description}</p>
