@@ -64,10 +64,16 @@ export default function RolePermissionEditor({ roleId }: { roleId: string }) {
 
   const handleUpdatePermissions = async () => {
     setUpdating(true);
+    console.log("check rolePermissions", rolePermissions);
+
     try {
-      await axios.put(`https://api.wedly.info/api/roles/${roleId}/permissions`, {
-        permissions: rolePermissions,
+      const res = await axios.put(`https://api.wedly.info/api/roles/${roleId}/permissions`, {
+        permissionIds: rolePermissions,
       });
+
+
+      console.log("check res", res);
+
       toast.success("Cập nhật quyền thành công!");
     } catch (error) {
       console.error("Update error", error);
