@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Dialog,
-  DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -26,7 +25,17 @@ type Permission = {
   description: string;
 };
 
-export default function RolePermissionEditor({ roleId }: { roleId: string }) {
+interface RolePermissionEditorProps {
+  roleId: string | number | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export default function RolePermissionEditor({
+  roleId,
+  open,
+  onOpenChange,
+}: RolePermissionEditorProps) {
   const [allPermissions, setAllPermissions] = useState<Permission[]>([]);
   const [rolePermissions, setRolePermissions] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -42,7 +51,6 @@ export default function RolePermissionEditor({ roleId }: { roleId: string }) {
         ]);
 
         setAllPermissions(allRes.data.data);
-        // ✅ Lưu _id thay vì name
         setRolePermissions(roleRes.data.data.map((perm: any) => perm._id));
       } catch (error) {
         console.error("Error fetching permissions", error);
@@ -55,7 +63,6 @@ export default function RolePermissionEditor({ roleId }: { roleId: string }) {
     fetchPermissions();
   }, [roleId]);
 
-  // ✅ toggle theo _id
   const togglePermission = (permId: string) => {
     setRolePermissions((prev) =>
       prev.includes(permId)
@@ -66,14 +73,11 @@ export default function RolePermissionEditor({ roleId }: { roleId: string }) {
 
   const handleUpdatePermissions = async () => {
     setUpdating(true);
-    console.log("check rolePermissions", rolePermissions);
-
     try {
-      const res = await axios.put(`https://api.wedly.info/api/roles/${roleId}/permissions`, {
+      await axios.put(`https://api.wedly.info/api/roles/${roleId}/permissions`, {
         permissionIds: rolePermissions,
       });
 
-      console.log("check res", res);
       toast.success("Cập nhật quyền thành công!");
     } catch (error) {
       console.error("Update error", error);
@@ -84,10 +88,7 @@ export default function RolePermissionEditor({ roleId }: { roleId: string }) {
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline">Chỉnh sửa quyền vai trò</Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Phân quyền cho vai trò</DialogTitle>
@@ -118,7 +119,6 @@ export default function RolePermissionEditor({ roleId }: { roleId: string }) {
                       >
                         <div className="flex items-center justify-between">
                           <span className="text-sm font-medium">{perm.name}</span>
-                          {/* ✅ Dùng _id thay vì name */}
                           <Switch
                             checked={rolePermissions.includes(perm._id)}
                             onCheckedChange={() => togglePermission(perm._id)}

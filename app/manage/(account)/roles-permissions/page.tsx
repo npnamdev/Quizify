@@ -37,6 +37,7 @@ export default function RoleListPage() {
     const [debouncedSearch, setDebouncedSearch] = useState('');
 
     const [isPermissionsModalOpen, setIsPermissionsModalOpen] = useState(false);
+    const [currentId, setCurrentId] = useState<string | number | null>(null);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -112,7 +113,8 @@ export default function RoleListPage() {
                         label: 'Chỉnh sửa',
                         icon: <Pencil size={16} strokeWidth={1.5} />,
                         action: (id) => {
-                            setIsPermissionsModalOpen(true)
+                            setCurrentId(id);
+                            setIsPermissionsModalOpen(true);
                         },
                     },
                     {
@@ -124,12 +126,16 @@ export default function RoleListPage() {
                 ]}
             />
 
-            <PermissionsModal
+            {/* <PermissionsModal
+                open={isPermissionsModalOpen}
+                onOpenChange={setIsPermissionsModalOpen}
+            /> */}
+
+            <RolePermissionEditor
+                roleId={currentId}
                 open={isPermissionsModalOpen}
                 onOpenChange={setIsPermissionsModalOpen}
             />
-
-            <RolePermissionEditor roleId="67f68680ae55b3a33cc910d3" />
         </div>
     );
 }
