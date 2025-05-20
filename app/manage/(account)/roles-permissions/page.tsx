@@ -129,7 +129,7 @@ export default function RoleListPage() {
                 onOpenChange={setIsPermissionsModalOpen}
             />
 
-            <RolePermissionEditor roleId="fđsfsdf"/>
+            <RolePermissionEditor roleId="67f68680ae55b3a33cc910d3" />
         </div>
     );
 }
