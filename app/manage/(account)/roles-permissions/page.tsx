@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import moment from 'moment';
 import { toast } from 'sonner';
 import PermissionsModal from './PermissionsModal';
+import RolePermissionEditor from './RolePermissionEditor';
 
 type Role = {
     id: string;
@@ -127,6 +128,8 @@ export default function RoleListPage() {
                 open={isPermissionsModalOpen}
                 onOpenChange={setIsPermissionsModalOpen}
             />
+
+            <RolePermissionEditor roleId="fđsfsdf"/>
         </div>
     );
 }
