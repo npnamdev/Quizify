@@ -16,7 +16,7 @@ const SortableItem = ({ id, label, isDragging = false }: { id: string; label: st
     transform: CSS.Transform.toString(transform),
     transition: transition ?? "transform 250ms cubic-bezier(0.4, 0, 0.2, 1)",
     willChange: "transform",
-    opacity: isDragging ? 0.8 : 1,
+    opacity: isDragging ? 0.4 : 1,  // mờ hơn khi kéo (opacity 0.4)
     boxShadow: isItemDragging || isDragging ? "0 8px 16px rgba(0,0,0,0.15)" : undefined,
     cursor: "default",
   }
@@ -86,7 +86,11 @@ export default function SortableList() {
 
         <DragOverlay>
           {activeId ? (
-            <SortableItem id={activeId} label={items.find(item => item.id === activeId)?.label || ""} isDragging={true} />
+            // Thay vì preview item, tạo placeholder trống đúng kích thước item
+            <div
+              className="p-4 mb-2 rounded-xl border border-dashed border-gray-400 bg-transparent"
+              style={{ width: "100%", height: 48 }} // chiều cao 48px tương đương p-4 + line-height khoảng 48px
+            />
           ) : null}
         </DragOverlay>
       </DndContext>
