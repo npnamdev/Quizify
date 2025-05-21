@@ -1,13 +1,13 @@
 "use client";
 
 import React from "react";
-import ImageCropper from "@/components/ui-custom/ImageCropper";
+import SortableList from "@/components/ui-custom/SortableList";
 
 const HomePage = () => {
 
   return (
     <div className="">
-      <ImageCropper />
+        <SortableList />
     </div>
   );
 };
