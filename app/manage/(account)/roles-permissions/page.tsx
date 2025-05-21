@@ -9,6 +9,7 @@ import moment from 'moment';
 import { toast } from 'sonner';
 import PermissionsModal from './PermissionsModal';
 import RolePermissionEditor from './RolePermissionEditor';
+import RoleCreateModal from './RoleCreateModal';
 
 type Role = {
     id: string;
@@ -50,6 +51,7 @@ export default function RoleListPage() {
     const [searchInput, setSearchInput] = useState('');
     const [debouncedSearch, setDebouncedSearch] = useState('');
 
+    const [isRoleCreateModalOpen, setIsRoleCreateModalOpen] = useState(false);
     const [isPermissionsModalOpen, setIsPermissionsModalOpen] = useState(false);
     const [currentId, setCurrentId] = useState<string | number | null>(null);
 
@@ -110,7 +112,7 @@ export default function RoleListPage() {
                 setSearchInput={setSearchInput}
                 isLoading={isLoading}
                 actionButton={
-                    <Button onClick={() => console.log('Tạo mới')} className='gap-1'>
+                    <Button onClick={() => setIsRoleCreateModalOpen(true)} className='gap-1'>
                         <Plus className="w-4 h-4" />
                         Thêm vai trò
                     </Button>
@@ -140,10 +142,10 @@ export default function RoleListPage() {
                 ]}
             />
 
-            {/* <PermissionsModal
-                open={isPermissionsModalOpen}
-                onOpenChange={setIsPermissionsModalOpen}
-            /> */}
+            <RoleCreateModal
+                open={isRoleCreateModalOpen}
+                onOpenChange={setIsRoleCreateModalOpen}
+            />
 
             <RolePermissionEditor
                 roleId={currentId}
