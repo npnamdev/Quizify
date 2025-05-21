@@ -27,7 +27,21 @@ const columns: Column<Role>[] = [
     { header: 'Ngày cập nhật', accessor: 'updatedAt' },
 ];
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+const fetcher = (url: string) => {
+    const token = localStorage.getItem('accessToken');
+
+    return fetch(url, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
+    }).then(res => {
+        if (!res.ok) {
+            throw new Error('Fetch error');
+        }
+        return res.json();
+    });
+};
+
 
 export default function RoleListPage() {
     const [page, setPage] = useState(0);
