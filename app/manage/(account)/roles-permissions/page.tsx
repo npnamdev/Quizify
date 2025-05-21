@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import useSWR from 'swr';
+import { useRoles } from '@/hooks/use-roles';
 import TableView from '@/components/ui-custom/TableView';
 import { Pencil, Trash2, Eye, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -28,22 +28,6 @@ const columns: Column<Role>[] = [
     { header: 'Ngày cập nhật', accessor: 'updatedAt' },
 ];
 
-const fetcher = (url: string) => {
-    const token = localStorage.getItem('accessToken');
-
-    return fetch(url, {
-        headers: {
-            'Authorization': `Bearer ${token}`,
-        },
-    }).then(res => {
-        if (!res.ok) {
-            throw new Error('Fetch error');
-        }
-        return res.json();
-    });
-};
-
-
 export default function RoleListPage() {
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
@@ -63,19 +47,11 @@ export default function RoleListPage() {
         return () => clearTimeout(timeout);
     }, [searchInput]);
 
-    const queryParams = new URLSearchParams({
-        limit: String(pageSize),
-        page: String(page + 1),
+    const { data, isLoading } = useRoles({
+        page,
+        pageSize,
+        search: debouncedSearch,
     });
-
-    if (debouncedSearch) {
-        queryParams.append('search', debouncedSearch);
-        queryParams.append('searchFields', 'name');
-    }
-
-    const url = `https://api.wedly.info/api/roles?${queryParams.toString()}`;
-
-    const { data, isLoading } = useSWR(url, fetcher);
 
     const roles: Role[] = (data?.data || []).map((role: any) => ({
         id: role._id,
@@ -85,7 +61,7 @@ export default function RoleListPage() {
                 : role.name === 'user'
                     ? 'Người dùng'
                     : role.name,
-        isSystem: role.isSystem || 'Hệ thống',
+        isSystem: role.isSystem || false,
         permissions: 20,
         createdAt: moment(role.createdAt).format('DD/MM/YYYY'),
         updatedAt: moment(role.updatedAt).format('DD/MM/YYYY'),
@@ -112,7 +88,7 @@ export default function RoleListPage() {
                 setSearchInput={setSearchInput}
                 isLoading={isLoading}
                 actionButton={
-                    <Button onClick={() => setIsRoleCreateModalOpen(true)} className='gap-1'>
+                    <Button onClick={() => setIsRoleCreateModalOpen(true)} className="gap-1">
                         <Plus className="w-4 h-4" />
                         Thêm vai trò
                     </Button>
