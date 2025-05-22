@@ -21,7 +21,6 @@ const axiosInstance = axios.create({
     withCredentials: true,
 });
 
-// Request Interceptor: Gắn accessToken vào headers
 axiosInstance.interceptors.request.use((config) => {
     const token = localStorage.getItem("accessToken");
     if (token) {
@@ -30,11 +29,22 @@ axiosInstance.interceptors.request.use((config) => {
     return config;
 });
 
-// Response Interceptor: Tự động gọi refresh token nếu token hết hạn
 axiosInstance.interceptors.response.use(
     response => response.data,
     async (error) => {
         const originalRequest = error.config;
+        if (typeof window !== 'undefined' && window.location.pathname === '/login') {
+            return Promise.reject(error);
+        }
+
+        if (originalRequest.url.includes('/auth/refresh-token')) {
+            localStorage.removeItem('accessToken');
+            if (typeof window !== 'undefined') {
+                window.location.href = '/login';
+            }
+            return Promise.reject(error);
+        }
+
         if (error.response?.status === 401 && !originalRequest._retry) {
             if (isRefreshing) {
                 return new Promise(function (resolve, reject) {
@@ -65,89 +75,22 @@ axiosInstance.interceptors.response.use(
 
                 originalRequest.headers.Authorization = `Bearer ${newToken}`;
                 return axiosInstance(originalRequest);
-            } catch (err) {
-                console.error('Refresh token failed', err);
+            } catch (err: any) {
                 processQueue(err, null);
                 localStorage.removeItem('accessToken');
-                // if (typeof window !== 'undefined') {
-                //     window.location.href = '/login';
-                // }
+
+                if (typeof window !== 'undefined') {
+                    if (window.location.pathname !== '/login') {
+                        window.location.href = '/login';
+                    }
+                }
                 return Promise.reject(err);
             } finally {
                 isRefreshing = false;
             }
         }
-
         return Promise.reject(error);
     }
 );
-
-// axiosInstance.interceptors.response.use(
-//     response => response.data,
-//     async (error) => {
-//         const originalRequest = error.config;
-
-//         // Trường hợp lỗi trong lúc gọi refresh-token
-//         if (originalRequest.url.includes('/auth/refresh-token')) {
-//             // Nếu refresh-token bị lỗi (401 hoặc 403), thì logout người dùng
-//             localStorage.removeItem('accessToken');
-//             if (typeof window !== 'undefined') {
-//                 window.location.href = '/login';
-//             }
-//             return Promise.reject(error);
-//         }
-
-//         // Trường hợp access token hết hạn
-//         if (error.response?.status === 401 && !originalRequest._retry) {
-//             if (isRefreshing) {
-//                 return new Promise(function (resolve, reject) {
-//                     failedQueue.push({ resolve, reject });
-//                 })
-//                     .then((token) => {
-//                         originalRequest.headers.Authorization = `Bearer ${token}`;
-//                         return axiosInstance(originalRequest);
-//                     })
-//                     .catch((err) => Promise.reject(err));
-//             }
-
-//             originalRequest._retry = true;
-//             isRefreshing = true;
-
-//             try {
-//                 const refreshResponse = await axios.post(
-//                     `${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh-token`,
-//                     {},
-//                     { withCredentials: true }
-//                 );
-
-//                 const newToken = refreshResponse.data.accessToken;
-//                 localStorage.setItem('accessToken', newToken);
-//                 axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
-
-//                 processQueue(null, newToken);
-
-//                 originalRequest.headers.Authorization = `Bearer ${newToken}`;
-//                 return axiosInstance(originalRequest);
-//             } catch (err: any) {
-//                 console.error('Refresh token failed', err);
-//                 processQueue(err, null);
-
-//                 // Nếu lỗi là 403, nghĩa là refresh token hết hạn => logout
-//                 if (err?.response?.status === 403) {
-//                     localStorage.removeItem('accessToken');
-//                     if (typeof window !== 'undefined') {
-//                         window.location.href = '/login';
-//                     }
-//                 }
-
-//                 return Promise.reject(err);
-//             } finally {
-//                 isRefreshing = false;
-//             }
-//         }
-
-//         return Promise.reject(error);
-//     }
-// );
 
 export default axiosInstance;

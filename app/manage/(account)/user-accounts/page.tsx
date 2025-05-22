@@ -12,23 +12,15 @@ import CreateUserModal from './CreateUserModal';
 import DeleteUserModal from './DeleteUserModal';
 import UserDetailsModal from './UserDetailsModal';
 import UserUpdateModal from './UserUpdateModal';
+import axiosInstance from '@/lib/axiosInstance';
 
-type User = {
-    id: string;
-    username: string;
-    email: string;
-    fullName: string;
-    gender: string;
-    dateOfBirth: string;
-    phoneNumber: string;
-    avatarUrl: string;
-    role: string;
-    isVerified: boolean;
-    emailVerified: boolean;
-    createdAt: string;
-    updatedAt: string;
-    address: string;
-};
+
+interface UserResponse {
+    data: any[];
+    pagination: {
+        total: number;
+    };
+}
 
 const columns: Column<User>[] = [
     { header: 'Họ và tên', accessor: 'fullName' },
@@ -44,21 +36,7 @@ const columns: Column<User>[] = [
     { header: 'Ngày cập nhật', accessor: 'updatedAt', visible: false },
 ];
 
-const fetcher = (url: string) => {
-    const token = localStorage.getItem('accessToken');
-
-    return fetch(url, {
-        headers: {
-            'Authorization': `Bearer ${token}`,
-        },
-    }).then(res => {
-        if (!res.ok) {
-            throw new Error('Fetch error');
-        }
-        return res.json();
-    });
-};
-
+const fetcher = (url: string): Promise<UserResponse> => axiosInstance.get(url);
 
 export default function App() {
     const [page, setPage] = useState(0);
