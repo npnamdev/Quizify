@@ -36,6 +36,14 @@ axiosInstance.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
+        // const isTokenExpired =
+        //     error.response?.status === 401 &&
+        //     error.response?.data?.message === 'jwt expired';
+
+        // if (isTokenExpired && !originalRequest._retry) {
+        //     // Thực hiện refresh token
+        // }
+
         if (error.response?.status === 401 && !originalRequest._retry) {
             if (isRefreshing) {
                 return new Promise(function (resolve, reject) {
@@ -69,6 +77,9 @@ axiosInstance.interceptors.response.use(
             } catch (err) {
                 processQueue(err, null);
                 localStorage.removeItem('accessToken');
+                if (typeof window !== 'undefined') {
+                    window.location.href = '/login';
+                }
                 return Promise.reject(err);
             } finally {
                 isRefreshing = false;
