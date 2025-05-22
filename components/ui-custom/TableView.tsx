@@ -207,12 +207,13 @@ export default function TableView<T extends { id: number | string, image?: strin
 
                         case 'system':
                           return (
-                            <div
-                              className={`rounded-lg px-2 py-1 text-xs w-min text-white ${value ? 'bg-[#3eca65]' : 'bg-[#f45d5d]'
-                                }`}
-                            >
-                              {String(value)}
-                            </div>
+                         <div
+  className={`rounded-lg px-2 py-1 text-xs w-min text-white ${
+    value ? 'bg-[#3eca65]' : 'bg-[#f45d5d]'
+  }`}
+>
+  {value ? 'Hệ thống' : 'Tuỳ chỉnh'}
+</div>
                           );
                         case 'image-preview':
                           return (
