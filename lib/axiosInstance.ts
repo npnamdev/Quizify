@@ -43,8 +43,11 @@ axiosInstance.interceptors.response.use(
         // if (isTokenExpired && !originalRequest._retry) {
         //     // Thực hiện refresh token
         // }
+        const isRefreshTokenRequest = originalRequest.url.includes('/api/auth/refresh-token');
 
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        if (error.response?.status === 401 && !originalRequest._retry && !isRefreshTokenRequest) {
+
+            // if (error.response?.status === 401 && !originalRequest._retry) {
             if (isRefreshing) {
                 return new Promise(function (resolve, reject) {
                     failedQueue.push({ resolve, reject });
@@ -77,9 +80,9 @@ axiosInstance.interceptors.response.use(
             } catch (err) {
                 processQueue(err, null);
                 localStorage.removeItem('accessToken');
-                if (typeof window !== 'undefined') {
-                    window.location.href = '/login';
-                }
+                // if (typeof window !== 'undefined') {
+                //     window.location.href = '/login';
+                // }
                 return Promise.reject(err);
             } finally {
                 isRefreshing = false;
