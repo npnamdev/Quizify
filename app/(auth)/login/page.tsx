@@ -23,6 +23,7 @@ export default function LoginPage() {
         const success = await login(email, password);
         if (success) {
             setLoading(false);
+            router.push('/')
         } else {
             setLoading(false);
         }

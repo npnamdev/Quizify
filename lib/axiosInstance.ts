@@ -32,7 +32,7 @@ axiosInstance.interceptors.request.use((config) => {
 
 // Response Interceptor: Tự động gọi refresh token nếu token hết hạn
 axiosInstance.interceptors.response.use(
-    response => response,
+    response => response.data,
     async (error) => {
         const originalRequest = error.config;
 
