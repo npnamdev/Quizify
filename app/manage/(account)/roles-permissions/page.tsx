@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import moment from 'moment';
 import RolePermissionEditor from './RolePermissionEditor';
 import RoleCreateModal from './RoleCreateModal';
+import { toast } from "sonner";
+import axiosInstance from "@/lib/axiosInstance";
 
 type Role = {
     id: string;
@@ -44,7 +46,7 @@ export default function RoleListPage() {
         return () => clearTimeout(timeout);
     }, [searchInput]);
 
-    const { data, isLoading } = useRoles({ page, pageSize, search: debouncedSearch });
+    const { data, isLoading, mutateRoles } = useRoles({ page, pageSize, search: debouncedSearch });
 
     const roles: Role[] = (data?.data || []).map((role: any) => ({
         id: role._id,
@@ -56,6 +58,19 @@ export default function RoleListPage() {
     }));
 
     const total = data?.pagination?.totalRoles || 0;
+
+
+    const handleCreateRole = async ({ label, name }: { label: string; name: string }) => {
+        try {
+            await axiosInstance.post("/roles", { label, name, permissions: [] });
+            toast.success("Tạo vai trò thành công!");
+            setIsRoleCreateModalOpen(false);
+            mutateRoles();
+        } catch (error: any) {
+            toast.error("Tạo vai trò thất bại: " + error);
+        }
+    };
+
 
     return (
         <div className="space-y-4">
@@ -105,7 +120,9 @@ export default function RoleListPage() {
             <RoleCreateModal
                 open={isRoleCreateModalOpen}
                 onOpenChange={setIsRoleCreateModalOpen}
+                onSubmit={handleCreateRole}
             />
+
 
             <RolePermissionEditor
                 roleId={currentId}

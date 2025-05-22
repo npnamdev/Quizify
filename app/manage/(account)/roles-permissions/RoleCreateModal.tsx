@@ -3,45 +3,34 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
-import { toast } from 'sonner';
+import { toast } from "sonner";
+import axiosInstance from "@/lib/axiosInstance";
 
-export default function RoleCreateModal({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void; }) {
-    const [formData, setFormData] = useState({ label: "", name: "" });
+export default function RoleCreateModal({
+    open,
+    onOpenChange,
+    onSubmit,
+}: {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    onSubmit: (data: { label: string; name: string }) => void;
+}) {
+    const [label, setLabel] = useState("");
+    const [name, setName] = useState("");
 
     useEffect(() => {
         if (!open) {
-            setFormData({ label: "", name: "" });
+            setLabel("");
+            setName("");
         }
     }, [open]);
 
-    const handleChange = (field: string, value: any) => {
-        setFormData((prev) => ({ ...prev, [field]: value }));
-    };
-
-    const handleSubmit = async () => {
-        if (!formData.label || !formData.name) {
-            toast.error("Vui lòng nhập đầy đủ thông tin.")
+    const handleSubmit = () => {
+        if (!label || !name) {
+            toast.error("Vui lòng nhập đầy đủ thông tin.");
             return;
         }
-
-        try {
-            const response = await fetch("https://api.wedly.info/api/roles", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ ...formData, permissions: [] }),
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                toast.error("Tạo vai trò thất bại: " + (errorData.message || response.statusText))
-                return;
-            }
-
-            toast.success("Tạo vai trò thành công!")
-            onOpenChange(false);
-        } catch (error) {
-            toast.success("Lỗi khi tạo vai trò.")
-        }
+        onSubmit({ label, name });
     };
 
     return (
@@ -55,8 +44,8 @@ export default function RoleCreateModal({ open, onOpenChange }: { open: boolean;
                         <Label htmlFor="label">Tên hiển thị</Label>
                         <Input
                             id="label"
-                            value={formData.label}
-                            onChange={(e) => handleChange("label", e.target.value)}
+                            value={label}
+                            onChange={(e) => setLabel(e.target.value)}
                             placeholder="Nhập tên hiển thị"
                             required
                         />
@@ -65,8 +54,8 @@ export default function RoleCreateModal({ open, onOpenChange }: { open: boolean;
                         <Label htmlFor="name">Tên vai trò (system name)</Label>
                         <Input
                             id="name"
-                            value={formData.name}
-                            onChange={(e) => handleChange("name", e.target.value)}
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
                             placeholder="admin, editor, etc."
                             required
                         />
