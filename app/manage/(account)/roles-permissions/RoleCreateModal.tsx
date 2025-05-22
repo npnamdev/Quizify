@@ -1,55 +1,16 @@
-import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogClose,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from 'sonner';
 
-interface Permission {
-    _id: string;
-    name: string;
-}
-
-export default function RoleCreateModal({
-    open,
-    onOpenChange,
-}: {
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
-}) {
-    const [formData, setFormData] = useState({
-        label: "",
-        name: "",
-        permissions: [] as string[],
-    });
-
-    const [permissions, setPermissions] = useState<Permission[]>([]);
-    const [loadingPermissions, setLoadingPermissions] = useState(false);
+export default function RoleCreateModal({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void; }) {
+    const [formData, setFormData] = useState({ label: "", name: "" });
 
     useEffect(() => {
-        if (open) {
-            setLoadingPermissions(true);
-            fetch("https://api.wedly.info/api/permissions")
-                .then((res) => res.json())
-                .then((data) => {
-                    if (data.status === "success" && Array.isArray(data.data)) {
-                        setPermissions(data.data);
-                    } else {
-                        alert("Lỗi khi tải danh sách quyền.");
-                    }
-                })
-                .catch(() => alert("Lỗi khi gọi API quyền."))
-                .finally(() => setLoadingPermissions(false));
-        } else {
-            setFormData({ label: "", name: "", permissions: [] });
-            setPermissions([]);
+        if (!open) {
+            setFormData({ label: "", name: "" });
         }
     }, [open]);
 
@@ -59,7 +20,7 @@ export default function RoleCreateModal({
 
     const handleSubmit = async () => {
         if (!formData.label || !formData.name) {
-            alert("Vui lòng nhập đầy đủ thông tin.");
+            toast.error("Vui lòng nhập đầy đủ thông tin.")
             return;
         }
 
@@ -67,20 +28,19 @@ export default function RoleCreateModal({
             const response = await fetch("https://api.wedly.info/api/roles", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({ ...formData, permissions: [] }),
             });
 
             if (!response.ok) {
                 const errorData = await response.json();
-                alert("Tạo vai trò thất bại: " + (errorData.message || response.statusText));
+                toast.error("Tạo vai trò thất bại: " + (errorData.message || response.statusText))
                 return;
             }
 
-            alert("Tạo vai trò thành công!");
+            toast.success("Tạo vai trò thành công!")
             onOpenChange(false);
         } catch (error) {
-            console.error("Lỗi khi tạo vai trò:", error);
-            alert("Lỗi khi tạo vai trò.");
+            toast.success("Lỗi khi tạo vai trò.")
         }
     };
 
@@ -110,36 +70,6 @@ export default function RoleCreateModal({
                             placeholder="admin, editor, etc."
                             required
                         />
-                    </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="permissions">Quyền</Label>
-                        <Select
-                            onValueChange={(value) =>
-                                handleChange("permissions", [...formData.permissions, value])
-                            }
-                            disabled={loadingPermissions}
-                        >
-                            <SelectTrigger>
-                                <SelectValue placeholder={loadingPermissions ? "Đang tải quyền..." : "Chọn quyền"} />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {permissions.map((perm) => (
-                                    <SelectItem key={perm._id} value={perm._id}>
-                                        {perm.name}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                        <div className="text-sm mt-1">
-                            {formData.permissions.length > 0 && (
-                                <ul className="list-disc list-inside text-muted-foreground">
-                                    {formData.permissions.map((permId) => {
-                                        const found = permissions.find((p) => p._id === permId);
-                                        return <li key={permId}>{found?.name || permId}</li>;
-                                    })}
-                                </ul>
-                            )}
-                        </div>
                     </div>
                 </div>
                 <DialogFooter className="flex justify-end items-center border-t h-[60px] px-7 gap-1">

@@ -1,10 +1,7 @@
 import useSWR from 'swr';
 import axiosInstance from '@/lib/axiosInstance';
 
-// const fetcher = (url: string) => axiosInstance.get(url);
-
 const fetcher = (url: string): Promise<RoleResponse> => axiosInstance.get(url);
-
 
 interface RoleResponse {
     data: any[];

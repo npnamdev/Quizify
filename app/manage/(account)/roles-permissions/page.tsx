@@ -6,7 +6,6 @@ import TableView from '@/components/ui-custom/TableView';
 import { Pencil, Trash2, Eye, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import moment from 'moment';
-import { toast } from 'sonner';
 import RolePermissionEditor from './RolePermissionEditor';
 import RoleCreateModal from './RoleCreateModal';
 
@@ -40,17 +39,12 @@ export default function RoleListPage() {
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            setDebouncedSearch(searchInput);
-            setPage(0);
+            setDebouncedSearch(searchInput); setPage(0);
         }, 500);
         return () => clearTimeout(timeout);
     }, [searchInput]);
 
-    const { data, isLoading } = useRoles({
-        page,
-        pageSize,
-        search: debouncedSearch,
-    });
+    const { data, isLoading } = useRoles({ page, pageSize, search: debouncedSearch });
 
     const roles: Role[] = (data?.data || []).map((role: any) => ({
         id: role._id,
@@ -72,10 +66,7 @@ export default function RoleListPage() {
                 currentPage={page}
                 total={total}
                 onPageChange={setPage}
-                onPageSizeChange={(size) => {
-                    setPageSize(size);
-                    setPage(0);
-                }}
+                onPageSizeChange={(size) => { setPageSize(size); setPage(0); }}
                 selectedIds={selectedIds}
                 setSelectedIds={setSelectedIds}
                 searchInput={searchInput}
@@ -83,8 +74,7 @@ export default function RoleListPage() {
                 isLoading={isLoading}
                 actionButton={
                     <Button onClick={() => setIsRoleCreateModalOpen(true)} className="gap-1">
-                        <Plus className="w-4 h-4" />
-                        Thêm vai trò
+                        <Plus className="w-4 h-4" /> <span>Thêm vai trò</span>
                     </Button>
                 }
                 options={[
