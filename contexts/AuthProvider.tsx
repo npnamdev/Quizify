@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 const res = await axiosInstance.get("/api/users/me");
                 console.log("check res me", res);
 
-                setUser(res);
+                setUser(res.user);
             } catch (err) {
                 console.error("User not authenticated", err);
                 setUser(null);
