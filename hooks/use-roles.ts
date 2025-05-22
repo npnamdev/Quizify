@@ -27,7 +27,7 @@ export const useRoles = ({ page, pageSize, search }: UseRolesParams) => {
         queryParams.append('searchFields', 'name');
     }
 
-    const url = `/roles?${queryParams.toString()}`;
+    const url = `/api/roles?${queryParams.toString()}`;
 
     const { data, error, isLoading, mutate } = useSWR<RoleResponse>(url, fetcher, {
         dedupingInterval: 60 * 1000,

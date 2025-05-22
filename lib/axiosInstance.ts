@@ -1,38 +1,24 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-    baseURL: `https://api.wedly.info/api`,
+    baseURL: process.env.NEXT_PUBLIC_API_URL,
     headers: { 'Content-Type': 'application/json' },
+    withCredentials: true,
 });
 
-// Request Interceptor
-axiosInstance.interceptors.request.use(
-    (config) => {
-        if (typeof window !== 'undefined') {
-            const token = localStorage.getItem('accessToken');
-            if (token) {
-                config.headers.Authorization = `Bearer ${token}`;
-            }
-        }
-        return config;
-    },
-    (error) => Promise.reject(error)
-);
+axiosInstance.interceptors.request.use((config) => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
 
-
-// Response Interceptor
 axiosInstance.interceptors.response.use(
     (response) => response.data,
     (error) => {
         if (error.response) {
             const { status, data } = error.response;
-
-            if (status === 401 || status === 403) {
-                console.warn('Unauthorized! Redirecting to login...');
-                // Ví dụ: redirect khi token hết hạn
-                // window.location.href = '/login';
-            }
-
             return Promise.reject(data?.message || 'Request failed!');
         }
 

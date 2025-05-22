@@ -62,7 +62,7 @@ export default function RoleListPage() {
 
     const handleCreateRole = async ({ label, name }: { label: string; name: string }) => {
         try {
-            await axiosInstance.post("/roles", { label, name, permissions: [] });
+            await axiosInstance.post("/api/roles", { label, name, permissions: [] });
             toast.success("Tạo vai trò thành công!");
             setIsRoleCreateModalOpen(false);
             mutateRoles();

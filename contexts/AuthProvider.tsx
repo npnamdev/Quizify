@@ -1,7 +1,8 @@
 "use client";
 
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
-import { toast } from "sonner"
+import { toast } from "sonner";
+import axiosInstance from "@/lib/axiosInstance";
 
 interface AuthContextType {
     user: any;
@@ -72,53 +73,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const login = async (email: string, password: string): Promise<boolean> => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
-                method: "POST",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password }),
-            });
-
-            if (!response.ok) {
-                const errData = await response.json();
-                toast.error(errData.message || "Login failed");
-                return false;
-            }
-
-            const data = await response.json();
-            localStorage.setItem("accessToken", data.accessToken);
-            setUser(data.user);
+            const response: any = await axiosInstance.post("/api/auth/login", { email, password });
+            localStorage.setItem("accessToken", response.accessToken);
+            setUser(response.user);
             toast.success("Login successfully");
             return true;
-        } catch (err) {
-            toast.error("Login failed");
-            console.error(err);
+        } catch (err: any) {
+            toast.error(err || "Login failed");
             return false;
         }
     };
 
     const logout = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
-                method: "POST",
-                credentials: 'include',
-            });
-
-            console.log("response", response);
-
-
-            if (!response.ok) {
-                throw new Error("Logout failed");
-            }
-
+            await axiosInstance.post("/api/auth/logout");
             toast.success("Logged out successfully");
-
-
-
             localStorage.removeItem("accessToken");
             setUser(null);
-        } catch (err) {
-            console.error("Logout failed", err);
+        } catch (err: any) {
+            toast.error(err || "Logout failed");
         }
     };
 
