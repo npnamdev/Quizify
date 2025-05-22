@@ -35,19 +35,7 @@ axiosInstance.interceptors.response.use(
     response => response.data,
     async (error) => {
         const originalRequest = error.config;
-
-        // const isTokenExpired =
-        //     error.response?.status === 401 &&
-        //     error.response?.data?.message === 'jwt expired';
-
-        // if (isTokenExpired && !originalRequest._retry) {
-        //     // Thực hiện refresh token
-        // }
-        const isRefreshTokenRequest = originalRequest.url.includes('/api/auth/refresh-token');
-
-        if (error.response?.status === 401 && !originalRequest._retry && !isRefreshTokenRequest) {
-
-            // if (error.response?.status === 401 && !originalRequest._retry) {
+        if (error.response?.status === 401 && !originalRequest._retry) {
             if (isRefreshing) {
                 return new Promise(function (resolve, reject) {
                     failedQueue.push({ resolve, reject });
@@ -78,6 +66,7 @@ axiosInstance.interceptors.response.use(
                 originalRequest.headers.Authorization = `Bearer ${newToken}`;
                 return axiosInstance(originalRequest);
             } catch (err) {
+                console.error('Refresh token failed', err);
                 processQueue(err, null);
                 localStorage.removeItem('accessToken');
                 // if (typeof window !== 'undefined') {
@@ -92,5 +81,73 @@ axiosInstance.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+
+// axiosInstance.interceptors.response.use(
+//     response => response.data,
+//     async (error) => {
+//         const originalRequest = error.config;
+
+//         // Trường hợp lỗi trong lúc gọi refresh-token
+//         if (originalRequest.url.includes('/auth/refresh-token')) {
+//             // Nếu refresh-token bị lỗi (401 hoặc 403), thì logout người dùng
+//             localStorage.removeItem('accessToken');
+//             if (typeof window !== 'undefined') {
+//                 window.location.href = '/login';
+//             }
+//             return Promise.reject(error);
+//         }
+
+//         // Trường hợp access token hết hạn
+//         if (error.response?.status === 401 && !originalRequest._retry) {
+//             if (isRefreshing) {
+//                 return new Promise(function (resolve, reject) {
+//                     failedQueue.push({ resolve, reject });
+//                 })
+//                     .then((token) => {
+//                         originalRequest.headers.Authorization = `Bearer ${token}`;
+//                         return axiosInstance(originalRequest);
+//                     })
+//                     .catch((err) => Promise.reject(err));
+//             }
+
+//             originalRequest._retry = true;
+//             isRefreshing = true;
+
+//             try {
+//                 const refreshResponse = await axios.post(
+//                     `${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh-token`,
+//                     {},
+//                     { withCredentials: true }
+//                 );
+
+//                 const newToken = refreshResponse.data.accessToken;
+//                 localStorage.setItem('accessToken', newToken);
+//                 axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+
+//                 processQueue(null, newToken);
+
+//                 originalRequest.headers.Authorization = `Bearer ${newToken}`;
+//                 return axiosInstance(originalRequest);
+//             } catch (err: any) {
+//                 console.error('Refresh token failed', err);
+//                 processQueue(err, null);
+
+//                 // Nếu lỗi là 403, nghĩa là refresh token hết hạn => logout
+//                 if (err?.response?.status === 403) {
+//                     localStorage.removeItem('accessToken');
+//                     if (typeof window !== 'undefined') {
+//                         window.location.href = '/login';
+//                     }
+//                 }
+
+//                 return Promise.reject(err);
+//             } finally {
+//                 isRefreshing = false;
+//             }
+//         }
+
+//         return Promise.reject(error);
+//     }
+// );
 
 export default axiosInstance;
