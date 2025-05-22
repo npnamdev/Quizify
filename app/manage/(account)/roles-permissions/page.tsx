@@ -7,7 +7,6 @@ import { Pencil, Trash2, Eye, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import moment from 'moment';
 import { toast } from 'sonner';
-import PermissionsModal from './PermissionsModal';
 import RolePermissionEditor from './RolePermissionEditor';
 import RoleCreateModal from './RoleCreateModal';
 
@@ -55,19 +54,14 @@ export default function RoleListPage() {
 
     const roles: Role[] = (data?.data || []).map((role: any) => ({
         id: role._id,
-        name:
-            role.name === 'admin'
-                ? 'Quản trị viên'
-                : role.name === 'user'
-                    ? 'Người dùng'
-                    : role.name,
+        name: role.name === 'admin' ? 'Quản trị viên' : role.name === 'user' ? 'Người dùng' : role.name,
         isSystem: role.isSystem || false,
         permissions: 20,
         createdAt: moment(role.createdAt).format('DD/MM/YYYY'),
         updatedAt: moment(role.updatedAt).format('DD/MM/YYYY'),
     }));
 
-    const total = data?.pagination?.total || 0;
+    const total = data?.pagination?.totalRoles || 0;
 
     return (
         <div className="space-y-4">

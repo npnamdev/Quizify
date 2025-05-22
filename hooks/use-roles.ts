@@ -1,8 +1,17 @@
 import useSWR from 'swr';
 import axiosInstance from '@/lib/axiosInstance';
 
-// const fetcher = (url: string) => axiosInstance.get(url).then(res => res.data);2
-const fetcher = (url: string) => axiosInstance.get(url)
+// const fetcher = (url: string) => axiosInstance.get(url);
+
+const fetcher = (url: string): Promise<RoleResponse> => axiosInstance.get(url);
+
+
+interface RoleResponse {
+    data: any[];
+    pagination: {
+        totalRoles: number;
+    };
+}
 
 interface UseRolesParams {
     page: number;
@@ -23,8 +32,8 @@ export const useRoles = ({ page, pageSize, search }: UseRolesParams) => {
 
     const url = `/roles?${queryParams.toString()}`;
 
-    const { data, error, isLoading, mutate } = useSWR(url, fetcher, {
-        dedupingInterval: 60 * 1000, // cache 1 phút
+    const { data, error, isLoading, mutate } = useSWR<RoleResponse>(url, fetcher, {
+        dedupingInterval: 60 * 1000,
     });
 
     return {
