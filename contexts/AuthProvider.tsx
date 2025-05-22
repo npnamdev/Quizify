@@ -6,7 +6,6 @@ import axiosInstance from "@/lib/axiosInstance";
 
 interface AuthContextType {
     user: any;
-    // login: (email: string, password: string) => Promise<void>;
     login: (email: string, password: string) => Promise<boolean>;
     logout: () => Promise<void>;
     isAuthenticated: boolean;
@@ -22,44 +21,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                let token = localStorage.getItem("accessToken");
+                const res = await axiosInstance.get("/api/users/me");
+                console.log("check res me", res);
 
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/me`, {
-                    method: 'GET',
-                    headers: { Authorization: `Bearer ${token}` },
-                    credentials: 'include',
-                });
-
-                if (res.status === 401) {
-                    const refreshRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh-token`, {
-                        method: 'POST',
-                        credentials: 'include',
-                    });
-
-                    if (refreshRes.ok) {
-                        const refreshData = await refreshRes.json();
-                        localStorage.setItem("accessToken", refreshData.accessToken);
-                        token = refreshData.accessToken;
-
-                        const retryRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/me`, {
-                            method: 'GET',
-                            headers: { Authorization: `Bearer ${token}` },
-                            credentials: 'include',
-                        });
-
-                        if (!retryRes.ok) throw new Error("Retry fetchUser failed");
-
-                        const retryData = await retryRes.json();
-                        setUser(retryData);
-                    } else {
-                        throw new Error("Refresh token failed");
-                    }
-                } else if (res.ok) {
-                    const data = await res.json();
-                    setUser(data);
-                } else {
-                    throw new Error("User not authenticated");
-                }
+                setUser(res);
             } catch (err) {
                 console.error("User not authenticated", err);
                 setUser(null);
@@ -67,7 +32,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 setLoading(false);
             }
         };
-
         fetchUser();
     }, []);
 
