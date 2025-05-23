@@ -247,7 +247,7 @@ function DropzoneArea({ setActiveTab, mutate }: { setActiveTab: (tab: string) =>
                         </div>
                     </div>
 
-                    <div className="h-[65px] border-t bg-grey-300 flex items-center px-5 justify-end">
+                    <div className="h-[65px] border-t bg-grey-300 flex items-center px-5 justify-center">
                         <Button onClick={handleUpload} disabled={isUploading}>
                             {isUploading ? (
                                 <div className="flex items-center gap-2">

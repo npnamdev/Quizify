@@ -66,7 +66,7 @@ export default function ImageCropper({ mutate }: { mutate?: () => void }) {
 
                     <div className="overflow-auto h-[calc(100dvh-60px)] md:h-[620px]">
                         <TabsContent value="upload" className="h-full w-full my-0">
-                            <div className="p-5 h-full">
+                            <div className="p-4 md:p-5 h-full">
                                 <DropzoneArea setActiveTab={setActiveTab} mutate={mutate} />
                             </div>
                         </TabsContent>
@@ -75,7 +75,7 @@ export default function ImageCropper({ mutate }: { mutate?: () => void }) {
                             value="imagegently"
                             className="h-full w-full my-0"
                         >
-                            <div className="px-6 py-5">
+                            <div className=" px-4 py-4 md:px-6 md:py-5">
                                 <MediaGallery />
                             </div>
                         </TabsContent>
