@@ -1,14 +1,9 @@
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Loader2, User, Mail, BadgeCheck, X, Fingerprint, ShieldCheck, HeartPulse, CalendarClock, Activity } from "lucide-react";
-
+import axiosInstance from "@/lib/axiosInstance";
 
 interface UserDetailsModalProps {
   open: boolean;
@@ -16,27 +11,13 @@ interface UserDetailsModalProps {
   userId: string | number | null;
 }
 
-interface UserData {
-  id: string | number;
-  username: string;
-  fullName: string;
-  email: string;
-  isVerified: boolean;
-  gender: string;
-  role: {
-    id: string;
-    name: string;
-  };
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
+interface ApiResponse<T> {
+  status: "success" | "error";
+  message?: string;
+  data: T;
 }
 
-export default function UserDetailsModal({
-  open,
-  onOpenChange,
-  userId,
-}: UserDetailsModalProps) {
+export default function UserDetailsModal({ open, onOpenChange, userId }: UserDetailsModalProps) {
   const [user, setUser] = useState<UserData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -49,25 +30,21 @@ export default function UserDetailsModal({
     const fetchUserDetails = async () => {
       setIsLoading(true);
       try {
-        const res = await fetch(`https://api.wedly.info/api/users/${userId}`);
-        const json = await res.json();
+        const res: ApiResponse<UserData> = await axiosInstance.get(`/api/users/${userId}`);
 
-        if (!res.ok || json.status !== "success") {
-          toast.error(
-            `Lấy thông tin người dùng thất bại: ${json.message || res.statusText}`
-          );
+        if (res.status !== "success") {
+          toast.error(`Lấy thông tin người dùng thất bại: ${res.message}`);
           setUser(null);
         } else {
-          const userData = json.data;
+          const userData = res.data;
           setUser({
-            id: userData._id,
+            _id: userData._id,
             username: userData.username,
             fullName: userData.fullName,
             email: userData.email,
             isVerified: userData.isVerified,
             gender: userData.gender,
             role: {
-              id: userData.role._id,
               name: userData.role.name,
             },
             isActive: userData.isActive,
@@ -93,7 +70,7 @@ export default function UserDetailsModal({
 
   const infoList = user
     ? [
-      { label: "ID", value: user.id, icon: <Fingerprint className="w-4 h-4 text-muted-foreground" /> },
+      { label: "ID", value: user._id, icon: <Fingerprint className="w-4 h-4 text-muted-foreground" /> },
       { label: "Tên đăng nhập", value: user.username, icon: <User className="w-4 h-4 text-muted-foreground" /> },
       { label: "Họ tên", value: user.fullName, icon: <User className="w-4 h-4 text-muted-foreground" /> },
       { label: "Email", value: user.email, icon: <Mail className="w-4 h-4 text-muted-foreground" /> },

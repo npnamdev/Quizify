@@ -121,15 +121,6 @@ export default function App() {
             },
         },
         {
-            value: 'duplicate',
-            label: 'Nhân bản',
-            icon: <CopyPlus size={16} strokeWidth={1.5} />,
-            action: (id: string | number) => {
-                // 👉 Bạn có thể tùy biến logic nhân bản ở đây
-                // handleDuplicateUser(id);
-            }
-        },
-        {
             value: 'delete',
             label: 'Xoá',
             icon: <Trash2 size={16} strokeWidth={1.5} />,
