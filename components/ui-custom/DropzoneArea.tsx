@@ -191,7 +191,7 @@ function DropzoneArea({ setActiveTab, mutate }: { setActiveTab: (tab: string) =>
                             {files.map((fileWithPreview, index) => (
                                 <div key={index} className="relative border rounded-md shadow-sm overflow-hidden bg-white">
                                     <div className="relative">
-                                        <img src={fileWithPreview.preview} alt={`preview-${index}`} className="w-full h-40 object-cover" />
+                                        <img src={fileWithPreview.preview} alt={`preview-${index}`} className="w-full h-[100px] md:h-[145px] object-contain object-center bg-gray-100" />
                                         {fileWithPreview.status === "uploading" && (
                                             <div className="absolute z-50 top-0 left-0 w-full h-full bg-black/40 flex items-center justify-center">
                                                 <div className=" w-10 h-10 bg-white rounded-full p-1 shadow">

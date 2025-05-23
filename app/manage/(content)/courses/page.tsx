@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import copy from 'clipboard-copy';
 import TableView from '@/components/ui-custom/TableView';
 import axiosInstance from '@/lib/axiosInstance';
+import { CourseCard } from '@/components/ui-custom/CourseCard';
 
 type Course = {
   id: string;
@@ -143,6 +144,12 @@ export default function CourseListPage() {
 
   return (
     <div className="space-y-4">
+      {/* <CourseCard
+        image="/images/courses/react.jpg"
+        title="Khóa học React từ A đến Z"
+        description="Học React từ cơ bản đến nâng cao, xây dựng ứng dụng thực tế..."
+        price="499.000đ"
+      /> */}
       <TableView<Course>
         columns={columns}
         data={courses}
@@ -162,7 +169,7 @@ export default function CourseListPage() {
         options={actionOptions}
         actionButton={
           <Button className="gap-1">
-            <Plus className="w-4 h-4" /> Thêm khóa học
+            <Plus className="w-4 h-4" /> <span className='hidden md:flex'>Thêm khóa học</span>
           </Button>
         }
       />
