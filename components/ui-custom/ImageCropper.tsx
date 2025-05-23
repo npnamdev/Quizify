@@ -64,7 +64,7 @@ export default function ImageCropper({ mutate }: { mutate?: () => void }) {
                         </TabsTrigger>
                     </TabsList>
 
-                    <div className="overflow-auto h-[620px]">
+                    <div className="overflow-auto h-[calc(100dvh-60px)] md:h-[620px]">
                         <TabsContent value="upload" className="h-full w-full my-0">
                             <div className="p-5 h-full">
                                 <DropzoneArea setActiveTab={setActiveTab} mutate={mutate}/>

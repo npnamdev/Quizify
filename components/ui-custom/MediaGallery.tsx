@@ -40,7 +40,7 @@ const MediaGallery = () => {
             {loading && <p>Đang tải dữ liệu...</p>}
             {error && <p className="text-red-600">{error}</p>}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {mediaList.map((item) => (
                     <div
                         key={item._id}
@@ -49,10 +49,10 @@ const MediaGallery = () => {
                         <img
                             src={item.secure_url}
                             alt={item.original_filename}
-                            className="w-full h-[145px] object-contain object-center bg-gray-100"
+                            className="w-full h-[100px] md:h-[145px] object-contain object-center bg-gray-100"
                         />
                         <div className="px-4 py-2 text-sm border-t">
-                            <p className="font-semibold truncate">
+                            <p className="font-semibold truncate text-sm">
                                 {item.original_filename}
                             </p>
                             <p className="text-gray-500 mt-0.5">{formatBytes(item.bytes)}</p>
