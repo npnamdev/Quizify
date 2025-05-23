@@ -3,3 +3,10 @@ interface LoginResponse {
     message: string;
     user: User;
 }
+
+interface UserResponse {
+    data: any[];
+    pagination: {
+        total: number;
+    };
+}

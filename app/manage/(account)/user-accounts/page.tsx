@@ -14,14 +14,6 @@ import UserDetailsModal from './UserDetailsModal';
 import UserUpdateModal from './UserUpdateModal';
 import axiosInstance from '@/lib/axiosInstance';
 
-
-interface UserResponse {
-    data: any[];
-    pagination: {
-        total: number;
-    };
-}
-
 const columns: Column<User>[] = [
     { header: 'Họ và tên', accessor: 'fullName' },
     { header: 'Tên người dùng', accessor: 'username', visible: false },
@@ -44,7 +36,6 @@ export default function App() {
     const [selectedIds, setSelectedIds] = useState<(string | number)[]>([]);
     const [searchInput, setSearchInput] = useState('');
     const [debouncedSearch, setDebouncedSearch] = useState('');
-
     const [isCreateUserModalOpen, setIsCreateUserModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isUserDetailsModalOpen, setIsUserDetailsModalOpen] = useState(false);
@@ -72,7 +63,8 @@ export default function App() {
 
     const url = `https://api.wedly.info/api/users?${queryParams.toString()}`;
 
-    const { data, isLoading, mutate } = useSWR(url, fetcher);
+    const { data, isLoading, mutate } = useSWR(url, fetcher, { dedupingInterval: 15000, revalidateOnFocus: false, keepPreviousData: true });
+
 
     const users: User[] = (data?.data || []).map((user: any) => ({
         id: user._id,
@@ -174,6 +166,7 @@ export default function App() {
             />
 
             <CreateUserModal
+                mutate={mutate}
                 open={isCreateUserModalOpen}
                 onOpenChange={setIsCreateUserModalOpen}
             />
