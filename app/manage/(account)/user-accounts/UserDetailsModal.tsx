@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Loader2, User, Mail, BadgeCheck, X, Fingerprint, ShieldCheck, HeartPulse, CalendarClock, Activity } from "lucide-react";
 
+
 interface UserDetailsModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;

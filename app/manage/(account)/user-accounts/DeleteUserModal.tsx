@@ -23,7 +23,7 @@ export default function DeleteUserModal({ open, onOpenChange, userId }: DeleteUs
         setIsLoading(true);
 
         try {
-            await axiosInstance.delete(`/users/${userId}`);
+            await axiosInstance.delete(`/api/users/${userId}`);
             toast.success("Đã xóa người dùng thành công!");
             onOpenChange(false);
         } catch (error: any) {

@@ -14,10 +14,11 @@ type User = {
     dateOfBirth: string;
     phoneNumber: string;
     avatarUrl: string;
-    role: string;
+    role: Role;
     isVerified: boolean;
     emailVerified: boolean;
     createdAt: string;
     updatedAt: string;
     address: string;
+    // isActive: boolean;
 };
