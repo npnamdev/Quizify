@@ -191,6 +191,24 @@ function DropzoneArea({ setActiveTab, mutate }: { setActiveTab: (tab: string) =>
                             {files.map((fileWithPreview, index) => (
                                 <div key={index} className="relative border rounded-md shadow-sm overflow-hidden bg-white">
                                     <div className="relative">
+                                         <div className="flex space-x-1 absolute top-0 right-0">
+                                            <Button
+                                                onClick={() => startCrop(index)}
+                                                className="bg-white rounded-sm shadow p-1 hover:bg-blue-100 w-6 h-6"
+                                                title="Chỉnh sửa ảnh"
+                                                disabled={isUploading}
+                                            >
+                                                <Edit3 className="w-2 h-2 text-gray-600" />
+                                            </Button>
+                                            <Button
+                                                onClick={() => removeFile(index)}
+                                                className="bg-white rounded-sm shadow p-1 hover:bg-red-100 w-6 h-6"
+                                                title="Xoá ảnh"
+                                                disabled={isUploading}
+                                            >
+                                                <Trash2 className="w-2 h-2 text-gray-600" />
+                                            </Button>
+                                        </div>
                                         <img src={fileWithPreview.preview} alt={`preview-${index}`} className="w-full h-[100px] md:h-[145px] object-contain object-center bg-gray-100" />
                                         {fileWithPreview.status === "uploading" && (
                                             <div className="absolute z-50 top-0 left-0 w-full h-full bg-black/40 flex items-center justify-center">
@@ -222,24 +240,7 @@ function DropzoneArea({ setActiveTab, mutate }: { setActiveTab: (tab: string) =>
                                                 {formatBytes(fileWithPreview.file.size)}
                                             </p>
                                         </div>
-                                        <div className="flex space-x-2">
-                                            <Button
-                                                onClick={() => startCrop(index)}
-                                                className="bg-white rounded-sm shadow p-1 hover:bg-blue-100 w-8 h-8"
-                                                title="Chỉnh sửa ảnh"
-                                                disabled={isUploading}
-                                            >
-                                                <Edit3 className="w-4 h-4 text-gray-600" />
-                                            </Button>
-                                            <Button
-                                                onClick={() => removeFile(index)}
-                                                className="bg-white rounded-sm shadow p-1 hover:bg-red-100 w-8 h-8"
-                                                title="Xoá ảnh"
-                                                disabled={isUploading}
-                                            >
-                                                <Trash2 className="w-4 h-4 text-gray-600" />
-                                            </Button>
-                                        </div>
+                                       
                                     </div>
                                 </div>
                             ))}
