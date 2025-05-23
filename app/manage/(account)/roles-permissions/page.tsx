@@ -88,8 +88,9 @@ export default function RoleListPage() {
                 setSearchInput={setSearchInput}
                 isLoading={isLoading}
                 actionButton={
-                    <Button onClick={() => setIsRoleCreateModalOpen(true)} className="gap-1">
-                        <Plus className="w-4 h-4" /> <span>Thêm vai trò</span>
+                    <Button onClick={() => setIsRoleCreateModalOpen(true)} className="gap-1 px-3">
+                        <Plus className="w-4 h-4" /> 
+                        <span className='hidden md:flex'>Thêm vai trò</span>
                     </Button>
                 }
                 options={[

@@ -119,7 +119,7 @@ export default function TableView<T extends { id: number | string, image?: strin
           <Search className="text-gray-600" size={18} strokeWidth={1.5} />
         </Button>
 
-        <div className='flex w-full items-center gap-2 justify-between'>
+        <div className='flex lg:w-full items-center gap-2 justify-between'>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className='px-2.5'>
@@ -140,10 +140,6 @@ export default function TableView<T extends { id: number | string, image?: strin
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-
-          {/* {selectedIds.length > 0 && (
-            <Button>Xóa {selectedIds.length} mục</Button>
-          )} */}
 
           {actionButton}
         </div>
@@ -207,13 +203,12 @@ export default function TableView<T extends { id: number | string, image?: strin
 
                         case 'system':
                           return (
-                         <div
-  className={`rounded-lg px-2 py-1 text-xs w-min text-white ${
-    value ? 'bg-[#3eca65]' : 'bg-[#f45d5d]'
-  }`}
->
-  {value ? 'Hệ thống' : 'Tuỳ chỉnh'}
-</div>
+                            <div
+                              className={`rounded-lg px-2 py-1 text-xs w-min text-white ${value ? 'bg-[#3eca65]' : 'bg-[#f45d5d]'
+                                }`}
+                            >
+                              {value ? 'Hệ thống' : 'Tuỳ chỉnh'}
+                            </div>
                           );
                         case 'image-preview':
                           return (

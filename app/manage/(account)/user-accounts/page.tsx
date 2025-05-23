@@ -158,9 +158,9 @@ export default function App() {
                 isLoading={isLoading}
                 options={actionOptions}
                 actionButton={
-                    <Button onClick={() => setIsCreateUserModalOpen(true)} className='gap-1'>
+                    <Button onClick={() => setIsCreateUserModalOpen(true)} className='gap-1 px-3'>
                         <Plus className="w-4 h-4" />
-                        Thêm người dùng
+                        <span className='hidden md:flex'>Thêm người dùng</span>
                     </Button>
                 }
             />

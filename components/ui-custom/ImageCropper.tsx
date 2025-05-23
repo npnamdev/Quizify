@@ -30,7 +30,7 @@ export default function ImageCropper({ mutate }: { mutate?: () => void }) {
             <DialogTrigger asChild>
                 <Button onClick={() => console.log('Tạo mới')} className='gap-1'>
                     <Plus className="w-4 h-4" />
-                    Thêm hình ảnh
+                    <span className='hidden md:flex'>Thêm hình ảnh</span>
                 </Button>
             </DialogTrigger>
 
@@ -67,7 +67,7 @@ export default function ImageCropper({ mutate }: { mutate?: () => void }) {
                     <div className="overflow-auto h-[calc(100dvh-60px)] md:h-[620px]">
                         <TabsContent value="upload" className="h-full w-full my-0">
                             <div className="p-5 h-full">
-                                <DropzoneArea setActiveTab={setActiveTab} mutate={mutate}/>
+                                <DropzoneArea setActiveTab={setActiveTab} mutate={mutate} />
                             </div>
                         </TabsContent>
 
