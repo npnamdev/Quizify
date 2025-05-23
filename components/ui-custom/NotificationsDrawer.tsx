@@ -37,6 +37,16 @@ export function NotificationsDrawer() {
     const [activeTab, setActiveTab] = React.useState<string>('all');
     const scrollRef = React.useRef<HTMLDivElement>(null);
 
+    const [now, setNow] = React.useState(Date.now());
+
+    React.useEffect(() => {
+        const interval = setInterval(() => {
+            setNow(Date.now());
+        }, 15000);
+
+        return () => clearInterval(interval);
+    }, []);
+
     React.useEffect(() => {
         if (scrollRef.current) {
             scrollRef.current.scrollTop = 0;
