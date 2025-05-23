@@ -29,6 +29,13 @@ export default function Menubar() {
         }, 500);
     };
 
+    const handleRedirectHomePage = () => {
+        setDropdownOpen(false);
+        setTimeout(async () => {
+            router.push("/");
+        }, 500);
+    };
+
 
     const data = {
         user: {
@@ -52,7 +59,7 @@ export default function Menubar() {
                 ],
             },
             {
-                title: "Quản lý trắc nghiệm",
+                title: "Quản lý khóa học",
                 url: "#",
                 icon: BookOpen,
                 items: [
@@ -62,16 +69,16 @@ export default function Menubar() {
                     { title: "Mã kích hoạt", url: "/manage/activate-course" },
                 ],
             },
-            {
-                title: "Quản lý doanh thu",
-                url: "#",
-                icon: ShoppingCart,
-                items: [
-                    { title: "Danh sách đơn hàng", url: "/manage/order-list" },
-                    { title: "Quản lý COD", url: "/manage/cod-management" },
-                    { title: "Xử lý đơn hàng COD", url: "/manage/process-cod-orders" },
-                ],
-            },
+            // {
+            //     title: "Quản lý doanh thu",
+            //     url: "#",
+            //     icon: ShoppingCart,
+            //     items: [
+            //         { title: "Danh sách đơn hàng", url: "/manage/order-list" },
+            //         { title: "Quản lý COD", url: "/manage/cod-management" },
+            //         { title: "Xử lý đơn hàng COD", url: "/manage/process-cod-orders" },
+            //     ],
+            // },
             {
                 title: "Quản lý thư viện",
                 url: "#",
@@ -259,9 +266,9 @@ export default function Menubar() {
                                     </div>
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={() => router.push("/")}>
+                                <DropdownMenuItem onClick={handleRedirectHomePage}>
                                     <House />
-                                    Trang chủ
+                                  Quay lại trang chủ
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={handleLogout}>
                                     <LogOut />
