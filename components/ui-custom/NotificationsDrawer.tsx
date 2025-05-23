@@ -78,24 +78,24 @@ export function NotificationsDrawer() {
                     <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as any)} className="w-full pt-2.5">
                         <TabsList className="w-full h-[50px] flex justify-between px-5 gap-2">
                             <div className="flex gap-1">
-                                <TabsTrigger className="px-2.5 py-2 flex items-center gap-1.5" value="all">
+                                <TabsTrigger className="px-2 py-2 flex items-center gap-1.5" value="all">
                                     <List className="w-4 h-4" />
                                     Tất cả
                                     <div className="border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent text-secondary-foreground hover:bg-secondary/80 flex h-5 w-5 items-center justify-center rounded-full bg-gray-200">{total}</div>
                                 </TabsTrigger>
-                                <TabsTrigger className="px-2.5 py-2 flex items-center gap-1.5" value="unread">
+                                <TabsTrigger className="px-2 py-2 flex items-center gap-1.5" value="unread">
                                     <Mail className="w-4 h-4" />
                                     Chưa đọc
                                     <div className="border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent text-secondary-foreground hover:bg-secondary/80 flex h-5 w-5 items-center justify-center rounded-full bg-gray-200">{unreadCount}</div>
                                 </TabsTrigger>
-                                <TabsTrigger className="px-2.5 py-2 flex items-center gap-1.5" value="read">
+                                <TabsTrigger className="px-2 py-2 flex items-center gap-1.5" value="read">
                                     <CheckCircle className="w-4 h-4" />
                                     Đã đọc
                                     <div className="border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent text-secondary-foreground hover:bg-secondary/80 flex h-5 w-5 items-center justify-center rounded-full bg-gray-200">{readCount}</div>
                                 </TabsTrigger>
                             </div>
 
-                            <Popover>
+                            {/* <Popover>
                                 <PopoverTrigger asChild>
                                     <Button variant="outline" size="icon" className="w-8 h-8 p-0">
                                         <EllipsisVertical strokeWidth={1.5} className="h-4 w-4" />
@@ -122,7 +122,7 @@ export function NotificationsDrawer() {
                                         </CommandList>
                                     </Command>
                                 </PopoverContent>
-                            </Popover>
+                            </Popover> */}
                         </TabsList>
 
                         <div ref={scrollRef} className="h-[calc(100dvh-120px-50px)] overflow-auto">

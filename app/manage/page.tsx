@@ -115,9 +115,9 @@ const chartConfig2 = {
 export default function Overview() {
   return (
     <div>
-      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         {stats.map((stat, index) => (
-          <Card key={index} className="p-4 lg:py-6 flex items-center justify-between">
+          <Card key={index} className="p-4 py-6 flex items-center justify-between">
             <CardHeader className="p-0">
               <h4 className="text-gray-500 text-sm">{stat.title}</h4>
               <div className="text-[18px] font-bold mt-2">{stat.value}</div>
