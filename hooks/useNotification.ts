@@ -114,6 +114,8 @@ export const useNotification = () => {
     }, [fetchNotifications]);
 
     const unreadCount = notifications.filter(n => n.status === "unread").length;
+    const total = notifications.length;
+    const readCount = notifications.filter(n => n.status === "read").length;
 
-    return { notifications, unreadCount, loading, error, markAsRead, deleteNotification };
+    return { notifications, unreadCount, total, readCount, loading, error, markAsRead, deleteNotification };
 };
