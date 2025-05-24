@@ -29,7 +29,7 @@ export default function HeaderLayout() {
     const pathSegments = usePathname().split("/").filter(Boolean).filter(s => !["vi", "en"].includes(s));
 
     const clickSound = useMemo(() => new Howl({
-        src: ["/rung.mp3"]
+        src: ["/rung2.mp3"]
     }), []);
 
     const handleButtonClick = () => {
