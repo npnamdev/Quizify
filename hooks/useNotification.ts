@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import io, { Socket } from "socket.io-client";
 import axios from "axios";
+import { Howl } from "howler";
 
 const socketUrl = process.env.NEXT_PUBLIC_API_URL!;
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL!;
@@ -33,6 +34,14 @@ export const useNotification = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const socketRef = useRef<Socket | null>(null);
+
+    const notificationSound = useRef(
+        new Howl({
+            src: ['/bell.mp3'],
+            volume: 0.5,
+            html5: true,
+        })
+    );
 
     const fetchNotifications = useCallback(async () => {
         setLoading(true);
@@ -94,6 +103,9 @@ export const useNotification = () => {
         socket.on("notify", (notification: Notification) => {
             console.log("New notification received:", notification);
             setNotifications(prev => [notification, ...prev]);
+
+            // Phát âm thanh khi có thông báo mới
+            notificationSound.current.play();
         });
 
         socket.on("deleteNotify", (id: string) => {
