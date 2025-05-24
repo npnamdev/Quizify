@@ -23,6 +23,7 @@ const axiosInstance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL,
     headers: { 'Content-Type': 'application/json' },
     withCredentials: true,
+    timeout: 10000,
 });
 
 axiosInstance.interceptors.request.use((config) => {
