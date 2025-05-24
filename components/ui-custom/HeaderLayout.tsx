@@ -30,7 +30,14 @@ export default function HeaderLayout() {
     return (
         <header className="flex justify-between items-center h-[60px] px-5 border-b bg-white sticky top-0 z-50">
             <div className="flex items-center gap-2">
-                <Button className="lg:hidden w-8 h-8" variant="outline" size="icon" onClick={toggleSidebar}>
+                <Button className="lg:hidden w-8 h-8" variant="outline" size="icon"
+                    onClick={() => {
+                        if (navigator.vibrate) {
+                            navigator.vibrate(50);
+                        }
+                        toggleSidebar();
+                    }}
+                >
                     <AlignLeft strokeWidth={1.5} />
                 </Button>
                 <Separator orientation="vertical" className="mx-1 h-4 md:hidden" />
