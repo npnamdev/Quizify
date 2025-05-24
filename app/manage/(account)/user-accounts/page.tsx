@@ -163,6 +163,7 @@ export default function App() {
             />
 
             <DeleteUserModal
+                mutate={mutate}
                 open={isDeleteModalOpen}
                 onOpenChange={setIsDeleteModalOpen}
                 userId={currentId}
@@ -175,6 +176,7 @@ export default function App() {
             />
 
             <UserUpdateModal
+                mutate={mutate}
                 open={isUserUpdateModalOpen}
                 onOpenChange={setIsUserUpdateModalOpen}
                 userId={currentId}

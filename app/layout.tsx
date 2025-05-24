@@ -34,10 +34,9 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body suppressHydrationWarning={true} className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
           <AdminRouteGuard >
-            {/* <Header /> */}
             <Navbar />
             {children}
           </AdminRouteGuard >

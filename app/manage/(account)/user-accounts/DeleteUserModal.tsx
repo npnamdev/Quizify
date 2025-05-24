@@ -8,9 +8,10 @@ interface DeleteUserModalProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     userId: string | number | null;
+    mutate: () => void;
 }
 
-export default function DeleteUserModal({ open, onOpenChange, userId }: DeleteUserModalProps) {
+export default function DeleteUserModal({ open, onOpenChange, userId, mutate }: DeleteUserModalProps) {
     const [isLoading, setIsLoading] = useState(false);
 
     const handleClose = () => {
@@ -24,6 +25,7 @@ export default function DeleteUserModal({ open, onOpenChange, userId }: DeleteUs
 
         try {
             await axiosInstance.delete(`/api/users/${userId}`);
+            mutate();
             toast.success("Đã xóa người dùng thành công!");
             onOpenChange(false);
         } catch (error: any) {
