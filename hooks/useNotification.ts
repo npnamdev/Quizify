@@ -37,7 +37,7 @@ export const useNotification = () => {
 
     const notificationSound = useRef(
         new Howl({
-            src: ['/bell2.mp3'],
+            src: ['/bell2.lnk'],
             volume: 0.5,
             html5: true,
         })
