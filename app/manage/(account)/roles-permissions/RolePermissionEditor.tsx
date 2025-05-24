@@ -5,6 +5,8 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { toast } from "sonner";
+import axiosInstance from "@/lib/axiosInstance";
+
 
 type Permission = {
   _id: string;
@@ -25,29 +27,30 @@ export default function RolePermissionEditor({ roleId, open, onOpenChange }: Rol
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
 
-useEffect(() => {
-  if (!roleId) return;
+  useEffect(() => {
+    if (!roleId) return;
 
-  const fetchPermissions = async () => {
-    setLoading(true);
-    try {
-      const [allRes, roleRes] = await Promise.all([
-        axios.get("https://api.wedly.info/api/permissions"),
-        axios.get(`https://api.wedly.info/api/roles/${roleId}/permissions`)
-      ]);
+    const fetchPermissions = async () => {
+      setLoading(true);
+      try {
+        const [allRes, roleRes] = await Promise.all([
+          axiosInstance.get("/api/permissions"),
+          axiosInstance.get(`/api/roles/${roleId}/permissions`)
+        ]);
 
-      setAllPermissions(allRes.data.data);
-      setRolePermissions(roleRes.data.data.map((perm: any) => perm._id));
-    } catch (error) {
-      console.error("Error fetching permissions", error);
-      toast.error("Lỗi tải quyền");
-    } finally {
-      setLoading(false);
-    }
-  };
+        setAllPermissions(allRes.data);
+        setRolePermissions(roleRes.data.map((perm: any) => perm._id));
+      } catch (error) {
+        console.error("Error fetching permissions", error);
+        toast.error("Lỗi tải quyền");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  fetchPermissions();
-}, [roleId]);
+
+    fetchPermissions();
+  }, [roleId]);
 
   const togglePermission = (permId: string) => {
     setRolePermissions((prev) =>
@@ -57,18 +60,25 @@ useEffect(() => {
     );
   };
 
+
   const handleUpdatePermissions = async () => {
     setUpdating(true);
     try {
-      await axios.put(`https://api.wedly.info/api/roles/${roleId}/permissions`, { permissionIds: rolePermissions });
+      const res = await axiosInstance.put(`/api/roles/${roleId}/permissions`, {
+        permissionIds: rolePermissions
+      });
+
       toast.success("Cập nhật quyền thành công!");
+      onOpenChange(false);
     } catch (error) {
       console.error("Update error", error);
       toast.error("Cập nhật thất bại!");
+      onOpenChange(false);
     } finally {
       setUpdating(false);
     }
   };
+
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

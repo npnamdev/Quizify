@@ -9,28 +9,53 @@ import axiosInstance from "@/lib/axiosInstance";
 export default function RoleCreateModal({
     open,
     onOpenChange,
-    onSubmit,
+    mutate,
 }: {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    onSubmit: (data: { label: string; name: string }) => void;
+    mutate: () => void;
 }) {
     const [label, setLabel] = useState("");
-    const [name, setName] = useState("");
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (!open) {
             setLabel("");
-            setName("");
         }
     }, [open]);
 
-    const handleSubmit = () => {
-        if (!label || !name) {
-            toast.error("Vui lòng nhập đầy đủ thông tin.");
+    const slugify = (text: string) => {
+        return text
+            .toLowerCase()
+            .normalize("NFD") // tách dấu
+            .replace(/[\u0300-\u036f]/g, "") // bỏ dấu
+            .replace(/\s+/g, "-") // thay khoảng trắng bằng dấu -
+            .replace(/[^\w\-]+/g, "") // bỏ ký tự đặc biệt
+            .replace(/\-\-+/g, "-") // bỏ dấu - lặp
+            .replace(/^-+/, "") // bỏ dấu - đầu chuỗi
+            .replace(/-+$/, ""); // bỏ dấu - cuối chuỗi
+    };
+
+    const handleCreateRole = async () => {
+        if (!label.trim()) {
+            toast.error("Vui lòng nhập tên vai trò.");
             return;
         }
-        onSubmit({ label, name });
+
+        const name = slugify(label);
+
+        setLoading(true);
+        try {
+            await axiosInstance.post("/api/roles", { label, name, permissions: [] });
+            toast.success("Tạo vai trò thành công!");
+            onOpenChange(false);
+            mutate();
+        } catch (error: any) {
+            const msg = error.response?.data?.message || error.message || "Lỗi không xác định";
+            toast.error("Tạo vai trò thất bại: " + msg);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -41,33 +66,26 @@ export default function RoleCreateModal({
                 </DialogHeader>
                 <div className="space-y-4 px-7 pt-4">
                     <div className="grid gap-2">
-                        <Label htmlFor="label">Tên hiển thị</Label>
+                        <Label htmlFor="label">Tên vai trò</Label>
                         <Input
                             id="label"
                             value={label}
                             onChange={(e) => setLabel(e.target.value)}
-                            placeholder="Nhập tên hiển thị"
+                            placeholder="Nhập tên vai trò, ví dụ: Quản trị viên"
                             required
-                        />
-                    </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="name">Tên vai trò (system name)</Label>
-                        <Input
-                            id="name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            placeholder="admin, editor, etc."
-                            required
+                            disabled={loading}
                         />
                     </div>
                 </div>
                 <DialogFooter className="flex justify-end items-center border-t h-[60px] px-7 gap-1">
                     <DialogClose asChild>
-                        <Button type="button" variant="secondary">
+                        <Button type="button" variant="secondary" disabled={loading}>
                             Đóng
                         </Button>
                     </DialogClose>
-                    <Button onClick={handleSubmit}>Tạo vai trò</Button>
+                    <Button onClick={handleCreateRole} disabled={loading}>
+                        {loading ? "Đang tạo..." : "Tạo vai trò"}
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

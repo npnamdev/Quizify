@@ -10,6 +10,7 @@ import RolePermissionEditor from './RolePermissionEditor';
 import RoleCreateModal from './RoleCreateModal';
 import { toast } from "sonner";
 import axiosInstance from "@/lib/axiosInstance";
+import DeleteRoleModal from './DeleteRoleModal';
 
 type Role = {
     id: string;
@@ -30,12 +31,13 @@ const columns: Column<Role>[] = [
 
 export default function RoleListPage() {
     const [page, setPage] = useState(0);
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(20);
     const [selectedIds, setSelectedIds] = useState<(string | number)[]>([]);
     const [searchInput, setSearchInput] = useState('');
     const [debouncedSearch, setDebouncedSearch] = useState('');
 
     const [isRoleCreateModalOpen, setIsRoleCreateModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isPermissionsModalOpen, setIsPermissionsModalOpen] = useState(false);
     const [currentId, setCurrentId] = useState<string | number | null>(null);
 
@@ -50,7 +52,7 @@ export default function RoleListPage() {
 
     const roles: Role[] = (data?.data || []).map((role: any) => ({
         id: role._id,
-        name: role.name === 'admin' ? 'Quản trị viên' : role.name === 'user' ? 'Người dùng' : role.name,
+        name: role.label,
         isSystem: role.isSystem || false,
         permissions: 20,
         createdAt: moment(role.createdAt).format('DD/MM/YYYY'),
@@ -58,19 +60,6 @@ export default function RoleListPage() {
     }));
 
     const total = data?.pagination?.totalRoles || 0;
-
-
-    const handleCreateRole = async ({ label, name }: { label: string; name: string }) => {
-        try {
-            await axiosInstance.post("/api/roles", { label, name, permissions: [] });
-            toast.success("Tạo vai trò thành công!");
-            setIsRoleCreateModalOpen(false);
-            mutateRoles();
-        } catch (error: any) {
-            toast.error("Tạo vai trò thất bại: " + error);
-        }
-    };
-
 
     return (
         <div className="space-y-4">
@@ -89,7 +78,7 @@ export default function RoleListPage() {
                 isLoading={isLoading}
                 actionButton={
                     <Button onClick={() => setIsRoleCreateModalOpen(true)} className="gap-1 px-3">
-                        <Plus className="w-4 h-4" /> 
+                        <Plus className="w-4 h-4" />
                         <span className='hidden md:flex'>Thêm vai trò</span>
                     </Button>
                 }
@@ -113,7 +102,10 @@ export default function RoleListPage() {
                         value: 'delete',
                         label: 'Xoá',
                         icon: <Trash2 size={16} strokeWidth={1.5} />,
-                        action: (id) => console.log('Xoá vai trò với id:', id),
+                        action: (id) => {
+                            setCurrentId(id)
+                            setIsDeleteModalOpen(true);
+                        },
                     },
                 ]}
             />
@@ -121,9 +113,15 @@ export default function RoleListPage() {
             <RoleCreateModal
                 open={isRoleCreateModalOpen}
                 onOpenChange={setIsRoleCreateModalOpen}
-                onSubmit={handleCreateRole}
+                mutate={mutateRoles}
             />
 
+            <DeleteRoleModal
+                mutate={mutateRoles}
+                open={isDeleteModalOpen}
+                onOpenChange={setIsDeleteModalOpen}
+                roleId={currentId}
+            />
 
             <RolePermissionEditor
                 roleId={currentId}
