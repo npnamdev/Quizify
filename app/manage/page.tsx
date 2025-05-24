@@ -81,6 +81,7 @@ const stats = [
 
 
 import { PolarGrid, RadialBar, RadialBarChart } from "recharts"
+import { useState } from "react";
 const chartData2 = [
   { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
   { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
@@ -115,6 +116,7 @@ const chartConfig2 = {
 } satisfies ChartConfig
 
 export default function Overview() {
+  const [hasStarted, setHasStarted] = useState(false);
   return (
     <div>
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
@@ -124,7 +126,16 @@ export default function Overview() {
               <h4 className="text-gray-500 text-sm">{stat.title}</h4>
               <CountUp end={stat.value} duration={1}>
                 {({ countUpRef, start }) => (
-                  <VisibilitySensor onChange={start} delayedCall>
+                  <VisibilitySensor
+                    onChange={(isVisible: boolean) => {
+                      if (isVisible && !hasStarted) {
+                        start();
+                        setHasStarted(true);
+                      }
+                    }}
+                    delayedCall
+                    partialVisibility
+                  >
                     <span className="text-[18px] font-bold mt-2" ref={countUpRef} />
                   </VisibilitySensor>
                 )}
