@@ -1,7 +1,9 @@
 "use client"
 
 import { UsersRound, BookOpen, ShoppingCart, DollarSign, TrendingUp } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, Rectangle, XAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, Rectangle, XAxis } from "recharts";
+import CountUp from 'react-countup';
+import VisibilitySensor from 'react-visibility-sensor';
 import {
   Card,
   CardContent,
@@ -70,7 +72,7 @@ const stats = [
   },
   {
     title: "Doanh thu",
-    value: "$95",
+    value: 950,
     icon: <DollarSign className="w-5 h-5 text-rose-600" />,
     color: "bg-red-100",
   },
@@ -120,7 +122,13 @@ export default function Overview() {
           <Card key={index} className="p-4 py-6 flex items-center justify-between">
             <CardHeader className="p-0">
               <h4 className="text-gray-500 text-sm">{stat.title}</h4>
-              <div className="text-[18px] font-bold mt-2">{stat.value}</div>
+              <CountUp end={stat.value} duration={1}>
+                {({ countUpRef, start }) => (
+                  <VisibilitySensor onChange={start} delayedCall>
+                    <span className="text-[18px] font-bold mt-2" ref={countUpRef} />
+                  </VisibilitySensor>
+                )}
+              </CountUp>
             </CardHeader>
             <div
               className={`w-10 h-10 rounded-xl flex items-center justify-center ${stat.color}`}
